@@ -1,0 +1,38 @@
+body {
+    width: 95vw;
+}
+div {
+    margin: 10px;
+}
+.letter {
+    font-size: 40px;
+    width: 40px;
+    text-align: center;
+    margin: 5px;
+
+    cursor: grab;
+}
+.letter-white {background-color: gray;}
+.letter-yellow {background-color: yellow;}
+.letter-green {background-color: green;}
+
+.word {
+    background-color: white;
+    font-size: 30px;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.big {
+    background-color: black;
+    min-height: 100px;
+    text-align: center;
+
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}

@@ -1,0 +1,33 @@
+body {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    /* overflow-y: hidden; */
+}
+
+
+.buttongrp {
+    display: inline;
+}
+
+.alert {
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+    margin-top: 450px;
+    visibility: hidden;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.closebtn {
+    margin-left: 25px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}

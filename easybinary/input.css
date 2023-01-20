@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components { 
+    .output {
+        @apply text-gray-900 text-8xl w-[95vw]
+    }
+
+    .input {
+        @apply text-gray-600 text-4xl w-[95vw]
+    }
+
+    .basic-main {
+        @apply ease-in-out duration-500
+        absolute top-[50%]
+    }
+}

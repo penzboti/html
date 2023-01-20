@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quhoo Wordle Solver</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div>
+        <input type="text" id="guess" class="input" placeholder="szövegdoboz">
+        <input type="button" value="Keresés indítása" onclick="guessWord()" class="button">
+        <input type="button" value="Újrakezdés" onclick="start()" class="button">
+    </div>
+
+    <div id="feedback" class="big"></div>
+    <div id="words" class="big"></div>
+    
+    <div>
+        Írd be ugyan azt a szót a szövegdobozba, amivel a wordle-nél kezdtél. <br>
+        Ha beírtad a szót a szövegdobozba, rá tudsz kattintani lejjebb a betűkre, hogy beállítsd mit kaptál vissza. <br>
+        Enter lenyomásával, vagy a 'keresés indítása' gomb megnyomásával elindíthatod a szókeresést. <br>
+        Utána még eggyel lejjebb, kiválaszthatod melyik szóval folytatod. Azok a szakak mind lehetnek. <br>
+        Ha kiválasztottál egyet és beírtad a wordle-be, rákattintással egyszerűen behozhatod itt is. <br>
+        Ezt ismételd meg addig, míg kitaláltad a szót. <br>
+        Ha újra szeretnéd kezdeni, kattints az 'újrakezdés' gombra.
+    </div>
+    <div>A forráskód megtalálható <a href="https://github.com/penzboti/Quhoo-wordle-solver">GitHubon!</a></div>
+
+    <script src="solver.js"></script>
+</body>
+</html>

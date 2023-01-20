@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Binary Converter</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap');
+        body { font-family: 'Noto Sans Mono', monospace; }
+    </style>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body class="bg-gray-400 overflow-x-hidden">
+    <div id="modeinfo" class="flex justify-center items-center
+    absolute inset-x-0
+    ease-in-out duration-500
+    rounded-full bg-purple-500 mx-[42.5%]">to-<b>binary</b></div>
+
+    <div id="main" class="flex flex-wrap
+    relative
+    h-[90vh]">
+        <div id="decimal" class="input basic-main 
+        translate-y-[-120%]">0</div>
+        <div id="binary" class="output basic-main
+        translate-y-[20%]">0</div>
+    </div>
+
+    <div id="info" class="flex justify-between
+    fixed top-[100vh] translate-y-[-100%] w-full
+    bg-indigo-500">
+        <div class="pl-10">type numbers</div>
+        <div><b>backspace</b> = delete last number</div>
+        <div><b>delete</b> = delete every number</div>
+        <div class="pr-10"><b>c</b> = change mode</div>
+    </div>
+
+
+    <script src="./main.js"></script>
+</body>
+</html>

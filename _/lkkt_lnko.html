@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lkkt & lnko</title>
+</head>
+<body>
+
+    <script>
+        let num1 = prompt("1st number");
+        let num2 = prompt("2nd number");
+
+        let primes0 = setPrimes();
+
+        function setPrimes() {
+            let n;
+            if (num1 < num2) n = num2;
+            else n = num1;
+            
+            let primes = [];
+            
+            primes.push(2);
+            
+            for(i = 2; i <= n; i++) {
+                let passed = 0;
+                primes.forEach(e => {
+                    if (i % e != 0) {
+                        passed++;
+                    }
+                });
+                
+                if (passed === primes.length) primes.push(i);
+            }
+            
+            return primes;
+        }
+
+        function getPrimes(n) {
+            // 84 -> [2, 2, 3, 7]
+            
+            const primes = [];
+            
+            primes0.forEach(e => {
+                let exit = false;
+                
+                while (exit === false) {
+                    if (n % e === 0) {
+                        primes.push(e);
+                        n /= e;
+                    } else {
+                        exit = true;
+                    }
+                }
+            });
+            
+            let sortedPrimes = sortPrimes(primes);
+            return sortedPrimes;
+        }
+
+        function sortPrimes(primes) {
+            // [2, 2, 3, 7] --> [[2, 2], [3, 1], [5, 0], [7, 1]]
+            
+            let sortedPrimes = [];
+            
+            primes0.forEach(e => {
+                length = primes.filter(x => x === e).length;
+                sortedPrimes.push([e, length]);
+                if (length == 0) {
+                    primes.splice(primes.indexOf(e), length);
+                }
+            });
+            
+            return sortedPrimes;
+        }
+
+        // the fun
+
+        function lkkt() {
+            // the 2 arrays --> lkkt
+            let ans = 1;
+            const primes1 = getPrimes(num1);
+            const primes2 = getPrimes(num2);
+            
+            for (i = 0; i < primes1.length; i++) {
+                e1 = primes1[i];
+                e2 = primes2[i];
+
+                if (e1[1] != 0 && e2[1] != 0) {
+                    // console.log("e1, e2", e1, e2)
+                    if (e1[1] < e2[1]) ans *=  Math.pow(e1[0], e2[1]);
+                    else ans *= Math.pow(e1[0], e1[1]);
+                } else if (e1[1] != 0) {
+                    // console.log("e1", e1, e2)
+                    ans *= Math.pow(e1[0], e1[1]);
+                } else if (e2[1] != 0) {
+                    // console.log("e2", e1, e2)
+                    ans *= Math.pow(e2[0], e2[1]);
+                }
+            }
+
+            alert(ans)
+        }
+
+        function lnko() {
+            // the 2 arrays --> lnko
+            let ans = 1;
+            const primes1 = getPrimes(num1);
+            const primes2 = getPrimes(num2);
+
+            for (i = 0; i < primes1.length; i++) {
+                e1 = primes1[i];
+                e2 = primes2[i];
+
+                if (e1[1] != 0 && e2[1] != 0) {
+                    if (e1[1] <= e2[1]) ans *= Math.pow(e1[0], e1[1]);
+                    else ans *= Math.pow(e1[0], e2[1])
+                }
+            }
+
+            alert(ans)
+        }
+
+        lkkt();
+        lnko();
+    </script>
+</body>
+</html>
