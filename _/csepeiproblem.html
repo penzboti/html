@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>csepeiproblem solver</title>
+</head>
+<body>
+
+    <div id="div" contenteditable="true"></div>
+    <input type="button" value="search" onclick="load();">
+    <div id="main"></div>
+    
+    <script>
+        const operators = ["+", "-", "*", "/"];
+        let lsa, rsa;
+        let lsf, rsf;
+
+        function load() {
+            let raw = document.getElementById("div").innerText;
+            let sides = raw.split("=");
+            function splitside(s) {
+                let side = s.split(" ");
+                for(i = 0; i < side.length; i++){
+                    let e = side[i];
+                    if (e == "") {
+                        side.splice(i, 1);
+                    }
+                }
+                return side;
+            }
+            lsa = splitside(sides[0]);
+            rsa = splitside(sides[1]);
+
+            fn();
+        }
+
+        function fn() {
+            let numofop = lsa.length + rsa.length - 2;
+            for(i = 0; i < Math.pow(4, numofop); i++){
+                let n = (i >>> 0).toString(4);
+                while (n.length != numofop) {
+                    let m = `0${n}`;
+                    n = m;
+                }
+                let ans = "";
+                for(j = 0; j < lsa.length; j++){
+                    if (j != lsa.length - 1) {
+                        ans += `${lsa[j]} ${operators[n[j]]} `
+                    } else {
+                        ans += lsa[j];
+                    }
+                }
+                ans += " = ";
+                for(j = 0; j < rsa.length; j++){
+                    if (j != rsa.length - 1) {
+                        ans += `${rsa[j]} ${operators[n[j + lsa.length-1]]} `
+                    } else {
+                        ans += rsa[j];
+                    }
+                }
+                let tst = ans.replace("=", "==");
+                console.log(ans)
+                let bool;
+                eval(`bool = ${tst}`);
+                if (bool == true) {
+                    document.getElementById("main").innerHTML += `<div>${ans}</div><br>`
+                }
+            }
+            console.log("done");
+        }
+    </script>
+
+</body>
+</html>
