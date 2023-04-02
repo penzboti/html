@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>playtime calculator</title>
+</head>
+
+<body>
+    <!-- stats input -->
+    <p>inputs: </p>
+    <p>start date</p>
+    <input type="date" id="startDate" />
+    <p>end date</p>
+    <input type="date" id="endDate" />
+    <p>playtime now</p>
+    <input type="number" id="playtime" />
+    <p>desired playtime (x hr/day)</p>
+    <input type="number" id="dailyDesiredPlaytime" />
+
+    <!-- calculated info -->
+    <p>outputs: </p>
+    <p id="daysLeft"></p>
+    <p id="playtimeLeft"></p>
+    <p id="dailyPlaytimeLeft"></p>
+    <p id="last2Weeks"></p>
+
+    <!-- extra stats? -->
+    <!-- <p>last 2 weeks playtime now</p> -->
+    <!-- extra stats calculated feedback? -->
+    <!-- <p id="areYouGoodOnLast2Weeks"></p> -->
+
+    <!-- js -->
+    <script>
+        let inputs = []; let fullDay = 1000*60*60*24;
+        [...document.body.children].forEach((element) => {
+            if (element.nodeName == "INPUT") {
+                if (window.localStorage.getItem(element.id) !== null) {
+                    element.value = window.localStorage.getItem(element.id);
+                }
+                inputs.push(element);
+            }
+        });
+
+        function main() {
+            inputs.forEach((element) => {
+                if (element.value != window.localStorage.getItem(element.id)) {
+                    window.localStorage.setItem(element.id, element.value);
+                    change = true;
+                }
+            });
+            const today = new Date().setHours(0, 0, 0, 0);
+
+            let daysLeftRaw = Math.round( (new Date(endDate.value) - today) / fullDay );
+            let playtimeLeftRaw = ((new Date(endDate.value) - new Date(startDate.value)) / fullDay * dailyDesiredPlaytime.value) - playtime.value;
+            let dailyPlaytimeLeftRaw = playtimeLeftRaw / daysLeftRaw;
+            if (change == true) {
+                daysLeft.innerText = `${daysLeftRaw} days left.`;
+                playtimeLeft.innerText = `${playtimeLeftRaw} hours left`;
+                dailyPlaytimeLeft.innerText = `you should play ${dailyPlaytimeLeftRaw} hours daily`;
+                last2Weeks.innerText = `your last 2 weeks playtime should be ${dailyPlaytimeLeftRaw*14} hours`
+                change = false;
+            }
+        }
+        
+        let change = true;
+        main();
+        setInterval(main, 100);
+    </script>
+</body>
+</html>
