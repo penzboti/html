@@ -21,20 +21,20 @@
     <input type="number" id="dailyDesiredPlaytime" />
 
     <!-- calculated info -->
-    <p>outputs: </p>
-    <p id="daysLeft"></p>
-    <p id="playtimeLeft"></p>
-    <p id="dailyPlaytimeLeft"></p>
-    <p id="last2Weeks"></p>
+    <p id="output">press enter after filling inputs to get results</p>
+    
+    <!--? did you achieve it check box and display a cool animation based on that? -->
 
-    <!-- extra stats? -->
-    <!-- <p>last 2 weeks playtime now</p> -->
-    <!-- extra stats calculated feedback? -->
-    <!-- <p id="areYouGoodOnLast2Weeks"></p> -->
+    <button onclick="copyinfo()" id="copyBtn">copy</button>
+
+    <!--? connect trough steam api to get data automatically? -->
 
     <!-- js -->
     <script>
-        let inputs = []; let fullDay = 1000*60*60*24;
+        let inputs = []; 
+        let fullDay = 1000*60*60*24;
+
+        // load inputs from saved data
         [...document.body.children].forEach((element) => {
             if (element.nodeName == "INPUT") {
                 if (window.localStorage.getItem(element.id) !== null) {
@@ -44,30 +44,61 @@
             }
         });
 
+        let daysLeftRaw, playtimeLeftRaw, dailyPlaytimeLeftRaw, last2weeksPlaytime;
+        let playtimeDiff;
+
         function main() {
+            // save inputs for later
             inputs.forEach((element) => {
                 if (element.value != window.localStorage.getItem(element.id)) {
+                    if (element.id == "playtime") {
+                        window.localStorage.setItem("prevPlaytime", window.localStorage.getItem("playtime"))
+                    }
                     window.localStorage.setItem(element.id, element.value);
-                    change = true;
                 }
             });
             const today = new Date().setHours(0, 0, 0, 0);
 
-            let daysLeftRaw = Math.round( (new Date(endDate.value) - today) / fullDay );
-            let playtimeLeftRaw = ((new Date(endDate.value) - new Date(startDate.value)) / fullDay * dailyDesiredPlaytime.value) - playtime.value;
-            let dailyPlaytimeLeftRaw = playtimeLeftRaw / daysLeftRaw;
-            if (change == true) {
-                daysLeft.innerText = `${daysLeftRaw} days left.`;
-                playtimeLeft.innerText = `${playtimeLeftRaw} hours left`;
-                dailyPlaytimeLeft.innerText = `you should play ${dailyPlaytimeLeftRaw} hours daily`;
-                last2Weeks.innerText = `your last 2 weeks playtime should be ${dailyPlaytimeLeftRaw*14} hours`
-                change = false;
-            }
+            // calculate stuff
+            daysLeftRaw = Math.round( (new Date(endDate.value) - today) / fullDay );
+            playtimeLeftRaw = ((new Date(endDate.value) - new Date(startDate.value)) / fullDay * dailyDesiredPlaytime.value) - playtime.value;
+            dailyPlaytimeLeftRaw = playtimeLeftRaw / daysLeftRaw;
+            last2weeksPlaytime = dailyPlaytimeLeftRaw * 14;
+            playtimeDiff = playtime.value - window.localStorage.getItem("prevPlaytime");
+            
+            // display stuff
+            output.innerHTML = 
+            `your last session was <b>${playtimeDiff} hours</b> of playtime <br>
+            you have <b>${daysLeftRaw} days</b> left <br>
+            in those days you have <b>${playtimeLeftRaw} hours</b> left <br>
+            to finish your journey you should play <b>${dailyPlaytimeLeftRaw} hours</b> daily <br>
+            and this means that your last 2 weeks playtime should be <b>${last2weeksPlaytime} hours</b>`;
         }
         
-        let change = true;
-        main();
-        setInterval(main, 100);
+        window.addEventListener("keyup", e => {
+            if (e.key == "Enter") {
+                main();
+                copyBtn.style.visibility = "visible";
+            }
+        })
+
+        // save on enter.
+        // accident save: back keybind.
+        // last session data
+
+        function copyinfo() {
+            text = 
+            `playtime last session was **${playtimeDiff} hours**, and overall its **${playtime.value} hours**.
+There are **${daysLeftRaw} days** left, and theres still **${playtimeLeftRaw} hours** of playtime left.
+This means a daily playtime of **${dailyPlaytimeLeftRaw} hours**, which was `;
+            if (dailyPlaytimeLeftRaw <= playtimeDiff) text += "achieved";
+            else text += "sadly unachieved";
+            text += "last time.";
+            navigator.clipboard.writeText(text);
+            alert("copied!");
+        }
+
+        copyBtn.style.visibility = "hidden";
     </script>
 </body>
 </html>
