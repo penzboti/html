@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "revision"
+		},
+		{
+			"path": "kemia"
 		}
 	],
 	"settings": {
