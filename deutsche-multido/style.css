@@ -1,0 +1,72 @@
+/* font */
+* {
+    font-family: 'Helvetica', Helvetica, system-ui, Arial;
+}
+
+input::-webkit-input-placeholder {
+    font-family: 'Helvetica', Helvetica, system-ui, Arial;
+}
+
+input:-ms-input-placeholder {
+    font-family: 'Helvetica', Helvetica, system-ui, Arial;
+}
+
+input:-moz-placeholder {
+    font-family: 'Helvetica', Helvetica, system-ui, Arial;
+}
+
+input::-moz-placeholder {
+    font-family: 'Helvetica', Helvetica, system-ui, Arial;
+}
+
+/* body */
+body {
+    background-color: black;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+/* elements */
+#word {
+    text-align: center;
+    margin-bottom: 5vh;
+    font-size: 5vw;
+    height: 6vw;
+}
+
+input {
+    width: calc(10vw - 6px);
+    margin: 2.5vw;
+    margin-bottom: 1vh;
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 0px 2px 0px 2px;
+    height: 5vh;
+
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+
+#information {
+    display: flex;
+    align-items: center;
+}
+
+#information > p {
+    color: grey;
+    width: 10vw;
+    margin: 2.5vw;
+    margin-top: 1vh;
+    text-align: center;
+}
+
+/* hover effects */
+input[type="button"]:hover {
+    background-color: rgb(60, 60, 60);
+}
