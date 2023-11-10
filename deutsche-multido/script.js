@@ -15,43 +15,46 @@ function changeAuxiliary() {
 
 // key pressing detection
 document.addEventListener("keydown", (e) => {
+    if (e.key == " ") {
+        submitInfo.innerText = "";
+    }
     if (e.key == "Enter") {
         if (lastTarget != auxiliaryButton) {
             switch(canStep) {
                 case false:
                     makeGuess();
                     break;
-                case true:
-                    hideScore();
-                    stepWord();
-                    break;
+                    case true:
+                        hideScore();
+                        stepWord();
+                        break;
+                    }
+                    canStep = !canStep;
+                }
             }
-            canStep = !canStep;
-        }
-    }
-})
-
-// for checking where we pressed enter, because we need it to also toggle the button
-// https://stackoverflow.com/questions/18316395/javascript-for-handling-tab-key-press
-let lastTarget;
-document.addEventListener("keyup", (e) => {
-    if (e.key == "Tab") {
-        lastTarget = e.target;
-    }
-})
-
-
-// load words
-let words;
-fetch("words.json").then( (data) => data.json() ).then( (data) => {
-    words = data;
-    startQuiz();
-})
-
+        })
+        
+        // for checking where we pressed enter, because we need it to also toggle the button
+        // https://stackoverflow.com/questions/18316395/javascript-for-handling-tab-key-press
+        let lastTarget;
+        document.addEventListener("keyup", (e) => {
+            if (e.key == "Tab") {
+                lastTarget = e.target;
+            }
+        })
+        
+        
+        // load words
+        let words;
+        fetch("words.json").then( (data) => data.json() ).then( (data) => {
+            words = data;
+            startQuiz();
+        })
+        
 // starting the quiz
 let quiz = {};
 let randomsequence = [];
-let currentStep;
+let currentStep = -69;
 let canStep = false;
 function startQuiz() {
     quiz = words;

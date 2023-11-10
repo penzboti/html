@@ -1,3 +1,5 @@
 # tasks
- - [x] delete pyscript bc idc
- - [x] remove (aka gitignore) revision bc im reusing the idea in nodejs
+- [ ] make deutsche-multido responsive with sizes: 
+  - [x] desktop
+  - [ ] tablet
+  - [ ] mobile
