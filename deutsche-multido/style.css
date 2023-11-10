@@ -38,6 +38,13 @@ input {
     text-align: center;
 }
 
+.green {
+    color: green;
+}
+.red {
+    color:red;
+}
+
 #information {
     display: flex;
     align-items: center;
@@ -48,6 +55,10 @@ input {
     width: 10vw;
     margin: 1vh 2.5vw 1vh 2.5vw;
     text-align: center;
+}
+
+.correctValue {
+    color: white !important;
 }
 
 .submitinfo {

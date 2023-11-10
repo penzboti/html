@@ -17,17 +17,16 @@ function changeAuxiliary() {
 document.addEventListener("keydown", (e) => {
     if (e.key == "Enter") {
         if (lastTarget != auxiliaryButton) {
-            makeGuess();
-            stepWord();
-            // switch(canStep) {
-            //     case false:
-            //         makeGuess();
-            //         break;
-            //     case true:
-            //         stepWord();
-            //         break;
-            // }
-            // canStep = !canStep;
+            switch(canStep) {
+                case false:
+                    makeGuess();
+                    break;
+                case true:
+                    hideScore();
+                    stepWord();
+                    break;
+            }
+            canStep = !canStep;
         }
     }
 })
@@ -58,7 +57,6 @@ function startQuiz() {
     quiz = words;
     // https://www.codemzy.com/blog/shuffle-array-javascript
     randomsequence = Object.keys(quiz).sort(() => (Math.random() - 0.5)*3);
-    console.log(randomsequence)
     currentStep = -1;
     stepWord();
 }
@@ -73,21 +71,19 @@ function stepWord() {
     auxiliaryButton.value = "ist"
     currentStep++;
     // checks if we ran out of words, restarts the quiz
-    if (currentStep == randomsequence.length) startQuiz();
     let nextWord = randomsequence[currentStep]
     word.innerText = nextWord;
+    if (currentStep == randomsequence.length) startQuiz();
 }
 
 
 // handling the guessing
 let answer = [];
 function makeGuess() {
-    console.log(word.innerText)
     answer = [];
     allInputs.forEach( e => {
         answer.push(e.value)
     })
-    console.log(answer)
     diffCheck();
     // https://stackoverflow.com/questions/4075057/javascript-unfocus-a-textbox
     document.activeElement.blur();
@@ -95,13 +91,46 @@ function makeGuess() {
 
 // checks the differences between the word and what the user answered
 let score = [];
+let quizWord;
 function diffCheck() {
     score = [];
-    let quizWord = quiz[word.innerText];
+    quizWord = quiz[word.innerText];
     for(i = 0; i < 4; i++){
         if (answer[i] == quizWord[i]) {
             score.push(true)
         } else score.push(false)
     }
-    console.log(score)
+    displayScore()
+}
+
+
+const infoElements = [infoInfinitiv, infoPrateritum, infoAuxiliary, infoPerfekt];
+infoElements.forEach( e => {
+    e.normalValue = e.innerText;
+})
+function displayScore() {
+    for(i = 0; i < 4; i++){
+        if (score[i] == false) {
+            allInputs[i].classList.toggle("red")
+            infoElements[i].innerText = quizWord[i]
+            infoElements[i].classList.toggle("correctValue")
+        } else allInputs[i].classList.toggle("green")
+    }
+}
+
+function hideScore() {
+    allInputs.forEach( e => {
+        if (e.classList.contains("green")) {
+            e.classList.toggle("green");
+        }
+        if (e.classList.contains("red")) {
+            e.classList.toggle("red");
+        }
+    })
+    infoElements.forEach(e => {
+        if (e.classList.contains("correctValue")) {
+            e.classList.toggle("correctValue")
+        }
+        e.innerText = e.normalValue;
+    });
 }
