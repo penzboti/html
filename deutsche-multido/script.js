@@ -2,15 +2,17 @@
 let auxiliary = "ist";
 
 function changeAuxiliary() {
-    switch(auxiliary){
-        case "ist":
-            auxiliary = "hat";
-            break;
-        case "hat":
-            auxiliary = "ist";
-            break;
+    if (!canStep) {
+        switch(auxiliary){
+            case "ist":
+                auxiliary = "hat";
+                break;
+            case "hat":
+                auxiliary = "ist";
+                break;
+        }
+        auxiliaryButton.value = auxiliary;
     }
-    auxiliaryButton.value = auxiliary;
 }
 
 // key pressing detection
@@ -24,37 +26,30 @@ document.addEventListener("keydown", (e) => {
                 case false:
                     makeGuess();
                     break;
-                    case true:
-                        hideScore();
-                        stepWord();
-                        break;
-                    }
-                    canStep = !canStep;
+                case true:
+                    hideScore();
+                    stepWord();
+                    break;
                 }
-            }
-        })
-        
-        // for checking where we pressed enter, because we need it to also toggle the button
-        // https://stackoverflow.com/questions/18316395/javascript-for-handling-tab-key-press
-        let lastTarget;
-        document.addEventListener("keyup", (e) => {
-            if (e.key == "Tab") {
-                lastTarget = e.target;
-            }
-        })
-        
-        
-        // load words
-        let words;
-        fetch("words.json").then( (data) => data.json() ).then( (data) => {
-            words = data;
-            startQuiz();
-        })
-        
+            canStep = !canStep;
+        }
+    }
+})
+
+// for checking where we pressed enter, because we need it to also toggle the button
+// https://stackoverflow.com/questions/18316395/javascript-for-handling-tab-key-press
+let lastTarget;
+document.addEventListener("keyup", (e) => {
+    if (e.key == "Tab") {
+        lastTarget = e.target;
+    }
+})
+
+
 // starting the quiz
 let quiz = {};
 let randomsequence = [];
-let currentStep = -69;
+let currentStep;
 let canStep = false;
 function startQuiz() {
     quiz = words;
@@ -99,7 +94,7 @@ function diffCheck() {
     score = [];
     quizWord = quiz[word.innerText];
     for(i = 0; i < 4; i++){
-        if (answer[i] == quizWord[i]) {
+        if (answer[i] == quizWord[i] || answer[i] == "PITE") {
             score.push(true)
         } else score.push(false)
     }
@@ -118,6 +113,7 @@ function displayScore() {
             infoElements[i].innerText = quizWord[i]
             infoElements[i].classList.toggle("correctValue")
         } else allInputs[i].classList.toggle("green")
+        allInputs[i].readOnly = true;
     }
 }
 
@@ -129,6 +125,7 @@ function hideScore() {
         if (e.classList.contains("red")) {
             e.classList.toggle("red");
         }
+        e.readOnly = false;
     })
     infoElements.forEach(e => {
         if (e.classList.contains("correctValue")) {
@@ -137,3 +134,7 @@ function hideScore() {
         e.innerText = e.normalValue;
     });
 }
+
+// load words
+let words = allwords
+startQuiz();

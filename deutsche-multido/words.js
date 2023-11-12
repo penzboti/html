@@ -1,4 +1,4 @@
-{
+let allwords = {
     "elindul": ["abfahren", "fuhr ab", "ist", "abgefahren"],
     "elrepül": ["abfliegen", "flog ab", "ist", "abgeflogen"],
     "lead": ["abgeben", "gab ab", "hat", "abgegeben"],
