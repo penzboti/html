@@ -15,6 +15,15 @@ function changeAuxiliary() {
     }
 }
 
+auxiliaryButton.addEventListener("onclick", () => {
+    changeAuxiliary();
+})
+auxiliaryButton.addEventListener("keydown", e => {
+    if (e.key == "Enter") {
+        changeAuxiliary();
+    }
+})
+
 // key pressing detection
 document.addEventListener("keydown", (e) => {
     if (e.key == " ") {
@@ -55,6 +64,7 @@ function startQuiz() {
     quiz = words;
     // https://www.codemzy.com/blog/shuffle-array-javascript
     randomsequence = Object.keys(quiz).sort(() => (Math.random() - 0.5)*3);
+    console.log("New sequence generated.")
     currentStep = -1;
     stepWord();
 }
@@ -68,6 +78,7 @@ function stepWord() {
     });
     auxiliaryButton.value = "ist"
     currentStep++;
+    console.log(currentStep)
     // checks if we ran out of words, restarts the quiz
     let nextWord = randomsequence[currentStep]
     word.innerText = nextWord;
