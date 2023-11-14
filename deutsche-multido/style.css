@@ -65,7 +65,7 @@ input {
     position: absolute;
     color: grey;
     text-align: center;
-    width: 60vw;
+    width: calc( 5 * 10vw + 5 * 2 * 2.5vw );
 }
 
 /* hover effects */

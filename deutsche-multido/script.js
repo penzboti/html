@@ -63,7 +63,7 @@ let canStep = false;
 function startQuiz() {
     quiz = words;
     // https://www.codemzy.com/blog/shuffle-array-javascript
-    randomsequence = Object.keys(quiz).sort(() => (Math.random() - 0.5)*3);
+    randomsequence = Object.keys(quiz).sort(() => (Math.random() - 0.5)*(Object.keys(quiz).length/4));
     console.log("New sequence generated.")
     currentStep = -1;
     stepWord();
@@ -71,7 +71,7 @@ function startQuiz() {
 
 
 // for stepping to the next word
-const allInputs = [infinitiv, prateritum, auxiliaryButton, perfekt];
+const allInputs = [infinitiv, prasens, prateritum, auxiliaryButton, perfekt];
 function stepWord() {
     allInputs.forEach(e => {
         e.value = "";
@@ -104,7 +104,7 @@ let quizWord;
 function diffCheck() {
     score = [];
     quizWord = quiz[word.innerText];
-    for(i = 0; i < 4; i++){
+    for(i = 0; i < 5; i++){
         if (answer[i] == quizWord[i] || answer[i] == "PITE") {
             score.push(true)
         } else score.push(false)
@@ -113,12 +113,12 @@ function diffCheck() {
 }
 
 
-const infoElements = [infoInfinitiv, infoPrateritum, infoAuxiliary, infoPerfekt];
+const infoElements = [infoInfinitiv, infoPrasens, infoPrateritum, infoAuxiliary, infoPerfekt];
 infoElements.forEach( e => {
     e.normalValue = e.innerText;
 })
 function displayScore() {
-    for(i = 0; i < 4; i++){
+    for(i = 0; i < 5; i++){
         if (score[i] == false) {
             allInputs[i].classList.toggle("red")
             infoElements[i].innerText = quizWord[i]
