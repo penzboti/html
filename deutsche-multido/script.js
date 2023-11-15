@@ -42,6 +42,19 @@ document.addEventListener("keydown", (e) => {
                 }
             canStep = !canStep;
         }
+        // this might trap the focus, but it might not
+        // https://hidde.blog/using-javascript-to-trap-focus-in-an-element/
+    if (e.key == "Tab") {
+        if (!e.shiftKey) {
+            if (lastTarget == perfekt) {
+                infinitiv.focus();
+            }
+        } else {
+            if (lastTarget == infinitiv) {
+                perfekt.focus();
+            }
+        }
+    }
     }
 })
 

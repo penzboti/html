@@ -12,26 +12,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    overflow-y: hidden;
 }
 
 /* elements */
 #word {
     text-align: center;
     margin-bottom: 5vh;
-    font-size: 5vw;
-    height: 6vw;
 }
 
 input {
-    width: calc(10vw - 6px);
-    margin: 2.5vw;
-    margin-bottom: 1vh;
     border: 1px solid grey;
     border-radius: 5px;
     padding: 0px 2px 0px 2px;
-    height: 5vh;
 
     background-color: black;
     color: white;
@@ -52,8 +44,6 @@ input {
 
 #information > p {
     color: grey;
-    width: 10vw;
-    margin: 1vh 2.5vw 1vh 2.5vw;
     text-align: center;
 }
 
@@ -65,10 +55,52 @@ input {
     position: absolute;
     color: grey;
     text-align: center;
-    width: calc( 5 * 10vw + 5 * 2 * 2.5vw );
 }
 
 /* hover effects */
 input[type="button"]:hover {
     background-color: rgb(60, 60, 60);
+}
+
+/* https://www.w3schools.com/cssref/css3_pr_mediaquery.php */
+@media screen and (min-width: 600px) {
+    word {
+        width: 50vw;
+        font-size: 5vw;
+        font-weight: bold;
+    }
+    input {
+        width: calc(50vw - 6px);
+        margin: 5vw;
+        margin-bottom: 2vh;
+        height: 10vh;
+    }
+    #submitinfo {
+        width: 50vw;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    body {
+        height: 100vh;
+        /* this might make it so that there is no y-overflow */
+        height: 100dvh;
+    }
+    word {
+        font-size: 5vw;
+        height: 6vw;
+    }
+    input {
+        width: calc(10vw - 6px);
+        margin: 2.5vw;
+        margin-bottom: 1vh;
+        height: 5vh;
+    }
+    #informatiom > p {
+        width: 10vw;
+        margin: 1vh 2.5vw 1vh 2.5vw;
+    }
+    #submitinfo {
+        width: calc( 5 * 10vw + 5 * 2 * 2.5vw );
+    }
 }
