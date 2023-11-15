@@ -78,8 +78,8 @@ let canStep = false;
 function startQuiz() {
     quiz = words;
     // https://www.codemzy.com/blog/shuffle-array-javascript
-    // randomsequence = Object.keys(quiz).sort(() => (Math.random() - 0.5)*(Object.keys(quiz).length/4));
-    randomsequence = Object.keys(quiz);
+    randomsequence = Object.keys(quiz).sort(() => (Math.random() - 0.5)*(Object.keys(quiz).length/4));
+    // randomsequence = Object.keys(quiz);
     console.log("New sequence generated.")
     currentStep = -1;
     stepWord();
