@@ -86,7 +86,7 @@ input[type="button"]:hover {
         /* this might make it so that there is no y-overflow */
         height: 100dvh;
     }
-    word {
+    #word {
         font-size: 5vw;
         height: 6vw;
     }
