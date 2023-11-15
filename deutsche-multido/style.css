@@ -63,7 +63,7 @@ input[type="button"]:hover {
 }
 
 /* https://www.w3schools.com/cssref/css3_pr_mediaquery.php */
-@media screen and (min-width: 600px) {
+/* @media screen and (min-width: 600px) {
     word {
         width: 50vw;
         font-size: 5vw;
@@ -78,9 +78,9 @@ input[type="button"]:hover {
     #submitinfo {
         width: 50vw;
     }
-}
+} */
 
-@media screen and (min-width: 1000px) {
+/* @media screen and (min-width: 1000px) { */
     body {
         height: 100vh;
         /* this might make it so that there is no y-overflow */
@@ -96,11 +96,11 @@ input[type="button"]:hover {
         margin-bottom: 1vh;
         height: 5vh;
     }
-    #informatiom > p {
+    #information > p {
         width: 10vw;
         margin: 1vh 2.5vw 1vh 2.5vw;
     }
-    #submitinfo {
+    #submitInfo {
         width: calc( 5 * 10vw + 5 * 2 * 2.5vw );
     }
-}
+/* } */

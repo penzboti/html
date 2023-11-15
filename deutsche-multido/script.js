@@ -42,19 +42,21 @@ document.addEventListener("keydown", (e) => {
                 }
             canStep = !canStep;
         }
-        // this might trap the focus, but it might not
-        // https://hidde.blog/using-javascript-to-trap-focus-in-an-element/
+    }
+    // this might trap the focus, but it might not
+    // https://hidde.blog/using-javascript-to-trap-focus-in-an-element/
     if (e.key == "Tab") {
         if (!e.shiftKey) {
             if (lastTarget == perfekt) {
                 infinitiv.focus();
+                e.preventDefault();
             }
         } else {
             if (lastTarget == infinitiv) {
                 perfekt.focus();
+                e.preventDefault();
             }
         }
-    }
     }
 })
 
@@ -76,7 +78,8 @@ let canStep = false;
 function startQuiz() {
     quiz = words;
     // https://www.codemzy.com/blog/shuffle-array-javascript
-    randomsequence = Object.keys(quiz).sort(() => (Math.random() - 0.5)*(Object.keys(quiz).length/4));
+    // randomsequence = Object.keys(quiz).sort(() => (Math.random() - 0.5)*(Object.keys(quiz).length/4));
+    randomsequence = Object.keys(quiz);
     console.log("New sequence generated.")
     currentStep = -1;
     stepWord();
@@ -104,7 +107,7 @@ let answer = [];
 function makeGuess() {
     answer = [];
     allInputs.forEach( e => {
-        answer.push(e.value)
+        answer.push(e.value.toLowerCase().trim())
     })
     diffCheck();
     // https://stackoverflow.com/questions/4075057/javascript-unfocus-a-textbox
