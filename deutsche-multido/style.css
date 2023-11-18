@@ -62,6 +62,8 @@ input[type="button"]:hover {
     background-color: rgb(60, 60, 60);
 }
 
+/* Idea: don't rearrange elements, but use absolute position, and offset info from input, and use the same padding. */
+
 /* https://www.w3schools.com/cssref/css3_pr_mediaquery.php */
 /* @media screen and (min-width: 600px) {
     word {
