@@ -1,3 +1,7 @@
+function hidePopup() {
+    submitInfo.style.visibility = "hidden";
+}
+
 // auxiliary button functionality
 let auxiliary = "ist";
 
@@ -15,7 +19,7 @@ function changeAuxiliary() {
     }
 }
 
-auxiliaryButton.addEventListener("onclick", () => {
+auxiliaryButton.addEventListener("click", () => {
     changeAuxiliary();
 })
 auxiliaryButton.addEventListener("keydown", e => {
@@ -26,21 +30,12 @@ auxiliaryButton.addEventListener("keydown", e => {
 
 // key pressing detection
 document.addEventListener("keydown", (e) => {
-    if (e.key == " ") {
-        submitInfo.innerText = "";
+    if (submitInfo.style.visibility!="hidden" && e.key == " ") {
+        hidePopup();
     }
     if (e.key == "Enter") {
         if (lastTarget != auxiliaryButton) {
-            switch(canStep) {
-                case false:
-                    makeGuess();
-                    break;
-                case true:
-                    hideScore();
-                    stepWord();
-                    break;
-                }
-            canStep = !canStep;
+            handleStep();
         }
     }
     // this might trap the focus, but it might not
@@ -85,6 +80,19 @@ function startQuiz() {
     stepWord();
 }
 
+
+function handleStep() {
+    switch(canStep) {
+        case false:
+            makeGuess();
+            break;
+        case true:
+            hideScore();
+            stepWord();
+            break;
+        }
+    canStep = !canStep;
+}
 
 // for stepping to the next word
 const allInputs = [infinitiv, prasens, prateritum, auxiliaryButton, perfekt];

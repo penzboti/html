@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1">
     <title>Német múltidő gyakorló</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -28,11 +28,12 @@
             <p id="infoAuxiliary">ist / hat button</p>
             <p id="infoPerfekt">perfekt</p>
         </div>
-        <p id="submitInfo">
-            You can navigate with <b>tab</b>s<br>Press <b>enter</b> to submit<br>You may toggle the button with <b>enter</b><br>After submission, correct values are displayed <b>under</b> the inputs, where necessary<br>Press the <b>space</b> key to hide <b>this</b> message
-        </p>
     </div>
-
+    <div id="submitInfo">
+        You can navigate with <b>tab</b>s<br>Press <b>enter</b> to submit<br>You may toggle the button with <b>enter</b><br>After submission, correct values are displayed <b>under</b> the inputs, where necessary<br>Press the <b>space</b> key to hide <b>this</b> message<br>Or use this <button onclick="hidePopup()">button</button>
+    </div>
+    <button id="touchEnter" onclick="handleStep()">Enter</button>
+    
     <!-- loading words -->
     <script src="words.js"></script>
     <!-- script -->

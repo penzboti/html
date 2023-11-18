@@ -1,10 +1,20 @@
-/* font */
-/* https://developer.mozilla.org/en-US/docs/Web/CSS/font-family */
-* {
+:root {
+    /* variables */
+    /* https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties */
+    --sml-comp-height: 10vh;
+    --mid-comp-height: 7.5vh;
+    --big-comp-height: 5vh;
+    
+    --sml-comp-width: 75vw;
+    --mid-comp-width: 50vw;
+    --big-comp-width: 10vw;
+    
+    /* font */
+    /* https://developer.mozilla.org/en-US/docs/Web/CSS/font-family */
     font-family: 'Helvetica', Helvetica, system-ui, Arial;
 }
 
-/* body */
+/** general classes and element styles */
 body {
     background-color: black;
     color: white;
@@ -14,95 +24,155 @@ body {
     align-items: center;
 }
 
-/* elements */
-#word {
-    text-align: center;
-    margin-bottom: 5vh;
-}
-
-input {
-    border: 1px solid grey;
-    border-radius: 5px;
-    padding: 0px 2px 0px 2px;
-
-    background-color: black;
-    color: white;
-    text-align: center;
-}
-
 .green {
     color: green;
 }
 .red {
     color:red;
 }
-
-#information {
-    display: flex;
-    align-items: center;
+.correctValue {
+    color: white !important;
 }
 
+#content {
+    width: min-content;
+}
+input[type="button"]:focus, input[type="button"]:hover {
+    background-color: rgb(60, 60, 60);
+}
 #information > p {
     color: grey;
     text-align: center;
 }
 
-.correctValue {
-    color: white !important;
-}
-
 #submitInfo {
-    position: absolute;
+    position: fixed;
+    z-index: 1;
+    background-color: rgb(30, 30, 30);
+    padding: 10px;
     color: grey;
     text-align: center;
 }
+#submitInfo > button {
+    border-radius: 5px;
+    padding: 2px 4px 2px 4px;
 
-/* hover effects */
-input[type="button"]:hover {
-    background-color: rgb(60, 60, 60);
+    border: 1px solid grey;
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+#touchEnter {
+    position: fixed;
+    /* -webkit-backface-visibility: hidden; */
+    top: calc(100vh - env(safe-area-inset-bottom));
+    left: calc(100vw);
+    transform: translate(-200%, -200%);
 }
 
-/* Idea: don't rearrange elements, but use absolute position, and offset info from input, and use the same padding. */
+/** mobile layout, or to browsers with no @media query */
 
+#word {
+    text-align: center;
+    width: var(--sml-comp-width);
+    height: var(--sml-comp-height);
+    font-size: calc(var(--sml-comp-height) / 2);
+    font-weight: bold;
+    margin: calc(var(--sml-comp-height)/4) 0px calc(var(--sml-comp-height)/4) 0px;
+}
+
+input {
+    border-radius: 5px;
+    padding: 0px 2px 0px 2px;
+    
+    border: 1px solid grey;
+    background-color: black;
+    color: white;
+    text-align: center;
+    
+    width: calc(var(--sml-comp-width) - 6px);
+    margin-bottom: calc(var(--sml-comp-height) + 2vh);
+    height: calc(var(--sml-comp-height) - 2px);
+}
+
+#information {
+    top: calc(var(--sml-comp-height) + (var(--sml-comp-height) / 2) + var(--sml-comp-height) - 2px + (var(--sml-comp-height) / 2));
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    pointer-events: none;
+}
+#information > p {
+    margin: 0px;
+    height: calc(var(--sml-comp-height) - 2px);
+    transform: translateY(-10%);
+    width: var(--sml-comp-width);
+    margin-bottom: calc(2vh + var(--sml-comp-height));
+}
+
+/** tablet layout from 600px width to 1000px width */
 /* https://www.w3schools.com/cssref/css3_pr_mediaquery.php */
-/* @media screen and (min-width: 600px) {
-    word {
-        width: 50vw;
-        font-size: 5vw;
+@media screen and (min-width: 600px) and (max-width: 1000px) {
+    #word {
+        width: var(--mid-comp-width);
+        font-size: var(--mid-comp-height);
         font-weight: bold;
+        height: var(--mid-comp-height);
+        margin: calc(var(--mid-comp-height) / 4) 0px calc(var(--mid-comp-height) / 4) 0px;
     }
     input {
-        width: calc(50vw - 6px);
-        margin: 5vw;
-        margin-bottom: 2vh;
-        height: 10vh;
+        width: calc(var(--mid-comp-width) - 6px);
+        margin-bottom: calc(2vh + var(--mid-comp-height));
+        height: calc(var(--mid-comp-height) - 2px);
+    }
+    #information {
+        top: calc( var(--mid-comp-height) + calc( var(--mid-comp-height) / 2 ) + calc( var(--mid-comp-height) - 2px ) + calc( var(--mid-comp-height) / 2 ));
+    }
+    #information > p {
+        margin: 0px;
+        height: calc(var(--mid-comp-height) - 2px);
+        transform: translateY(-10%);
+        width: var(--mid-comp-width);
+        margin-bottom: calc(2vh + var(--mid-comp-height));
+    }
+    #infoPerfekt {
+        margin: 0px !important;
     }
     #submitinfo {
         width: 50vw;
     }
-} */
+}
 
-/* @media screen and (min-width: 1000px) { */
+/** desktop layout */
+@media screen and (min-width: 1000px) {
     body {
+        overflow-y: hidden;
         height: 100vh;
-        /* this might make it so that there is no y-overflow */
-        height: 100dvh;
     }
     #word {
-        font-size: 5vw;
-        height: 6vw;
+        font-size: var(--big-comp-height);
+        height: var(--big-comp-height);
+        font-weight: normal;
+        margin: 0px 0px var(--big-comp-height) 0px;
     }
     input {
-        width: calc(10vw - 6px);
-        margin: 2.5vw;
+        width: calc(var(--big-comp-width) - 6px);
+        margin: calc(var(--big-comp-width) / 4);
         margin-bottom: 1vh;
-        height: 5vh;
+        height: var(--big-comp-height);
+    }
+    #information {
+        position: inherit;
+        align-items: normal;
+        flex-direction: row;
+        justify-content: center;
     }
     #information > p {
-        width: 10vw;
-        margin: 1vh 2.5vw 1vh 2.5vw;
+        height: fit-content;
+        width: var(--big-comp-width);
+        margin: 1vh calc(var(--big-comp-width) / 4) 1vh calc(var(--big-comp-width) / 4);
+        transform: translate(0px, 0px);
     }
-    #submitInfo {
-        width: calc( 5 * 10vw + 5 * 2 * 2.5vw );
-    }
-/* } */
+}
