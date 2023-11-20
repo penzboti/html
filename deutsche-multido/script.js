@@ -22,13 +22,6 @@ function changeAuxiliary() {
 auxiliaryButton.addEventListener("click", () => {
     changeAuxiliary();
 })
-// auxiliaryButton.addEventListener("keydown", e => {
-//     console.log(e);
-//     if (e.key == "Enter") {
-//         console.log("asdasd")
-//         changeAuxiliary();
-//     }
-// })
 
 // key pressing detection
 document.addEventListener("keydown", (e) => {
@@ -102,7 +95,8 @@ function stepWord() {
     allInputs.forEach(e => {
         e.value = "";
     });
-    auxiliaryButton.value = "ist"
+    auxiliaryButton.value = "ist";
+    auxiliary = "ist";
     currentStep++;
     console.log(currentStep)
     // checks if we ran out of words, restarts the quiz
