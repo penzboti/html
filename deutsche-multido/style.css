@@ -49,18 +49,29 @@ input[type="button"]:focus, input[type="button"]:hover {
     position: fixed;
     z-index: 1;
     background-color: rgb(30, 30, 30);
-    padding: 10px;
+    padding: 5vw;
     color: grey;
     text-align: center;
+    border-radius: 10px;
+    border: 1px solid grey;
+    /* https://cssgenerator.org/box-shadow-css-generator.html */
+    box-shadow: 7px 7px 26px -4px rgba(0,0,0,1);
+    -webkit-box-shadow: 3px 3px 26px -4px rgba(255,255,255,1);
+    -moz-box-shadow: 3px 3px 26px -4px rgba(255,255,255,1);
 }
 #submitInfo > button {
     border-radius: 5px;
     padding: 2px 4px 2px 4px;
-
+    
     border: 1px solid grey;
     background-color: black;
     color: white;
     text-align: center;
+}
+input[type="number"] {
+    margin: 0px 0px 0px 0px;
+    width: 50px;
+    height: 25px;
 }
 #touchEnter {
     position: fixed;

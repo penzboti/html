@@ -1,10 +1,18 @@
+content.style.visibility = "hidden";
+// hiding initial popup
 function hidePopup() {
     submitInfo.style.visibility = "hidden";
+    content.style.visibility = "visible";
+    let startval = startIndexInput.value, endval = endIndexInput.value;
+    // checking if the min and max values have changed and if so, restarting the quiz
+    if (startval != startIndex || endval != endIndex) {
+        startIndex = startval, endIndex = endval;
+    }
+    startQuiz();
 }
 
 // auxiliary button functionality
 let auxiliary = "ist";
-
 function changeAuxiliary() {
     if (!canStep) {
         switch(auxiliary){
@@ -18,10 +26,28 @@ function changeAuxiliary() {
         auxiliaryButton.value = auxiliary;
     }
 }
-
 auxiliaryButton.addEventListener("click", () => {
     changeAuxiliary();
-})
+});
+
+// min and max value functionality
+// https://stackoverflow.com/questions/62348768/how-to-check-the-state-of-input-event
+startIndexInput.addEventListener("change", () => { updateMinMax(); })
+endIndexInput.addEventListener("change", () => { updateMinMax(); })
+function updateMinMax() {
+    // https://stackoverflow.com/a/31058978/12706133
+    // checking for edge cases
+    if (parseInt(startIndexInput.value, 10) > parseInt(startIndexInput.max, 10)) startIndexInput.value = parseInt(startIndexInput.max, 10);
+    if (parseInt(startIndexInput.value, 10) < parseInt(startIndexInput.min, 10)) startIndexInput.value = parseInt(startIndexInput.min, 10);
+    if (parseInt(endIndexInput.value, 10) > parseInt(endIndexInput.max, 10)) endIndexInput.value = parseInt(endIndexInput.max, 10);
+    if (parseInt(endIndexInput.value, 10) < parseInt(endIndexInput.min, 10)) endIndexInput.value = parseInt(endIndexInput.min, 10);
+    // changing the min and max values
+    startIndexInput.max = parseInt(endIndexInput.value, 10) -1;
+    endIndexInput.min = parseInt(startIndexInput.value, 10) +1;
+    // checking if input was empty, and if so, setting it to the min/max value
+    if (startIndexInput.max == "NaN") { startIndexInput.max = endIndexInput.max; endIndexInput.value = endIndexInput.max; updateMinMax(); }
+    if (endIndexInput.min == "NaN") { endIndexInput.min = startIndexInput.min; startIndexInput.value = startIndexInput.min; updateMinMax(); }
+}
 
 // key pressing detection
 document.addEventListener("keydown", (e) => {
@@ -36,15 +62,15 @@ document.addEventListener("keydown", (e) => {
     // this might trap the focus, but it might not
     // https://hidde.blog/using-javascript-to-trap-focus-in-an-element/
     if (e.key == "Tab") {
-        if (!e.shiftKey) {
-            if (lastTarget == perfekt) {
-                infinitiv.focus();
+        if (e.shiftKey) {
+            if (lastTarget == infinitiv) {
                 e.preventDefault();
+                perfekt.focus();
             }
         } else {
-            if (lastTarget == infinitiv) {
-                perfekt.focus();
+            if (lastTarget == perfekt) {
                 e.preventDefault();
+                infinitiv.focus();
             }
         }
     }
@@ -61,15 +87,14 @@ document.addEventListener("keyup", (e) => {
 
 
 // starting the quiz
-let quiz = {};
-let randomsequence = [];
+let quiz = [];
 let currentStep;
 let canStep = false;
+let startIndex = startIndexInput.value = 80, endIndex = endIndexInput.value = 100; endIndexInput.max = Object.keys(words).length; updateMinMax();
 function startQuiz() {
-    quiz = words;
+    quiz = Object.keys(words).slice(startIndex, endIndex);
     // https://www.codemzy.com/blog/shuffle-array-javascript
-    randomsequence = Object.keys(quiz).sort(() => (Math.random() - 0.5)*(Object.keys(quiz).length/4));
-    // randomsequence = Object.keys(quiz);
+    quiz.sort(() => (Math.random() - 0.5)*(quiz.length/4));
     console.log("New sequence generated.")
     currentStep = -1;
     stepWord();
@@ -100,9 +125,9 @@ function stepWord() {
     currentStep++;
     console.log(currentStep)
     // checks if we ran out of words, restarts the quiz
-    let nextWord = randomsequence[currentStep]
+    let nextWord = quiz[currentStep]
     word.innerText = nextWord;
-    if (currentStep == randomsequence.length) startQuiz();
+    if (currentStep == quiz.length) startQuiz();
 }
 
 
@@ -123,7 +148,7 @@ let score = [];
 let quizWord;
 function diffCheck() {
     score = [];
-    quizWord = quiz[word.innerText];
+    quizWord = words[word.innerText];
     for(i = 0; i < 5; i++){
         if (answer[i] == quizWord[i] || answer[i] == "PITE") {
             score.push(true)
@@ -165,7 +190,3 @@ function hideScore() {
         e.innerText = e.normalValue;
     });
 }
-
-// load words
-let words = allwords
-startQuiz();
