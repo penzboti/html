@@ -17,3 +17,7 @@ pictures, or just go trough the word list and create elements on a popup maybe?
 ```
 it's kind of mixed at the moment, so idk
 ```
+ - score system?
+```
+probably would just be a right/failed percentage at the bottom.
+```
