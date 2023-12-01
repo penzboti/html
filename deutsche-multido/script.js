@@ -11,8 +11,8 @@ function hidePopup() {
     startQuiz();
 }
 
-// auxiliary button functionality
 let auxiliary = "ist";
+// auxiliary button functionality
 function changeAuxiliary() {
     if (!canStep) {
         switch(auxiliary){
@@ -30,10 +30,10 @@ auxiliaryButton.addEventListener("click", () => {
     changeAuxiliary();
 });
 
-// min and max value functionality
 // https://stackoverflow.com/questions/62348768/how-to-check-the-state-of-input-event
 startIndexInput.addEventListener("change", () => { updateMinMax(); })
 endIndexInput.addEventListener("change", () => { updateMinMax(); })
+// min and max value functionality
 function updateMinMax() {
     // https://stackoverflow.com/a/31058978/12706133
     // checking for edge cases
@@ -51,14 +51,8 @@ function updateMinMax() {
 
 // key pressing detection
 document.addEventListener("keydown", (e) => {
-    if (submitInfo.style.visibility!="hidden" && e.key == " ") {
-        hidePopup();
-    }
-    if (e.key == "Enter") {
-        if (lastTarget != auxiliaryButton) {
-            handleStep();
-        }
-    }
+    if (submitInfo.style.visibility!="hidden" && e.key == " ") hidePopup();
+    if (e.key == "Enter" && lastTarget != auxiliaryButton) handleStep();
     // this might trap the focus, but it might not
     // https://hidde.blog/using-javascript-to-trap-focus-in-an-element/
     if (e.key == "Tab") {
@@ -74,23 +68,44 @@ document.addEventListener("keydown", (e) => {
             }
         }
     }
-})
 
-// for checking where we pressed enter, because we need it to also toggle the button
-// https://stackoverflow.com/questions/18316395/javascript-for-handling-tab-key-press
-let lastTarget;
-document.addEventListener("keyup", (e) => {
-    if (e.key == "Tab") {
-        lastTarget = e.target;
+    // you can also toggle the button with arrow keys
+    if ((e.key == "ArrowUp" || e.key == "ArrowDown") && lastTarget == auxiliaryButton) changeAuxiliary();
+    // and also navigate
+    if (e.key == "ArrowLeft") {
+        let i = allInputs.indexOf(lastTarget);
+        if (i == 0) {
+            allInputs[allInputs.length-1].focus();
+            lastTarget = allInputs[allInputs.length-1];
+        } else {
+            allInputs[i-1].focus();
+            lastTarget = allInputs[i-1];
+        }
+    } if (e.key == "ArrowRight") {
+        let i = allInputs.indexOf(lastTarget);
+        if (i == allInputs.length-1) {
+            allInputs[0].focus();
+            lastTarget = allInputs[0];
+        } else {
+            allInputs[i+1].focus();
+            lastTarget = allInputs[i+1];
+        }
     }
 })
 
+// for checking where we pressed enter (we keep it tracked using tabs), because we need it to also toggle the button
+// https://stackoverflow.com/questions/18316395/javascript-for-handling-tab-key-press
+let lastTarget;
+document.addEventListener("keyup", (e) => {
+    if (e.key == "Tab") lastTarget = e.target;
+});
 
-// starting the quiz
+
 let quiz = [];
 let currentStep;
 let canStep = false;
 let startIndex = startIndexInput.value = 80, endIndex = endIndexInput.value = 100; endIndexInput.max = Object.keys(words).length; updateMinMax();
+// starting the quiz
 function startQuiz() {
     quiz = Object.keys(words).slice(startIndex, endIndex);
     // https://www.codemzy.com/blog/shuffle-array-javascript
@@ -100,7 +115,7 @@ function startQuiz() {
     stepWord();
 }
 
-
+// handles between stepping to next word and scoreing guesses
 function handleStep() {
     switch(canStep) {
         case false:
@@ -114,8 +129,8 @@ function handleStep() {
     canStep = !canStep;
 }
 
-// for stepping to the next word
 const allInputs = [infinitiv, prasens, prateritum, auxiliaryButton, perfekt];
+// for stepping to the next word
 function stepWord() {
     allInputs.forEach(e => {
         e.value = "";
@@ -131,21 +146,22 @@ function stepWord() {
 }
 
 
-// handling the guessing
 let answer = [];
+// handling the guessing (just gets what the user answers, and passes it down to diffCheck)
 function makeGuess() {
     answer = [];
     allInputs.forEach( e => {
         answer.push(e.value.toLowerCase().trim())
     })
     diffCheck();
+    // unfocusing an element
     // https://stackoverflow.com/questions/4075057/javascript-unfocus-a-textbox
     document.activeElement.blur();
 }
 
-// checks the differences between the word and what the user answered
 let score = [];
 let quizWord;
+// checks the differences between the correct answer and what the user answered
 function diffCheck() {
     score = [];
     quizWord = words[word.innerText];
@@ -159,9 +175,7 @@ function diffCheck() {
 
 
 const infoElements = [infoInfinitiv, infoPrasens, infoPrateritum, infoAuxiliary, infoPerfekt];
-infoElements.forEach( e => {
-    e.normalValue = e.innerText;
-})
+// displays the score
 function displayScore() {
     for(i = 0; i < 5; i++){
         if (score[i] == false) {
@@ -173,7 +187,12 @@ function displayScore() {
     }
 }
 
+infoElements.forEach( e => {
+    e.normalValue = e.innerText;
+})
+// hides the score
 function hideScore() {
+    // resetting inputs
     allInputs.forEach( e => {
         if (e.classList.contains("green")) {
             e.classList.toggle("green");
@@ -183,6 +202,7 @@ function hideScore() {
         }
         e.readOnly = false;
     })
+    // resseting input elements
     infoElements.forEach(e => {
         if (e.classList.contains("correctValue")) {
             e.classList.toggle("correctValue")

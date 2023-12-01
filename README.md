@@ -1,14 +1,7 @@
 # tasks
 dw, i finally pressed done on these tasks!
-- [x] make deutsche-multido responsive with sizes: 
-  - [x] desktop
-hopefully it didn't break
-  - [x] tablet
-unfinished, need rearranging of inputs and informations elements
-  - [x] mobile
-also needs rearranging & do tablet first pls
-
- - [ ] add button toggling with all arrow keys (just an event listenner)
+ - [x] add button toggling with all arrow keys (just an event listenner)
+ - [ ] make an index.html in root folder, so github pages loads sg. Then can we open any html file from the main one? Hopefully! Free, best github integration website hosting "service".
  - [ ] add complete list of words
 ```
 pictures, or just go trough the word list and create elements on a popup maybe?
