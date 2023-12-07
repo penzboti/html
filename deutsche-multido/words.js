@@ -1,6 +1,6 @@
 //! hungarian: [infinitiv, präsens, präteritum, auxiliary, perfekt]
 let words = {
-    //* 0-20
+    //* 1-20
     "elindul": ["abfahren", "fährt ab", "fuhr ab", "ist", "abgefahren"],
     "elrepül": ["abfliegen", "fliegt ab", "flog ab", "ist", "abgeflogen"],
     "lead": ["abgeben", "gibt ab", "gab ab", "hat", "abgegeben"],
@@ -21,7 +21,7 @@ let words = {
     "kezd": ["beginnen", "beginnt", "begann", "hat", "begonnen"],
     "betart": ["behalten", "behält", "behielt", "hat", "behalten"],
     "kap": ["bekommen", "bekommt", "bekam", "hat", "bekommen"],
-    //* 20-40
+    //* 21-40
     "pályázik": ["bewerben", "bewirbt", "bewarb", "hat", "beworben"],
     "fordul": ["biegen", "biegt", "bog", "hat", "gebogen"],
     "nyújt": ["bieten", "bietet", "bot", "hat", "geboten"],
@@ -42,7 +42,7 @@ let words = {
     "eszik": ["essen", "isst", "aß", "hat", "gegessen"],
     "utazik": ["fahren", "fährt", "fuhr", "ist", "gefahren"],
     "(le)esik": ["fallen", "fällt", "fiel", "ist", "gefallen"],
-    //* 40-60
+    //* 41-60
     "fog": ["fangen", "fängt", "fing", "hat", "gefangen"],
     "tévét néz": ["fernsehen", "sieht fern", "sah fern", "hat", "ferngesehen"],
     "talál": ["finden", "findet", "fand", "hat", "gefunden"],
@@ -63,7 +63,7 @@ let words = {
     "rak": ["laden", "lädt", "lud", "hat", "geladen"],
     "hagy": ["lassen", "lässt", "ließ", "hat", "gelassen"],
     "fut": ["laufen", "läuft", "lief", "ist", "gelaufen"],
-    //* 60-80
+    //* 61-80
     "sajnál": ["leidtun", "tut leid", "tat leid", "hat", "leidgetan"],
     "kölcsönad": ["leihen", "leiht", "lieh", "hat", "geliehen"],
     "olvas": ["lesen", "liest", "las", "hat", "gelesen"],
@@ -84,7 +84,7 @@ let words = {
     "zár": ["schließen", "schließt", "schloss", "hat", "geschlossen"],
     "vág": ["schneiden", "schneidet", "schnitt", "hat", "geschnitten"],
     "ír": ["schreiben", "schreibt", "schrieb", "hat", "geschrieben"],
-    //* 80-100
+    //* 81-100
     "úszik": ["schwimmen", "schwimmt", "schwamm", "ist", "geschwommen"],
     "lát": ["sehen", "sieht", "sah", "hat", "gesehen"],
     "van, létezik": ["sein", "ist", "war", "ist", "gewesen"],
@@ -105,7 +105,7 @@ let words = {
     "űz, terel": ["treiben", "treibt", "trieb", "hat", "getrieben"],
     "találkozik": ["treffen", "trifft", "traf", "hat", "getroffen"],
     "lép": ["treten", "tritt", "trat", "hat", "getreten"],
-    //* 100-115
+    //* 101-115
     "iszik": ["trinken", "trinkt", "trank", "hat", "getrunken"],
     "tesz": ["tun", "tut", "tat", "hat", "getan"],
     "közvetít": ["übertragen", "überträgt", "übertrug", "hat", "übertragen"],
@@ -114,11 +114,27 @@ let words = {
     "átöltözik / elköltözik": ["umziehen", "zieht um", "zog um", "ist/hat", "umgezogen"],
     "beszélget": ["unterhalten", "unterhält", "unterhielt", "hat", "unterhalten"],
     "vállalkozik": ["unternehmen", "unternimmt", "unternahm", "hat", "unternommen"],
-    "aláír": ["unterschreiben", "unterscreibt", "unterschrieb", "hat", "unterschrieben"],
+    "aláír": ["unterschreiben", "unterschreibt", "unterschrieb", "hat", "unterschrieben"],
     "időt eltölt": ["verbringen", "verbringt", "verbrachte", "hat", "verbracht"],
     "elfelejt": ["vergessen", "vergisst", "vergaß", "hat", "vergessen"],
     "összehasonlít": ["vergleichen", "vergleicht", "verglich", "hat", "verglichen"],
     "elveszít": ["verlieren", "verliert", "verlor", "hat", "verloren"],
     "elhalaszt": ["verschieben", "verschiebt", "verschob", "hat", "verschoben"],
     "eltűnik": ["verschwinden", "verschwindet", "verschwand", "ist", "verschwunden"],
+    //* 116-130
+    "megígér": ["versprechen", "verspricht", "versprach", "hat", "versprochen"],
+    "megért": ["verstehen", "verteht", "verstand", "hat", "verstanden"],
+    "javasol": ["vorschlagen", "schlägt vor", "schlug vor", "hat", "vorgeschlagen"],
+    "bemutat(kozik)": ["vorstellen", "stellt vor", "stellte vor", "hat", "vorgestellt"],
+    "nő": ["wachsen", "wächst", "wuchs", "ist", "gewachsen"],
+    "mos": ["waschen", "wäscht", "wusch", "hat", "gewaschen"],
+    "elmegy": ["weggehen", "geht weg", "ging weg", "ist", "weggegangen"],
+    "eldob": ["wegwerfen", "wirft weg", "warf weg", "hat", "weggeworfen"],
+    "fáj": ["wehtun", "tut weh", "tat weh", "hat", "wehgetan"],
+    "lesz, válik vmivé": ["werden", "wird", "wurde", "ist", "geworden"],
+    "dob": ["werfen", "wirft", "warf", "hat", "geworfen"],
+    "tud": ["wissen", "weiß", "wusste", "hat", "gewusst"],
+    "húz": ["ziehen", "zieht", "zog", "hat", "gezogen"],
+    "boldogul": ["zurechtkommen", "kommt zurecht", "kam zurecht", "ist", "zurechtgekommen"],
+    "visszajön": ["zurückkommen", "kommt zurück", "kam zurück", "ist", "zurückgekommen"],
 }

@@ -72,7 +72,7 @@ document.addEventListener("keydown", (e) => {
     // you can also toggle the button with arrow keys
     if ((e.key == "ArrowUp" || e.key == "ArrowDown") && lastTarget == auxiliaryButton) changeAuxiliary();
     // and also navigate
-    if (e.key == "ArrowLeft") {
+    if (e.key == "ArrowLeft" && lastTarget == auxiliaryButton) {
         let i = allInputs.indexOf(lastTarget);
         if (i == 0) {
             allInputs[allInputs.length-1].focus();
@@ -81,7 +81,7 @@ document.addEventListener("keydown", (e) => {
             allInputs[i-1].focus();
             lastTarget = allInputs[i-1];
         }
-    } if (e.key == "ArrowRight") {
+    } if (e.key == "ArrowRight" && lastTarget == auxiliaryButton) {
         let i = allInputs.indexOf(lastTarget);
         if (i == allInputs.length-1) {
             allInputs[0].focus();
@@ -104,7 +104,7 @@ document.addEventListener("keyup", (e) => {
 let quiz = [];
 let currentStep;
 let canStep = false;
-let startIndex = startIndexInput.value = 100, endIndex = endIndexInput.value = 115; endIndexInput.max = Object.keys(words).length; updateMinMax();
+let startIndex = startIndexInput.value = 115, endIndex = endIndexInput.value = 130; endIndexInput.max = Object.keys(words).length; updateMinMax();
 // starting the quiz
 function startQuiz() {
     quiz = Object.keys(words).slice(startIndex, endIndex);
