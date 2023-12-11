@@ -2,6 +2,7 @@
 dw, i finally pressed done on these tasks!
  - [x] add button toggling with all arrow keys (just an event listenner)
  - [ ] make an index.html in root folder, so github pages loads sg. Then can we open any html file from the main one? Hopefully! Free, best github integration website hosting "service".
+ - currently testing!
  - [ ] add complete list of words
 ```
 pictures, or just go trough the word list and create elements on a popup maybe?

@@ -123,7 +123,7 @@ let words = {
     "eltűnik": ["verschwinden", "verschwindet", "verschwand", "ist", "verschwunden"],
     //* 116-130
     "megígér": ["versprechen", "verspricht", "versprach", "hat", "versprochen"],
-    "megért": ["verstehen", "verteht", "verstand", "hat", "verstanden"],
+    "megért": ["verstehen", "versteht", "verstand", "hat", "verstanden"],
     "javasol": ["vorschlagen", "schlägt vor", "schlug vor", "hat", "vorgeschlagen"],
     "bemutat(kozik)": ["vorstellen", "stellt vor", "stellte vor", "hat", "vorgestellt"],
     "nő": ["wachsen", "wächst", "wuchs", "ist", "gewachsen"],
