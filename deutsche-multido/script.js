@@ -104,7 +104,7 @@ document.addEventListener("keyup", (e) => {
 let quiz = [];
 let currentStep;
 let canStep = false;
-let startIndex = startIndexInput.value = 115, endIndex = endIndexInput.value = 130; endIndexInput.max = Object.keys(words).length; updateMinMax();
+let startIndex = startIndexInput.value = 0, endIndex = endIndexInput.value = 130; endIndexInput.max = Object.keys(words).length; updateMinMax();
 // starting the quiz
 function startQuiz() {
     quiz = Object.keys(words).slice(startIndex, endIndex);
