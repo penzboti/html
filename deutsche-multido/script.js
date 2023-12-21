@@ -8,6 +8,9 @@ function hidePopup() {
     if (startval != startIndex || endval != endIndex) {
         startIndex = startval, endIndex = endval;
     }
+    infoElements.forEach( e => {
+        e.normalValue = e.innerText;
+    })
     startQuiz();
 }
 
@@ -187,9 +190,6 @@ function displayScore() {
     }
 }
 
-infoElements.forEach( e => {
-    e.normalValue = e.innerText;
-})
 // hides the score
 function hideScore() {
     // resetting inputs
