@@ -1,0 +1,10 @@
+/* maybe i'll steal some code off from deutsche-multido */
+/* i mean they are kinda similar, so like why not */
+
+body {
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
