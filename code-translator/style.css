@@ -1,10 +1,98 @@
-/* maybe i'll steal some code off from deutsche-multido */
-/* i mean they are kinda similar, so like why not */
+:root {
+    --sml-comp-height: 10vh;
+    --mid-comp-height: 7.5vh;
+    --big-comp-height: 5vh;
+    
+    --sml-comp-width: 75vw;
+    --mid-comp-width: 50vw;
+    --big-comp-width: 10vw;
+    
+    font-family: 'Helvetica', Helvetica, system-ui, Arial;
+}
 
 body {
     background-color: black;
     color: white;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#inputfeedback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: grey;
+}
+
+#inputfeedback > span {
+    margin: 0px 0px 0px 0px;
+    font-size: 3vh;
+}
+
+.green {
+    color: rgb(53, 205, 50);
+}
+.red {
+    color:rgb(191, 0, 0);
+}
+.highlight {
+    color: white !important;
+}
+
+#content {
+    width: min-content;
+}
+
+button:hover button:focus button:active {
+    background-color: rgb(60, 60, 60);
+}
+
+button {
+    margin: 0px 0px 0px 0px;
+    background-color: black;
+}
+
+body {
+    overflow-y: hidden;
+    height: 100vh;
+}
+#word {
+    font-size: var(--big-comp-height);
+    height: var(--big-comp-height);
+    font-weight: normal;
+    margin: 0px 0px var(--big-comp-height) 0px;
+    text-align: center;
+}
+button {
+    width: calc(var(--big-comp-width) - 6px);
+    margin: calc(var(--big-comp-width) / 4);
+    margin-bottom: 1vh;
+    height: var(--big-comp-height);
+}
+#content > p {
+    text-align: center;
+}
+/* #information {
+    position: inherit;
+    align-items: normal;
+    flex-direction: row;
+    justify-content: center;
+}
+#information > p {
+    height: fit-content;
+    width: var(--big-comp-width);
+    margin: 1vh calc(var(--big-comp-width) / 4) 1vh calc(var(--big-comp-width) / 4);
+    transform: translate(0px, 0px);
+} */
+
+.separated-buttons {
+    display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
 }

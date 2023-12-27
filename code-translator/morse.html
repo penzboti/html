@@ -8,7 +8,27 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="content">
+        <div id="word">Words go here</div>
+        <div id="inputfeedback"></div>
+        <div id="input">
+            <div class="separated-buttons">
+                <button type="button" id="dot" onclick="addChar('.')">.</button>
+                <button type="button" id="dash" onclick="addChar('-')">-</button>
+                <button type="button" id="back" onclick="addChar('Del')">Delete</button>
+            </div>
+            <div class="separated-buttons">
+                <button type="button" id="enter" onclick="confirmChar()">space</button>
+            </div>
+        </div>
+        <p>
+            You can use a keyboard aswell.<br>
+            Press spacebar for confirming a character.<br>
+            Press space for confirming a word.
+        </p>
+    </div>
 
+    <script src="scripts/api_key.js"></script>
     <script src="scripts/morse.js"></script>
 </body>
 </html>
