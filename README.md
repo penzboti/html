@@ -1,8 +1,8 @@
 https://penzboti.github.io/html/
 # ideas
  - Deutsche-multido to do regular german word practice aswell
- - Satisfying keyboard visualizer
-```the problem is im not that good in css lol```
+ - copy Qlocktwo's clock desing
+ - copy keybr.com's keyboard desing
 
 # tasks
 ## deutsche-multido
