@@ -26,47 +26,36 @@ const code = {
     "y": "-.--",
     "z": "--..",
 }
-// https://api-ninjas.com/api/randomword
-//? get the definiton of the word you gotten, because it gives you interesting words
-// https://api-ninjas.com/api/dictionary
-let req = new Request("https://api.api-ninjas.com/v1/randomword", {
-    method: "GET",
-    headers: {
-        'X-Api-Key': apiNinjaKey,
-    },
+
+// get wordlist, and after that, start the site
+let wordlist;
+getWords().then(words => {
+    wordlist = words.split("\n");
+    currword = getWord();
+    displayWord();
 });
 
-function getWord() {
+// handling fetching the wordlist
+function getWords() {
     return new Promise((resolve, reject) => {
-        fetch(req)
-            .then(response => response.json())
+        // this wordlist is from https://www.ef.com/wwen/english-resources/english-vocabulary/top-3000-words/
+        fetch('words.txt')
+            .then(response => response.text())
             .then(data => {
-                console.log(data);
-                resolve(data.word);
+                resolve(data);
             })
             .catch(err => {
                 console.log(err);
                 reject(err);
             });
     });
-}
+};
 
 let currword = "";
-let nextword = "";
-// gets both words if nextword is empty, but only gets nextword if it isn't
-function HandleWords() {
-    if (nextword == "") {
-        getWord().then(word => {
-            nextword = word;
-            document.getElementById("word").innerHTML = word;
-        });
-    }
-    currword = nextword;
-    document.getElementById("word").innerHTML = currword;
-    getWord().then(word => {
-        nextword = word;
-        gettingWordsInProgress = false;
-    });
+// getting a word from the wordlist
+function getWord() {
+    let randomInt = Math.floor(Math.random() * wordlist.length);
+    return wordlist[randomInt-1];
 }
 
 // keybord input
@@ -82,49 +71,41 @@ document.addEventListener("keydown", e => {
             addChar("-");
             break;
         case "Backspace":
-            addChar("Del");
+            addChar("←");
             break;
     }
 });
 
-// adding morse code . or -
+// adding morse code . or -; and deleting characters
 let characters = "";
 function addChar(char) {
-    if (char == "Del") {
+    if (currword.length == userword.length) {return;}
+    if (char == "←") {
         characters = characters.slice(0, -1);
-    } else {
+    } else { 
+        if (characters.length == 5) {
+            characters = characters.slice(0, -1);
+        }
         characters = `${characters}${char}`;
     }
-    if (characters.length > 0) {
-        sendCharFeedback();
-    } else {
-        sendWordFeedback();
-    }
+
+    displayMorse();
 }
 
 // sending morse code feedback
-function sendCharFeedback() {
-    inputfeedback.innerHTML = "";
-    for (let i = 0; i < characters.length; i++) {
-        let node = document.createElement("span");
-        node.innerText = characters[i];
-        inputfeedback.appendChild(node);
+function displayMorse() {
+    for (let i = 0; i < 5; i++) {
+        inputfeedback.children[i].innerText = typeof(characters[i]) != "undefined" ? characters[i] : "";
     }
-    let node = document.createElement("span");
-    node.innerText = "|";
-    node.classList.add("highlight");
-    inputfeedback.appendChild(node);
 }
 
 let userword = "";
-//TODO: next word switching is kind of clunky still
 let endOfWord = false;
-let gettingWordsInProgress = false;
 // confirming morse code to a character
 // also is the function that handles next word
 function confirmChar() {
-    if (userword.length == currword.length) {endOfWord = true;}
-    if (!endOfWord && !gettingWordsInProgress) {
+    if (userword.length == currword.length) endOfWord = true;
+    if (!endOfWord) {
         let char = "";
         Object.keys(code).forEach(key => {
             if (code[key] == characters) {
@@ -133,44 +114,33 @@ function confirmChar() {
         });
         characters = "";
         userword = `${userword}${char}`;
-        sendWordFeedback();
     } else {
-        gettingWordsInProgress = true;
-        HandleWords();
         endOfWord = false;
+        currword = getWord();
         userword = "";
-        sendWordFeedback();
     }
+    displayMorse();
+    displayWord();
 }
 
 // sending word feedback
-function sendWordFeedback() {
-    inputfeedback.innerHTML = "";
+function displayWord() {
+    //? do we keep the colors here? or move it elsewhere?
+    document.getElementById("word").innerHTML = "";
     for (let i = 0; i < userword.length; i++) {
         let node = document.createElement("span");
         node.innerText = userword[i];
-        if (userword[i] != currword[i]) {
-            node.classList.add("red");
-        } else {
-            node.classList.add("green");
-        }
-        inputfeedback.appendChild(node);
+        node.classList.add(userword[i] != currword[i] ? "red" : "green");
+        // kind of from this answer https://stackoverflow.com/a/42528274/12706133
+        document.getElementById("word").appendChild(node);
     }
-    for (let i = userword.length; i < currword.length; i++) {
-        let node = document.createElement("span");
-        node.innerText = currword[i];
-        if (i == userword.length) {
-            node.classList.add("highlight");
-        }
-        inputfeedback.appendChild(node);
-    }
+
+    let node = document.createElement("span");
+    node.innerText = userword.length != currword.length ? currword[userword.length] : "";
+    node.classList.add("highlight");
+    document.getElementById("word").appendChild(node);
+
+    let node2 = document.createElement("span");
+    node2.innerText = currword.slice(userword.length+1);
+    document.getElementById("word").appendChild(node2);
 }
-
-// initializing words
-// HandleWords();
-currword = "hello";
-document.getElementById("word").innerHTML = currword;
-nextword = "world";
-
-// starting initial feedback
-sendWordFeedback();

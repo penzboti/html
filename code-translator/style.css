@@ -19,6 +19,14 @@ body {
     flex-wrap: wrap;
 }
 
+#word {
+    text-align: center;
+
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
 #inputfeedback {
     width: 100%;
     height: 100%;
@@ -29,9 +37,23 @@ body {
     color: grey;
 }
 
-#inputfeedback > span {
-    margin: 0px 0px 0px 0px;
-    font-size: 3vh;
+button {
+    background-color: black;
+    color: white;
+}
+button:hover button:focus button:active {
+    background-color: rgb(60, 60, 60);
+}
+.separated-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#content {
+    width: min-content;
+    text-align: center;
 }
 
 .green {
@@ -41,58 +63,34 @@ body {
     color:rgb(191, 0, 0);
 }
 .highlight {
-    color: white !important;
+    font-weight: bold;
 }
 
-#content {
-    width: min-content;
-}
-
-button:hover button:focus button:active {
-    background-color: rgb(60, 60, 60);
-}
-
-button {
-    margin: 0px 0px 0px 0px;
-    background-color: black;
-}
+/* sizes */
 
 body {
     overflow-y: hidden;
     height: 100vh;
 }
+
 #word {
     font-size: var(--big-comp-height);
     height: var(--big-comp-height);
     font-weight: normal;
     margin: 0px 0px var(--big-comp-height) 0px;
-    text-align: center;
 }
+
+#inputfeedback > div {
+    margin: 0px 0px 0px 0px;
+    font-size: 5vh;
+    width: 20px;
+    height: 20px;
+}
+
 button {
+    margin: 0px 0px 0px 0px;
     width: calc(var(--big-comp-width) - 6px);
     margin: calc(var(--big-comp-width) / 4);
     margin-bottom: 1vh;
     height: var(--big-comp-height);
-}
-#content > p {
-    text-align: center;
-}
-/* #information {
-    position: inherit;
-    align-items: normal;
-    flex-direction: row;
-    justify-content: center;
-}
-#information > p {
-    height: fit-content;
-    width: var(--big-comp-width);
-    margin: 1vh calc(var(--big-comp-width) / 4) 1vh calc(var(--big-comp-width) / 4);
-    transform: translate(0px, 0px);
-} */
-
-.separated-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
 }
