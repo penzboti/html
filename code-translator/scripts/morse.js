@@ -32,8 +32,9 @@ let wordlist;
 getWords().then(words => {
     wordlist = words.split("\n");
     currword = getWord();
+    displayMorse();
     displayWord();
-});
+}).catch(() => alert("We've encountered an error. See console for details."));
 
 // handling fetching the wordlist
 function getWords() {
@@ -46,7 +47,7 @@ function getWords() {
             })
             .catch(err => {
                 console.log(err);
-                reject(err);
+                reject();
             });
     });
 };
@@ -55,7 +56,7 @@ let currword = "";
 // getting a word from the wordlist
 function getWord() {
     let randomInt = Math.floor(Math.random() * wordlist.length);
-    return wordlist[randomInt-1];
+    return wordlist[randomInt].toLowerCase();
 }
 
 // keybord input
@@ -95,7 +96,8 @@ function addChar(char) {
 // sending morse code feedback
 function displayMorse() {
     for (let i = 0; i < 5; i++) {
-        inputfeedback.children[i].innerText = typeof(characters[i]) != "undefined" ? characters[i] : "";
+        morseword.children[i].innerText = typeof(characters[i]) != "undefined" ? characters[i] : "_";
+        if (characters[i] == ".") morseword.children[i].innerText = "·";
     }
 }
 
@@ -125,7 +127,6 @@ function confirmChar() {
 
 // sending word feedback
 function displayWord() {
-    //? do we keep the colors here? or move it elsewhere?
     document.getElementById("word").innerHTML = "";
     for (let i = 0; i < userword.length; i++) {
         let node = document.createElement("span");
