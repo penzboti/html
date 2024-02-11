@@ -72,23 +72,23 @@ document.addEventListener("keydown", e => {
             addChar("-");
             break;
         case "Backspace":
-            addChar("←");
+            delChar();
             break;
     }
 });
 
-// adding morse code . or -; and deleting characters
+// adding morse code . or -
 let characters = "";
 function addChar(char) {
-    if (currword.length == userword.length) {return;}
-    if (char == "←") {
-        characters = characters.slice(0, -1);
-    } else { 
-        if (characters.length == 5) {
-            characters = characters.slice(0, -1);
-        }
-        characters = `${characters}${char}`;
-    }
+    if (currword.length <= userword.length) {return;}
+    if (characters.length != 5) characters = `${characters}${char}`;
+
+    displayMorse();
+}
+
+// deleting character from morse code
+function delChar() {
+    characters = characters.slice(0, -1);
 
     displayMorse();
 }
@@ -96,8 +96,8 @@ function addChar(char) {
 // sending morse code feedback
 function displayMorse() {
     for (let i = 0; i < 5; i++) {
-        morseword.children[i].innerText = typeof(characters[i]) != "undefined" ? characters[i] : "_";
-        if (characters[i] == ".") morseword.children[i].innerText = "·";
+        codeSequence.children[i].innerText = typeof(characters[i]) != "undefined" ? characters[i] : "_";
+        if (characters[i] == ".") codeSequence.children[i].innerText = "·";
     }
 }
 
@@ -127,21 +127,21 @@ function confirmChar() {
 
 // sending word feedback
 function displayWord() {
-    document.getElementById("word").innerHTML = "";
+    baseSequence.innerHTML = "";
     for (let i = 0; i < userword.length; i++) {
         let node = document.createElement("span");
         node.innerText = userword[i];
         node.classList.add(userword[i] != currword[i] ? "red" : "green");
         // kind of from this answer https://stackoverflow.com/a/42528274/12706133
-        document.getElementById("word").appendChild(node);
+        baseSequence.appendChild(node);
     }
 
     let node = document.createElement("span");
     node.innerText = userword.length != currword.length ? currword[userword.length] : "";
     node.classList.add("highlight");
-    document.getElementById("word").appendChild(node);
+    baseSequence.appendChild(node);
 
     let node2 = document.createElement("span");
     node2.innerText = currword.slice(userword.length+1);
-    document.getElementById("word").appendChild(node2);
+    baseSequence.appendChild(node2);
 }

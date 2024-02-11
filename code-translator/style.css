@@ -14,18 +14,18 @@ body {
 }
 
 #content {
-    width: min-content;
+    width: max-content;
     text-align: center;
 }
 
-#word {
+#baseSequence {
     text-align: center;
     display: flex;
     justify-content: center;
     flex-wrap: nowrap;
 }
 
-#morseword {
+#codeSequence {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -69,17 +69,17 @@ body {
     height: 100vh;
 }
 
-#word {
+#baseSequence {
     font-size: var(--comp-height);
     height: var(--comp-height);
     font-weight: normal;
 }
 
-#morseword {
+#codeSequence {
     height: var(--comp-height);
 }
 
-#morseword > div {
+#codeSequence > div {
     margin: 0px 0px 0px 0px;
     font-size: 5vh;
     width: 20px;

@@ -9,8 +9,8 @@
 </head>
 <body>
     <div id="content">
-        <div id="word"></div>
-        <div id="morseword">
+        <div id="baseSequence"></div>
+        <div id="codeSequence">
             <div></div>
             <div></div>
             <div></div>
@@ -21,16 +21,17 @@
             <div class="separated-buttons">
                 <button type="button" id="dot" onclick="addChar('.')">·</button>
                 <button type="button" id="dash" onclick="addChar('-')">—</button>
-                <button type="button" id="back" onclick="addChar('←')">←</button>
+                <button type="button" id="back" onclick="delChar()">←</button>
             </div>
             <div class="separated-buttons">
                 <button type="button" id="enter" onclick="confirmChar()">✓</button>
             </div>
         </div>
         <p>
-            You can use a keyboard aswell.<br>
-            Press spacebar for confirming a character,<br>
-            or at the end of a word.
+            You can use a keyboard aswell<br>
+            ← is backspace<br>
+            ✓ is space, to confirm a character.br>
+            At the end of a word use the confirm button again
         </p>
     </div>
 
