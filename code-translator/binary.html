@@ -8,7 +8,39 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+    <div id="content">
+        <div id="baseSequence"></div>
+        <div id="codeSequence">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div id="input">
+            <div class="separated-buttons">
+                <button type="button" id="dot" onclick="addChar('0')">0</button>
+                <button type="button" id="dash" onclick="addChar('1')">1</button>
+                <button type="button" id="back" onclick="delChar()">←</button>
+            </div>
+            <div class="separated-buttons">
+                <button type="button" id="enter" onclick="confirmNum()">✓</button>
+            </div>
+        </div>
+        <p>
+            You can use a keyboard aswell<br>
+            ← is backspace<br>
+            ✓ is space, to confirm a character<br>
+            Then press it again to go to the next one <br>
+            The binary values grow from right to left<br>
+            The first value is 2^7<br>
+            Maximum value is 255
+        </p>
+    </div>
+
     <script src="scripts/binary.js"></script>
 </body>
 </html>
