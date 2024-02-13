@@ -74,7 +74,11 @@ function newCode() {
 // displays the binary code
 function displayBinary() {
     for (let i = 0; i <= 7; i++) {
-        codeSequence.children[i].innerText = typeof(characters[i]) != "undefined" ? characters[i] : " ";
+        if (typeof(characters[i]) != "undefined") {
+            codeSequence.children[i].innerText = characters[i];
+        } else {
+            codeSequence.children[i].innerHTML = '<span class="grey">0</span>';
+        }
     }
 }
 
