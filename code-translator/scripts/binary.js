@@ -36,11 +36,22 @@ let answerPhase = false;
 // confirms the number and displays answer to the user
 function confirmNum() {
     if (!answerPhase) {
+        characters = characters.padEnd(8, "0");
         let n = parseInt(characters, 2);
         if (n == currN) {
             baseSequence.classList.add("green");
         } else {
             baseSequence.innerHTML = `${currN}≠<span class="red">${n}</span>`;
+            let code = currN.toString(2).padStart(8, "0");
+            console.log(characters, code)
+            console.log(currN, n)
+            for (let i = 0; i <= 7; i++) {
+                if (code[i] != characters[i]) {
+                    codeSequence.children[i].innerHTML = `<span class="red">${typeof(characters[i]) != "undefined" ? characters[i] : "0"}</span>`;
+                } else {
+                    codeSequence.children[i].innerText = typeof(characters[i]) != "undefined" ? characters[i] : "0";
+                }
+            }
         }
     }
     else {
