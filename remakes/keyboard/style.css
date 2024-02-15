@@ -1,0 +1,26 @@
+body {
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+#content {
+    width: min-content;
+    height: min-content;
+    background-color: darkgray;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.row > div {
+    width: 50px;
+    text-align: center;
+}
