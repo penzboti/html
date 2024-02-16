@@ -8,31 +8,34 @@
 function setupKeys() {
     Array.from(document.getElementById('content').children).forEach(e => {
         Array.from(e.children).forEach(f => {
-            if (f.id != "") console.log(f.id);
-            else {
+            if (f.id == "") {
                 let key = f.textContent;
                 f.id = key;
-                console.log(f.id);
+                // console.log(f.id);
             }
         });
     });
 }
 
 document.addEventListener('keydown', e => {
-    // console.log(e.code + ' down');
-    if (e.code == "Tab" || e.code == "Digit1" || e.code == "Digit6") e.preventDefault();
-    toggleKey(e, true);
+    if (!e.repeat) {
+        if (e.code == "Tab" || e.code == "Digit1" || e.code == "Digit6") e.preventDefault();
+        // console.log(e.code + ' down');
+        toggleKey(e, true);
+    }
 });
 
 document.addEventListener('keyup', e => {
     // console.log(e.code + ' up');
-    e.preventDefault();
     toggleKey(e, false);
 });
 
 function toggleKey(e, down) {
     let checkCode = document.getElementById(e.code);
-    if (checkCode !== null) document.getElementById(e.code).classList.toggle("pushed");
+    if (checkCode !== null) {
+            if (down) document.getElementById(e.code).classList.add("pushed");
+            else document.getElementById(e.code).classList.remove("pushed");
+    }
     else {
         let checkKey = document.getElementById(e.key.toLowerCase());
         if (checkKey !== null) {
@@ -40,7 +43,7 @@ function toggleKey(e, down) {
             else document.getElementById(e.key.toLowerCase()).classList.remove("pushed");
         }
         else {
-            console.log(e.code + " not found");
+            // console.log(e.code + " not found");
         }
     }
 }

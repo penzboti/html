@@ -2,7 +2,7 @@
     /* the grid shape scales with changing the width */
     --normalwidth: 50px;
     /* but it does not when changing the margin */
-    --normalmargin: calc(var(--normalwidth) / 10);
+    --normalmargin: calc(var(--normalwidth) / 15);
 }
 
 body {
@@ -34,6 +34,7 @@ body {
     width: var(--normalwidth);
     height: var(--normalwidth);
     margin: var(--normalmargin);
+    border-radius: calc(var(--normalwidth) / 10);
 
     display: flex;
     justify-content: center;
@@ -50,7 +51,7 @@ div.row:not(.sysrow) > div:not(.onehalf, .two, .twohalf, .sys) > p {
 
 /* pushed keys */
 .pushed {
-    background-color: rgb(51, 51, 51) !important;
+    background-color: rgb(50, 50, 50) !important;
     color: white !important;
 }
 
@@ -60,11 +61,11 @@ div.row:not(.sysrow) > div:not(.onehalf, .two, .twohalf, .sys) > p {
 }
 
 .two {
-    width: calc(var(--normalwidth) * 2) !important;
+    width: calc(var(--normalwidth) * 2 - var(--normalmargin)) !important;
 }
 
 .twohalf {
-    width: calc(var(--normalwidth) * 2.5 - var(--normalmargin) * 3) !important;
+    width: calc(var(--normalwidth) * 2.5 - var(--normalmargin) * 5) !important;
 }
 
 .sys {
@@ -73,5 +74,5 @@ div.row:not(.sysrow) > div:not(.onehalf, .two, .twohalf, .sys) > p {
 }
 
 #Space {
-    width: calc(var(--normalwidth) * 10 - var(--normalmargin) * 10) !important;
+    width: calc(var(--normalwidth) * 9 - var(--normalmargin) * 7) !important;
 }
