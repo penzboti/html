@@ -1,3 +1,10 @@
+* {
+    /* the grid shape scales with changing the width */
+    --normalwidth: 50px;
+    /* but it does not when changing the margin */
+    --normalmargin: calc(var(--normalwidth) / 10);
+}
+
 body {
     background-color: black;
     display: flex;
@@ -5,12 +12,13 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    
+    font-family: Helvetica, system-ui;
 }
 
 #content {
     width: min-content;
     height: min-content;
-    background-color: darkgray;
 }
 
 .row {
@@ -21,6 +29,41 @@ body {
 }
 
 .row > div {
-    width: 50px;
+    background-color: darkgray;
+    width: var(--normalwidth);
+    height: var(--normalwidth);
+    margin: var(--normalmargin);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.row > div > p {
     text-align: center;
+    font-size: medium;
+}
+
+div.row:not(.sysrow) > div:not(.onehalf, .two, .twohalf, .sys) > p {
+    font-size: calc(var(--normalwidth) / 2) !important;
+}
+
+/* speific key types */
+.onehalf {
+    width: calc(var(--normalwidth) * 1.5 + var(--normalmargin) * 3) !important;
+}
+
+.two {
+    width: calc(var(--normalwidth) * 2) !important;
+}
+
+.twohalf {
+    width: calc(var(--normalwidth) * 2.5 - var(--normalmargin) * 3) !important;
+}
+
+.sys {
+    background-color: darkred !important;
+}
+
+#space {
+    width: calc(var(--normalwidth) * 10 - var(--normalmargin) * 10) !important;
 }
