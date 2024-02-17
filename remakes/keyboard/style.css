@@ -6,12 +6,12 @@
 }
 
 body {
-    background-color: black;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
+    overflow-y: hidden;
     
     font-family: Helvetica, system-ui;
 }
@@ -19,6 +19,10 @@ body {
 #content {
     width: min-content;
     height: min-content;
+    background-color: black;
+    padding: calc(var(--normalwidth) / 2);
+    border-radius: calc(var(--normalwidth) / 10 + 10px);
+    box-shadow: 10px 10px rgb(47, 47, 47), 20px 20px 40px black;
 }
 
 .row {
@@ -30,11 +34,15 @@ body {
 
 /* keys */
 .row > div {
-    background-color: darkgray;
+    border: 2px solid grey;
+    /* background-color: whitesmoke; */
+    background-color: rgb(253, 246, 231);
     width: var(--normalwidth);
     height: var(--normalwidth);
     margin: var(--normalmargin);
     border-radius: calc(var(--normalwidth) / 10);
+    box-shadow: 2px 2px whitesmoke;
+    /* box-shadow: 2px 2px rgb(253, 246, 231); */
 
     display: flex;
     justify-content: center;
@@ -53,6 +61,9 @@ div.row:not(.sysrow) > div:not(.onehalf, .two, .twohalf, .sys) > p {
 .pushed {
     background-color: rgb(50, 50, 50) !important;
     color: white !important;
+    border: 2px solid black !important;
+    /* box-shadow:inset -1px -1px 1px black, inset 1px 1px 1px black !important; */
+    box-shadow: none !important;
 }
 
 /* speific key types */
@@ -71,8 +82,10 @@ div.row:not(.sysrow) > div:not(.onehalf, .two, .twohalf, .sys) > p {
 .sys {
     background-color: black !important;
     color: rgb(90, 90, 90) !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 #Space {
-    width: calc(var(--normalwidth) * 9 - var(--normalmargin) * 7) !important;
+    width: calc(var(--normalwidth) * 9 - var(--normalmargin) * 7 + 2px*14) !important;
 }
