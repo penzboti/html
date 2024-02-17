@@ -16,6 +16,13 @@ body {
     font-family: Helvetica, system-ui;
 }
 
+@media screen and (max-width: 970px) {
+    body {
+        width: max-content;
+        padding-right: 30px;
+    }
+}
+
 #content {
     width: min-content;
     height: min-content;
