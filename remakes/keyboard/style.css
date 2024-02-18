@@ -17,6 +17,9 @@ body {
 }
 
 @media screen and (max-width: 970px) {
+    /* while this scales, its very bad on mobile vertical, so i wont add it. its not a vertical keyboard on mobile.
+    --normalwidth: 4.5vw; */
+
     body {
         width: max-content;
         padding-right: 30px;
@@ -95,4 +98,28 @@ div.row:not(.sysrow) > div:not(.onehalf, .two, .twohalf, .sys) > p {
 
 #Space {
     width: calc(var(--normalwidth) * 9 - var(--normalmargin) * 7 + 2px*14) !important;
+}
+
+/* output */
+#output {
+    position: absolute;
+    top: 15vh;
+    right: 50vw;
+    width: 50%;
+
+    display: flex;
+    justify-content: flex-end;
+    white-space: nowrap;
+    overflow: hidden;
+    color: rgb(70, 70, 70);
+}
+#output-fadeout {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 15vh;
+  background-image: linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255, 1) 90%);
+  width: 50%;
+  left: 0px;
+  height: 4em;
 }
