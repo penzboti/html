@@ -106,12 +106,13 @@ div.row:not(.sysrow) > div:not(.onehalf, .two, .twohalf, .sys) > p {
     top: 15vh;
     right: 50vw;
     width: 50%;
+    color: rgb(70, 70, 70);
 
+    /* ty kind sir: https://stackoverflow.com/a/69010726/12706133 */
     display: flex;
     justify-content: flex-end;
     white-space: nowrap;
     overflow: hidden;
-    color: rgb(70, 70, 70);
 }
 #output-fadeout {
   content: "";
