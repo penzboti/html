@@ -15,7 +15,9 @@ const rows = [numberrowids, toprowids, midrowendids, botrowendids];
 // next update sneak peek
 const keys = "0123456789öüóqwertzuiopőúűasdfghjkléáíyxcvbnm,.-";
 const shiftkeys = "§'\"+!%/=()ÖÜÓQWERTZUIOPŐÚŰASDFGHJKLÉÁÍYXCVBNM:_?";
-const ctrlkeys = " ~ˇ^˘°˛`˙´˝¨¸\\|Ä®™ €Í÷×¤äđĐ[]   Ł$ß<>#&@{} ;>*"
+const altkeys = " ~ˇ^˘°˛`˙´˝¨¸\\|Ä®™ €Í  ÷×¤äđĐ[] íłŁ$ß<>#&@{} ;>*"
+
+let generalkeys = [];
 
 // sets up id's for all keys, so they can be styled and handled
 // it only sets an id if the element does not have one. this basically means non-function keys, only keys that return text.
@@ -47,17 +49,22 @@ function setupKeys() {
             list.forEach( e => {
                 e.id = idlist.shift();
             });
+            // for modifying later
+            generalkeys = generalkeys.concat(list);
         }
 
         row++;
     });
+
+    switchKeys(""); 
 }
 
 // checking keydowns and keyups
 document.addEventListener('keydown', e => {
     if (!e.repeat) {
         if (e.code == "Tab" || e.code == "Digit1" || e.code == "Digit6") e.preventDefault();
-        console.log(e.code + ' down');
+        if (e.ctrlKey) e.preventDefault();
+        // console.log(e.code + ' down')
         toggleKey(e, true);
     }
 });
@@ -75,7 +82,25 @@ function toggleKey(e, down) {
                 document.getElementById(e.code).classList.add("pushed");
                 handleText(e, "code");
             }
-            else document.getElementById(e.code).classList.remove("pushed");
+            else {
+                document.getElementById(e.code).classList.remove("pushed");
+                if (e.code == "ShiftLeft" || e.code == "AltRight" || e.code == "CapsLock") {
+                    switch (e.code) {
+                        case "ShiftLeft":
+                            isShift = false;
+                            break;
+                        case "AltRight":
+                            isAltGr = false;
+                            break;
+                    }
+                    if (isCaps || isShift) switchKeys("ShiftLeft");
+                    else if (isAltGr) switchKeys("AltRight");
+                    else {
+                        switchKeys("");
+                    }
+                }
+            }
+
     }
 }
 
@@ -90,6 +115,9 @@ document.addEventListener('blur', e => {
 });
 
 let text = "";
+let isShift = false;
+let isCaps = false;
+let isAltGr = false;
 // output handling, .keys and .codes
 function handleText(event, mode) {
     if (mode == "code") {
@@ -98,15 +126,29 @@ function handleText(event, mode) {
             text = text.slice(0, -1);
         }
         else if (event.code == "Backquote") handleText("0", "key");
-        else if (event.code == "Enter") {
+        else if (event.code == "Enter" || event.code == "Tab") {
             // checkCode(text); // secret codes will be checked later here
             text = "";
         }
-        else if (["Comma", "Period", "Slash"].includes(event.code)) {
-            handleText(event.key, "key");
+        // else if (event.code == "CapsLock") {
+        //     isCaps = !isCaps;
+        //     if (isCaps) {
+        //         switchKeys("ShiftLeft");
+        //     } else {
+        //         switchKeys("");
+        //     }
+        // }
+        else if (event.code == "ShiftLeft") {
+            isShift = true;
+            if (isCaps) switchKeys("");
+            else switchKeys(event.code);
+        }
+        else if (event.code == "AltRight") {
+            isAltGr = true;
+            switchKeys(event.code);
         }
         // skipping unused codes
-        else if (["ControlLeft", "Tab", "ShiftLeft", "AltLeft", "ShiftRight", "CapsLock", "AltRight", "ControlRight", "MetaLeft"].includes(event.code)) {}
+        else if (["ControlLeft", "AltLeft", "ShiftRight", "CapsLock", "AltRight", "ControlRight", "MetaLeft"].includes(event.code)) {}
         else {
             handleText(event.key, "key");
         }
@@ -115,6 +157,31 @@ function handleText(event, mode) {
         text = `${text}${event}`;
     }
     document.getElementById('output').innerHTML = text;
+}
+
+// hierarchy:
+// 1. shift
+// 2. alt gr
+// 3. caps
+// caps + shift = normal
+// alt gr + shift = shift
+// altgr + caps = altgr
+function switchKeys(code) {
+    if (code == "ShiftLeft" || isShift) {
+        generalkeys.forEach(e => {
+            e.innerHTML = `<p>${shiftkeys[generalkeys.indexOf(e)]}</p>`;
+        });
+    }
+    else if (code == "AltRight" && !isShift) {
+        generalkeys.forEach(e => {
+            e.innerHTML = `<p>${altkeys[generalkeys.indexOf(e)]}</p>`;
+        });
+    }
+    else {
+        generalkeys.forEach(e => {
+            e.innerHTML = `<p>${keys[generalkeys.indexOf(e)]}</p>`;
+        });
+    }
 }
 
 // start the site

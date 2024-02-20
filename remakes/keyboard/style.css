@@ -33,6 +33,7 @@ body {
     padding: calc(var(--normalwidth) / 2);
     border-radius: calc(var(--normalwidth) / 10 + 10px);
     box-shadow: 10px 10px rgb(47, 47, 47), 20px 20px 40px black;
+    user-select: none;
 }
 
 .row {
@@ -113,6 +114,7 @@ div.row:not(.sysrow) > div:not(.onehalf, .two, .twohalf, .sys) > p {
     justify-content: flex-end;
     white-space: nowrap;
     overflow: hidden;
+    white-space:pre;
 }
 #output-fadeout {
   content: "";
