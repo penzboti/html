@@ -12,10 +12,12 @@ const midrowendids = ["Semicolon", "Quote"];
 const botrowendids = ["Comma", "Period", "Slash"];
 const rows = [numberrowids, toprowids, midrowendids, botrowendids];
 
-// next update sneak peek
+// all state keys from top to bottom, left to right
 const keys = "0123456789öüóqwertzuiopőúűasdfghjkléáíyxcvbnm,.-";
-const shiftkeys = "§'\"+!%/=()ÖÜÓQWERTZUIOPŐÚŰASDFGHJKLÉÁÍYXCVBNM:_?";
-const altkeys = " ~ˇ^˘°˛`˙´˝¨¸\\|Ä®™ €Í  ÷×¤äđĐ[] íłŁ$ß<>#&@{} ;>*"
+const shiftkeys = "0'\"+!%/=()ÖÜÓQWERTZUIOPŐÚŰASDFGHJKLÉÁÍYXCVBNM:_?";
+const altkeys = "0~ˇ^˘°˛`˙´˝¨¸\\|Ä®™ €Í  ÷×¤äđĐ[] íłŁ$ß<>#&@{} ;>*";
+const capskeys = "0123456789ÖÜÓQWERTZUIOPŐÚŰASDFGHJKLÉÁÍYXCVBNM,.-";
+const capsshiftkeys = "0'\"+!%/=()öüóqwertzuiopőúűasdfghjkléáíyxcvbnm:_?";
 
 let generalkeys = [];
 
@@ -42,6 +44,7 @@ function setupKeys() {
                 }
                 idlist.push(`Key${list[i].innerText.toUpperCase()}`);
             }
+            // for 'í'
             if (row == 3) idlist.splice(0, 1, "IntlBackslash");
             for(i = 0; i < currow.length; i++){
                 idlist.push(currow[i]);
@@ -74,7 +77,7 @@ document.addEventListener('keyup', e => {
 });
 
 // handling styling keypresses, and back to normal
-// it does separate .keys and .codes, because the id's have been setup that way
+// calls the output text handler, and on keyup, calls the switchKeys function
 function toggleKey(e, down) {
     let checkCode = document.getElementById(e.code);
     if (checkCode !== null) {
@@ -84,21 +87,7 @@ function toggleKey(e, down) {
             }
             else {
                 document.getElementById(e.code).classList.remove("pushed");
-                if (e.code == "ShiftLeft" || e.code == "AltRight" || e.code == "CapsLock") {
-                    switch (e.code) {
-                        case "ShiftLeft":
-                            isShift = false;
-                            break;
-                        case "AltRight":
-                            isAltGr = false;
-                            break;
-                    }
-                    if (isCaps || isShift) switchKeys("ShiftLeft");
-                    else if (isAltGr) switchKeys("AltRight");
-                    else {
-                        switchKeys("");
-                    }
-                }
+                if (["ShiftLeft", "ShiftRight", "AltRight"].includes(e.code)) switchKeys(e.code);
             }
 
     }
@@ -115,9 +104,6 @@ document.addEventListener('blur', e => {
 });
 
 let text = "";
-let isShift = false;
-let isCaps = false;
-let isAltGr = false;
 // output handling, .keys and .codes
 function handleText(event, mode) {
     if (mode == "code") {
@@ -130,25 +116,10 @@ function handleText(event, mode) {
             // checkCode(text); // secret codes will be checked later here
             text = "";
         }
-        // else if (event.code == "CapsLock") {
-        //     isCaps = !isCaps;
-        //     if (isCaps) {
-        //         switchKeys("ShiftLeft");
-        //     } else {
-        //         switchKeys("");
-        //     }
-        // }
-        else if (event.code == "ShiftLeft") {
-            isShift = true;
-            if (isCaps) switchKeys("");
-            else switchKeys(event.code);
-        }
-        else if (event.code == "AltRight") {
-            isAltGr = true;
-            switchKeys(event.code);
-        }
+        else if (["ShiftLeft", "ShiftRight", "AltRight", "CapsLock"].includes(event.code)) switchKeys(event.code);
         // skipping unused codes
-        else if (["ControlLeft", "AltLeft", "ShiftRight", "CapsLock", "AltRight", "ControlRight", "MetaLeft"].includes(event.code)) {}
+        else if (["ControlLeft", "AltLeft", "ControlRight", "MetaLeft"].includes(event.code)) {}
+        // if not a special case, then it is a key, so it will be output to the screen
         else {
             handleText(event.key, "key");
         }
@@ -159,29 +130,62 @@ function handleText(event, mode) {
     document.getElementById('output').innerHTML = text;
 }
 
-// hierarchy:
-// 1. shift
-// 2. alt gr
-// 3. caps
-// caps + shift = normal
-// alt gr + shift = shift
-// altgr + caps = altgr
+let isCaps = false;
+let isAltGr = false;
+let isShift = false;
+let isShiftRight = false;
+// switching between shifted, capslocked, ol altgred states & keys
 function switchKeys(code) {
-    if (code == "ShiftLeft" || isShift) {
+    // switches bools
+    switch (code) {
+        case "CapsLock":
+            isCaps = !isCaps;
+            break;
+        case "AltRight":
+            isAltGr = !isAltGr;
+            break;
+        case "ShiftLeft":
+            isShift = !isShift;
+            break;
+            case "ShiftRight":
+                isShiftRight = !isShiftRight;
+                break;
+    }
+
+
+    // switches keys
+    // it is set up in a hierarchical way, so the last one will be the one that is shown
+    if (isCaps) {
         generalkeys.forEach(e => {
-            e.innerHTML = `<p>${shiftkeys[generalkeys.indexOf(e)]}</p>`;
+            e.innerHTML = `<p>${capskeys[generalkeys.indexOf(e)]}</p>`;
         });
     }
-    else if (code == "AltRight" && !isShift) {
+    if (isAltGr) {
         generalkeys.forEach(e => {
             e.innerHTML = `<p>${altkeys[generalkeys.indexOf(e)]}</p>`;
         });
     }
-    else {
+    if (isShift || isShiftRight) {
+        generalkeys.forEach(e => {
+            e.innerHTML = `<p>${shiftkeys[generalkeys.indexOf(e)]}</p>`;
+        });
+    }
+    if (isCaps && (isShift || isShiftRight)) {
+        generalkeys.forEach(e => {
+            e.innerHTML = `<p>${capsshiftkeys[generalkeys.indexOf(e)]}</p>`;
+        });
+    }
+    if ((!isShift && !isAltGr && !isCaps && !isShiftRight) || code == "") {
         generalkeys.forEach(e => {
             e.innerHTML = `<p>${keys[generalkeys.indexOf(e)]}</p>`;
         });
     }
+
+    // this is cool af
+    // let object = {
+    //     isAltGr, isShift, isCaps, isShiftRight
+    // }
+    // console.table(object);
 }
 
 // start the site
