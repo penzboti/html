@@ -23,43 +23,53 @@ let generalkeys = [];
 
 // sets up id's for all keys, so they can be styled and handled
 // it only sets an id if the element does not have one. this basically means non-function keys, only keys that return text.
-// the id is being set to the text of the key, or if it has a special code, then it sets it to that.
+// the id is being set to a key from keys[], or if it has a special code, then it sets it to that.
+// also creates an array with the keys, so they can be modified later
 function setupKeys() {
-    let row = 0;
-    Array.from(document.getElementById('content').children).forEach(e => {
-        if (!e.classList.contains("sysrow")) {
-            currow = rows[row];
-            // seems like a great resource for the rust / linq way
-            // https://gist.github.com/DanDiplo/30528387da41332ff22b
-            let list = Array.from(e.children).filter(f => f.id == "");
-            let idlist = [];
-            for(i = 0; i < (list.length-currow.length); i++){
-                if (list[i].innerText == "z") {
-                    idlist.push(`KeyY`);
-                    continue;
-                }
-                if (list[i].innerText == "y") {
-                    idlist.push(`KeyZ`);
-                    continue;
-                }
-                idlist.push(`Key${list[i].innerText.toUpperCase()}`);
+    let keysindex = -1;
+    let htmlrows = Array.from(document.getElementById('content').children);
+    for(j = 0; j < 4; j++){
+        e = htmlrows[j];
+        currow = rows[j];
+        // seems like a great resource for the rust / linq way in js
+        // https://gist.github.com/DanDiplo/30528387da41332ff22b
+        let list = Array.from(e.children).filter(f => f.id == "");
+
+        let idlist = [];
+        // for normal id keys
+        for(i = 0; i < (list.length-currow.length); i++){
+            keysindex++;
+            if (keys[keysindex] == "z") {
+                idlist.push(`KeyY`);
+                continue;
             }
-            // for 'í'
-            if (row == 3) idlist.splice(0, 1, "IntlBackslash");
-            for(i = 0; i < currow.length; i++){
-                idlist.push(currow[i]);
+            if (keys[keysindex] == "y") {
+                idlist.push(`KeyZ`);
+                continue;
             }
-            list.forEach( e => {
-                e.id = idlist.shift();
-            });
-            // for modifying later
-            generalkeys = generalkeys.concat(list);
+            idlist.push(`Key${keys[keysindex].toUpperCase()}`);
         }
 
-        row++;
-    });
+        // for 'í', because it is a special case in the front of the third row
+        if (i == 3) idlist.splice(0, 1, "IntlBackslash");
 
-    switchKeys(""); 
+        // for special id keys
+        for(i = 0; i < currow.length; i++){
+            keysindex++;
+            idlist.push(currow[i]);
+        }
+
+        // setting ids
+        list.forEach( e => {
+            e.id = idlist.shift();
+        });
+
+        // setting a full array of modifiable keys for later
+        generalkeys = generalkeys.concat(list);
+    }
+
+    // setting keys initially
+    switchKeys("");
 }
 
 // checking keydowns and keyups
@@ -80,6 +90,7 @@ document.addEventListener('keyup', e => {
 // calls the output text handler, and on keyup, calls the switchKeys function
 function toggleKey(e, down) {
     let checkCode = document.getElementById(e.code);
+    // console.log(checkCode, e.code)
     if (checkCode !== null) {
             if (down) {
                 document.getElementById(e.code).classList.add("pushed");
