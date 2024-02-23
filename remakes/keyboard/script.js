@@ -41,6 +41,7 @@ function setupKeys() {
             keysindex++;
             if (keys[keysindex] == "z") {
                 idlist.push(`KeyY`);
+                // continue means skipping this iteration, and going to the next one
                 continue;
             }
             if (keys[keysindex] == "y") {
@@ -106,6 +107,7 @@ function toggleKey(e, down) {
 
 // alt tabbing does not leave alt key in pushed style
 // basically checking for leaving the document
+// from here: https://developer.mozilla.org/en-US/docs/Web/API/Window/focus_event
 document.addEventListener('blur', e => {
     Array.from(document.getElementById('content').children).forEach(e => {
         Array.from(e.children).forEach(f => {
@@ -201,3 +203,9 @@ function switchKeys(code) {
 
 // start the site
 setupKeys();
+
+// needed for the apple special key layout
+// https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
+if (navigator.userAgent.includes("Iphone") || navigator.userAgent.includes("Mac OS")) {
+    alert("nagyon apple");
+}

@@ -33,6 +33,7 @@ body {
     padding: calc(var(--normalwidth) / 2);
     border-radius: calc(var(--normalwidth) / 10 + 10px);
     box-shadow: 10px 10px rgb(47, 47, 47), 20px 20px 40px black;
+    /* stop highlighting the letters: https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting */
     user-select: none;
 }
 
@@ -114,15 +115,17 @@ div.row:not(.sysrow) > div:not(.onehalf, .two, .twohalf, .sys) > p {
     justify-content: flex-end;
     white-space: nowrap;
     overflow: hidden;
+    /* adds multiple spaces: https://stackoverflow.com/a/4503044/12706133 */
     white-space:pre;
 }
 #output-fadeout {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  top: 15vh;
-  background-image: linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255, 1) 90%);
-  width: 50%;
-  left: 0px;
-  height: 4em;
+    /* repurpose code from here: https://stackoverflow.com/a/22666488/12706133 */
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 15vh;
+    background-image: linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255, 1) 90%);
+    width: 50%;
+    left: 0px;
+    height: 4em;
 }
