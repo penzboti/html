@@ -209,3 +209,21 @@ setupKeys();
 if (navigator.userAgent.includes("Iphone") || navigator.userAgent.includes("Mac OS")) {
     alert("nagyon apple");
 }
+
+// mouse (touch untested) support for pressing keys, and releasing them
+let mouseDownKeys = [];
+document.getElementById("content").addEventListener("mousedown", e => {
+    let target = e.target;
+    if (target.tagName == "P") target = target.parentElement;
+    if (!target.classList.contains("row") && target.id != "content" && !target.classList.contains("sys")) {
+        mouseDownKeys.push(target);
+        toggleKey({code: target.id, key: target.children[0].innerText}, true);
+    }
+});
+
+document.getElementById("content").addEventListener("mouseup", e => {
+    mouseDownKeys.forEach(e => {
+        let target = mouseDownKeys.shift();
+        toggleKey({code: target.id, key: target.children[0].innerText}, false);
+    });
+});
