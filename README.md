@@ -14,5 +14,5 @@ website: https://penzboti.github.io/html/
 ```the ability to type them aswell as able to view them on the keyboard when the special key is pressed (like shift or ctrl)```
 ```this probably means more javascript instead of html, probably will have to decide between e.key || e.code```
  - [ ] some apple macbook bug, probably NOT with keycode
- - [ ] the ability to touch buttons so i can show it off on mobile aswell
+ - [x] the ability to touch buttons so i can show it off on mobile aswell ```hopefully it works correct```
  - [ ] some small extras, activatable by codes

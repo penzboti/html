@@ -210,20 +210,33 @@ if (navigator.userAgent.includes("Iphone") || navigator.userAgent.includes("Mac 
     alert("nagyon apple");
 }
 
-// mouse (touch untested) support for pressing keys, and releasing them
+// phone detection, for handling touch and mouse events right
+let isMobile = false;
+if (navigator.userAgent.includes("Android") || navigator.userAgent.includes("Iphone")) {
+    isMobile = true;
+}
+
 let mouseDownKeys = [];
-document.getElementById("content").addEventListener("mousedown", e => {
-    let target = e.target;
-    if (target.tagName == "P") target = target.parentElement;
-    if (!target.classList.contains("row") && target.id != "content" && !target.classList.contains("sys")) {
-        mouseDownKeys.push(target);
-        toggleKey({code: target.id, key: target.children[0].innerText}, true);
-    }
+let switchOnMobile = false;
+["mousedown", "touchstart"].forEach(t => {
+    document.getElementById("content").addEventListener(t, e => {
+        // on default, both triggers on mobile. thats why whe have a switch, to only have it true on one of them
+        if (isMobile) switchOnMobile = !switchOnMobile;
+        let target = e.target;
+        if (target.tagName == "P") target = target.parentElement;
+        if (!target.classList.contains("row") && target.id != "content" && !target.classList.contains("sys")) {
+            mouseDownKeys.push(target);
+            // this is the check we use to only trigger on one of the events
+            if (!isMobile || switchOnMobile) toggleKey({code: target.id, key: target.children[0].innerText}, true);
+        }
+    });
 });
 
-document.getElementById("content").addEventListener("mouseup", e => {
-    mouseDownKeys.forEach(e => {
-        let target = mouseDownKeys.shift();
-        toggleKey({code: target.id, key: target.children[0].innerText}, false);
+["mouseup", "touchend"].forEach(t => {
+    document.getElementById("content").addEventListener(t, e => {
+        mouseDownKeys.forEach(e => {
+            let target = mouseDownKeys.shift();
+            toggleKey({code: target.id, key: target.children[0].innerText}, false);
+        });
     });
 });
