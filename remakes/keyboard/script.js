@@ -218,8 +218,11 @@ if (navigator.userAgent.includes("Android") || navigator.userAgent.includes("Iph
 
 let mouseDownKeys = [];
 let switchOnMobile = false;
+// mouse and touch event handling
 ["mousedown", "touchstart"].forEach(t => {
     document.getElementById("content").addEventListener(t, e => {
+        //! sometimes touchstart doesn't trigger on mobile????
+        //! also special keys are broken on mobile
         // on default, both triggers on mobile. thats why whe have a switch, to only have it true on one of them
         if (isMobile) switchOnMobile = !switchOnMobile;
         let target = e.target;
@@ -232,10 +235,19 @@ let switchOnMobile = false;
     });
 });
 
+// adding the same code for two event listeners is fine like this, but i kinda hate it
+// https://www.tutorialspoint.com/How-to-add-many-Event-Handlers-to-the-same-element-with-JavaScript-HTML-DOM
 ["mouseup", "touchend"].forEach(t => {
     document.getElementById("content").addEventListener(t, e => {
         mouseDownKeys.forEach(e => {
+            //! touchlist object is interesting
+            // https://developer.mozilla.org/en-US/docs/Web/API/Element/touchend_event
+            // touchend event refers to touchlist on .changedTouches .targetTouches .touches
+            // https://developer.mozilla.org/en-US/docs/Web/API/Element/touchend_event
             let target = mouseDownKeys.shift();
+            // tought i could fire a keyboard event, but you can only fire mouse events???? sure whatever
+            // https://stackoverflow.com/questions/21354060/how-to-fire-keyboard-events-in-javascript
+            // luckily its literally just a call function, so im happy with myself for thinking ahead
             toggleKey({code: target.id, key: target.children[0].innerText}, false);
         });
     });
