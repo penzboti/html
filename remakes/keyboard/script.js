@@ -209,42 +209,51 @@ setupKeys();
 if (navigator.userAgent.includes("Iphone") || navigator.userAgent.includes("Mac OS")) {
     alert("nagyon apple");
 }
+// this useragentdata is only built-in in some browsers, (firefox does not have it, and also safari so now it does not have the apple detection feature i wanted to use it for but whatever)
+// and as it turns out i can only use it in secure context. so i have to test it in 'prod'
+// https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgentData
+//! REMOVE THIS AFTER TESTING IN PROD
+if (typeof(navigator.userAgentData) != "undefined") alert(navigator.userAgentData.platform);
 
 // phone detection, for handling touch and mouse events right
 let isMobile = false;
-if (navigator.userAgent.includes("Android") || navigator.userAgent.includes("Iphone")) {
-    isMobile = true;
-}
+if (navigator.userAgent.includes("Android") || navigator.userAgent.includes("Iphone")) isMobile = true;
+// https://stackoverflow.com/a/11381730/12706133 - found it first here, but i didn't want to use regex
+if (typeof(navigator.userAgentData) != "undefined") isMobile = navigator.userAgentData.mobile;
 
 let mouseDownKeys = [];
-let switchOnMobile = false;
+// we have a down event list here. if it is mobile, then we remove the first event, because a mouse event also triggers on touch. i kinda get why its there, but its just a bit of a pain here.
+// but if we're on desktop, touch never happens so we can just leave it.
+// we also do this on the up events
+let downevents = ["mousedown", "touchstart"];
+if (isMobile) downevents.splice(0, 1);
 // mouse and touch event handling
-["mousedown", "touchstart"].forEach(t => {
+downevents.forEach(t => {
+    // got a 'violation here'. and a link with it: https://chromestatus.com/feature/5745543795965952
+    // [Violation] Added non-passive event listener to a scroll-blocking 'touchstart' event. Consider marking event handler as 'passive' to make the page more responsive.
     document.getElementById("content").addEventListener(t, e => {
-        //! sometimes touchstart doesn't trigger on mobile????
-        //! also special keys are broken on mobile
-        // on default, both triggers on mobile. thats why whe have a switch, to only have it true on one of them
-        if (isMobile) switchOnMobile = !switchOnMobile;
         let target = e.target;
         if (target.tagName == "P") target = target.parentElement;
         if (!target.classList.contains("row") && target.id != "content" && !target.classList.contains("sys")) {
             mouseDownKeys.push(target);
-            // this is the check we use to only trigger on one of the events
-            if (!isMobile || switchOnMobile) toggleKey({code: target.id, key: target.children[0].innerText}, true);
+            toggleKey({code: target.id, key: target.children[0].innerText}, true);
         }
     });
 });
 
 // adding the same code for two event listeners is fine like this, but i kinda hate it
 // https://www.tutorialspoint.com/How-to-add-many-Event-Handlers-to-the-same-element-with-JavaScript-HTML-DOM
-["mouseup", "touchend"].forEach(t => {
+let upevents = ["mouseup", "touchend"];
+if (isMobile) upevents.splice(0, 1);
+upevents.forEach(t => {
     document.getElementById("content").addEventListener(t, e => {
         mouseDownKeys.forEach(e => {
-            //! touchlist object is interesting
+            // the thing is that right now we have a list of keys pushed with touch. and on touchup, we remove the first element of the list. this is not great in this case, that why im looking at touchlist
             // https://developer.mozilla.org/en-US/docs/Web/API/Element/touchend_event
             // touchend event refers to touchlist on .changedTouches .targetTouches .touches
             // https://developer.mozilla.org/en-US/docs/Web/API/Element/touchend_event
             let target = mouseDownKeys.shift();
+
             // tought i could fire a keyboard event, but you can only fire mouse events???? sure whatever
             // https://stackoverflow.com/questions/21354060/how-to-fire-keyboard-events-in-javascript
             // luckily its literally just a call function, so im happy with myself for thinking ahead

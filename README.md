@@ -15,5 +15,6 @@ website: https://penzboti.github.io/html/
 ```this probably means more javascript instead of html, probably will have to decide between e.key || e.code```
  - [ ] some apple macbook bug, probably NOT with keycode
  - [x] the ability to touch buttons so i can show it off on mobile aswell
-```when using multiple fingers, the touchend event does not track which touch did it end (or maybe there is, i just haven't found it yet)```
+```when using multiple fingers, the touchend event does not track which touch did it end (or maybe some feature allows it to, i just haven't found it yet)```
+ - [ ] apple special keys support
  - [ ] some small extras, activatable by codes
