@@ -106,7 +106,8 @@ div.row:not(.sysrow) > div:not(.onehalf, .two, .twohalf, .sys) > p {
 #output {
     position: absolute;
     top: 15vh;
-    right: 50vw;
+    /* hopefully this means that it will be at the center of the keyboard */
+    right: 50%;
     width: 50%;
     color: rgb(70, 70, 70);
 

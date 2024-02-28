@@ -27,7 +27,7 @@ let generalkeys = [];
 // also creates an array with the keys, so they can be modified later
 function setupKeys() {
     let keysindex = -1;
-    let htmlrows = Array.from(document.getElementById('content').children);
+    let htmlrows = Array.from(content.children);
     for(j = 0; j < 4; j++){
         e = htmlrows[j];
         currow = rows[j];
@@ -109,7 +109,7 @@ function toggleKey(e, down) {
 // basically checking for leaving the document
 // from here: https://developer.mozilla.org/en-US/docs/Web/API/Window/focus_event
 document.addEventListener('blur', e => {
-    Array.from(document.getElementById('content').children).forEach(e => {
+    Array.from(content.children).forEach(e => {
         Array.from(e.children).forEach(f => {
             f.classList.remove("pushed");
         });
@@ -140,7 +140,7 @@ function handleText(event, mode) {
     if (mode == "key" && event != "Dead") {
         text = `${text}${event}`;
     }
-    document.getElementById('output').innerHTML = text;
+    output.innerHTML = text;
 }
 
 let isCaps = false;
@@ -210,10 +210,9 @@ if (navigator.userAgent.includes("Iphone") || navigator.userAgent.includes("Mac 
     alert("nagyon apple");
 }
 // this useragentdata is only built-in in some browsers, (firefox does not have it, and also safari so now it does not have the apple detection feature i wanted to use it for but whatever)
-// and as it turns out i can only use it in secure context. so i have to test it in 'prod'
+// and also secure context (https) is required
 // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgentData
-//! REMOVE THIS AFTER TESTING IN PROD
-if (typeof(navigator.userAgentData) != "undefined") alert(navigator.userAgentData.platform);
+// if (typeof(navigator.userAgentData) != "undefined") alert(navigator.userAgentData.platform);
 
 // phone detection, for handling touch and mouse events right
 let isMobile = false;
@@ -231,7 +230,7 @@ if (isMobile) downevents.splice(0, 1);
 downevents.forEach(t => {
     // got a 'violation here'. and a link with it: https://chromestatus.com/feature/5745543795965952
     // [Violation] Added non-passive event listener to a scroll-blocking 'touchstart' event. Consider marking event handler as 'passive' to make the page more responsive.
-    document.getElementById("content").addEventListener(t, e => {
+    content.addEventListener(t, e => {
         let target = e.target;
         if (target.tagName == "P") target = target.parentElement;
         if (!target.classList.contains("row") && target.id != "content" && !target.classList.contains("sys")) {
@@ -246,7 +245,7 @@ downevents.forEach(t => {
 let upevents = ["mouseup", "touchend"];
 if (isMobile) upevents.splice(0, 1);
 upevents.forEach(t => {
-    document.getElementById("content").addEventListener(t, e => {
+    content.addEventListener(t, e => {
         mouseDownKeys.forEach(e => {
             // the thing is that right now we have a list of keys pushed with touch. and on touchup, we remove the first element of the list. this is not great in this case, that why im looking at touchlist
             // https://developer.mozilla.org/en-US/docs/Web/API/Element/touchend_event
