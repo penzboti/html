@@ -220,19 +220,22 @@ if (navigator.userAgent.includes("Android") || navigator.userAgent.includes("Iph
 // https://stackoverflow.com/a/11381730/12706133 - found it first here, but i didn't want to use regex
 if (typeof(navigator.userAgentData) != "undefined") isMobile = navigator.userAgentData.mobile;
 
+// mouse and touch event handling
 let mouseDownKeys = [];
 // we have a down event list here. if it is mobile, then we remove the first event, because a mouse event also triggers on touch. i kinda get why its there, but its just a bit of a pain here.
 // but if we're on desktop, touch never happens so we can just leave it.
 // we also do this on the up events
 let downevents = ["mousedown", "touchstart"];
 if (isMobile) downevents.splice(0, 1);
-// mouse and touch event handling
+// adding the same code for two event listeners is fine like this, but i kinda hate it
+// https://www.tutorialspoint.com/How-to-add-many-Event-Handlers-to-the-same-element-with-JavaScript-HTML-DOM
 downevents.forEach(t => {
     // got a 'violation here'. and a link with it: https://chromestatus.com/feature/5745543795965952
     // [Violation] Added non-passive event listener to a scroll-blocking 'touchstart' event. Consider marking event handler as 'passive' to make the page more responsive.
     content.addEventListener(t, e => {
         let target = e.target;
         if (target.tagName == "P") target = target.parentElement;
+        if (isMobile) console.log("down", e, target);
         if (!target.classList.contains("row") && target.id != "content" && !target.classList.contains("sys")) {
             mouseDownKeys.push(target);
             toggleKey({code: target.id, key: target.children[0].innerText}, true);
@@ -240,23 +243,29 @@ downevents.forEach(t => {
     });
 });
 
-// adding the same code for two event listeners is fine like this, but i kinda hate it
-// https://www.tutorialspoint.com/How-to-add-many-Event-Handlers-to-the-same-element-with-JavaScript-HTML-DOM
-let upevents = ["mouseup", "touchend"];
-if (isMobile) upevents.splice(0, 1);
-upevents.forEach(t => {
-    content.addEventListener(t, e => {
-        mouseDownKeys.forEach(e => {
-            // the thing is that right now we have a list of keys pushed with touch. and on touchup, we remove the first element of the list. this is not great in this case, that why im looking at touchlist
-            // https://developer.mozilla.org/en-US/docs/Web/API/Element/touchend_event
-            // touchend event refers to touchlist on .changedTouches .targetTouches .touches
-            // https://developer.mozilla.org/en-US/docs/Web/API/Element/touchend_event
-            let target = mouseDownKeys.shift();
-
-            // tought i could fire a keyboard event, but you can only fire mouse events???? sure whatever
-            // https://stackoverflow.com/questions/21354060/how-to-fire-keyboard-events-in-javascript
-            // luckily its literally just a call function, so im happy with myself for thinking ahead
-            toggleKey({code: target.id, key: target.children[0].innerText}, false);
-        });
+// there is a custom user agent setting in crome dev tools, so i was able to test mobile events on desktop
+// touch upevents have a target that is the original down element, so on mobile this works. 
+// on desktop with mouse movement, the target changes to where the mouse upevent was triggered.
+// but the original array idea works, since only one mouse cursor
+// so now im separating the two
+if (isMobile) {
+    document.addEventListener("touchend", e => {
+        let target = e.target;
+        if (target.tagName == "P") target = target.parentElement;
+        // tought i could fire a keyboard event, but you can only fire mouse events???? sure whatever
+        // https://stackoverflow.com/questions/21354060/how-to-fire-keyboard-events-in-javascript
+        // luckily its literally just a call function, so im happy with myself for thinking ahead
+        toggleKey({code: target.id, key: target.children[0].innerText}, false);
+        // there is an issue when sometimes chrome doesn't fire touchend events
+        // i found out using this cool debugging tool, just wanted to show it off
+        // i phisically can't fix this tho
+        // https://developer.chrome.com/docs/devtools/remote-debugging/
+        // https://stackoverflow.com/questions/37256331/is-it-possible-to-open-developer-tools-console-in-chrome-on-android-phone
     });
-});
+} else {
+    content.addEventListener("mouseup", e => {
+        let target = mouseDownKeys.shift();
+        toggleKey({code: target.id, key: target.children[0].innerText}, false);
+    });
+}
+// now the only people left out should be the ones with a touchscreen and a mouse, idk if i want to support them or not
