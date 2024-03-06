@@ -28,16 +28,16 @@ let generalkeys = [];
 function setupKeys() {
     let keysindex = -1;
     let htmlrows = Array.from(content.children);
-    for(j = 0; j < 4; j++){
-        e = htmlrows[j];
-        currow = rows[j];
+    for(i = 0; i < 4; i++){
+        e = htmlrows[i];
+        currow = rows[i];
         // seems like a great resource for the rust / linq way in js
         // https://gist.github.com/DanDiplo/30528387da41332ff22b
         let list = Array.from(e.children).filter(f => f.id == "");
 
         let idlist = [];
         // for normal id keys
-        for(i = 0; i < (list.length-currow.length); i++){
+        for(j = 0; j < (list.length-currow.length); j++){
             keysindex++;
             if (keys[keysindex] == "z") {
                 idlist.push(`KeyY`);
@@ -55,9 +55,9 @@ function setupKeys() {
         if (i == 3) idlist.splice(0, 1, "IntlBackslash");
 
         // for special id keys
-        for(i = 0; i < currow.length; i++){
+        for(j = 0; j < currow.length; j++){
             keysindex++;
-            idlist.push(currow[i]);
+            idlist.push(currow[j]);
         }
 
         // setting ids
