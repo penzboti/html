@@ -13,11 +13,12 @@ const botrowendids = ["Comma", "Period", "Slash"];
 const rows = [numberrowids, toprowids, midrowendids, botrowendids];
 
 // all state keys from top to bottom, left to right
-const keys = "0123456789öüóqwertzuiopőúűasdfghjkléáíyxcvbnm,.-";
-const shiftkeys = "0'\"+!%/=()ÖÜÓQWERTZUIOPŐÚŰASDFGHJKLÉÁÍYXCVBNM:_?";
-const altkeys = "0~ˇ^˘°˛`˙´˝¨¸\\|Ä®™ €Í  ÷×¤äđĐ[] íłŁ$ß<>#&@{} ;>*";
-const capskeys = "0123456789ÖÜÓQWERTZUIOPŐÚŰASDFGHJKLÉÁÍYXCVBNM,.-";
-const capsshiftkeys = "0'\"+!%/=()öüóqwertzuiopőúűasdfghjkléáíyxcvbnm:_?";
+// they are 'let' instead of 'const' because they change on apple devices
+let keys = "0123456789öüóqwertzuiopőúűasdfghjkléáíyxcvbnm,.-";
+let shiftkeys = "0'\"+!%/=()ÖÜÓQWERTZUIOPŐÚŰASDFGHJKLÉÁÍYXCVBNM:_?";
+let altkeys = "0~ˇ^˘°˛`˙´˝¨¸\\|Ä®™ €Í  ÷×¤äđĐ[] íłŁ$ß<>#&@{} ;>*";
+let capskeys = "0123456789ÖÜÓQWERTZUIOPŐÚŰASDFGHJKLÉÁÍYXCVBNM,.-";
+let capsshiftkeys = "0'\"+!%/=()öüóqwertzuiopőúűasdfghjkléáíyxcvbnm:_?";
 
 let generalkeys = [];
 
@@ -100,6 +101,8 @@ function toggleKey(e, down) {
             else {
                 document.getElementById(e.code).classList.remove("pushed");
                 if (["ShiftLeft", "ShiftRight", "AltRight"].includes(e.code)) switchKeys(e.code);
+                // capslock is toggled in the firmware, we don't need to handle it differently
+                if (isApple && e.code == "CapsLock") switchKeys(e.code);
             }
 
     }
@@ -130,6 +133,7 @@ function handleText(event, mode) {
             text = "";
         }
         else if (["ShiftLeft", "ShiftRight", "AltRight", "CapsLock"].includes(event.code)) switchKeys(event.code);
+        else if (isApple && ["AltLeft", "MetaLeft", "MetaRight"].includes(event.code)) switchKeys(event.code);
         // skipping unused codes
         else if (["ControlLeft", "AltLeft", "ControlRight", "MetaLeft"].includes(event.code)) {}
         // if not a special case, then it is a key, so it will be output to the screen
@@ -149,20 +153,35 @@ let isShift = false;
 let isShiftRight = false;
 // switching between shifted, capslocked, ol altgred states & keys
 function switchKeys(code) {
-    // switches bools
-    switch (code) {
-        case "CapsLock":
-            isCaps = !isCaps;
-            break;
-        case "AltRight":
-            isAltGr = !isAltGr;
-            break;
-        case "ShiftLeft":
-            isShift = !isShift;
-            break;
+    
+    //  switches bools
+    if (!isApple) {
+        switch (code) {
+            case "CapsLock":
+                isCaps = !isCaps;
+                break;
+            case "AltRight":
+                isAltGr = !isAltGr;
+                break;
+            case "ShiftLeft":
+                isShift = !isShift;
+                break;
             case "ShiftRight":
                 isShiftRight = !isShiftRight;
                 break;
+        }
+    } else {
+        switch (code) {
+            case "CapsLock":
+                isCaps = !isCaps;
+                break;
+            case "ShiftLeft":
+                isShift = !isShift;
+                break;
+            case "ShiftRight":
+                isShiftRight = !isShiftRight;
+                break;
+        }
     }
 
 
@@ -201,13 +220,27 @@ function switchKeys(code) {
     // console.table(object);
 }
 
-// start the site
-setupKeys();
-
+let isApple = true;
 // needed for the apple special key layout
 // https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
 if (navigator.userAgent.includes("Iphone") || navigator.userAgent.includes("Mac OS")) {
-    alert("nagyon apple");
+    // some of the sysrow keys are switched, aswell as new keyboard combinations
+    let list = Array.from((Array.from(content.children))[4].children);
+    list[0].innerHTML = "<p>Fn</p>"; list[0].classList.add("sys"); list[0].id = "FnLeft";
+    list[1].innerHTML = "<p>^</p>"; list[1].classList.remove("sys"); list[1].id = "ControlLeft";
+    list[2].innerHTML = "<p>⌥</p>"; list[2].id = "AltLeft";
+    list[3].innerHTML = "<p>⌘</p>"; list[3].id = "MetaLeft";
+    list[5].innerHTML = "<p>⌘</p>"; list[5].id = "MetaRight";
+    list[6].innerHTML = "<p>⌥</p>"; list[6].classList.remove("sys"); list[6].id = "AltRight";
+    list[7].innerHTML = ""; list[7].classList.add("sys"); list[7].id = "undefined";
+    // special key layouts are different
+    shiftkeys = '§' + shiftkeys.substring(1);
+    altkeys = "@ę€¶†ź¨^ŅĻ¨~`"
+    
+    setupKeys();
+    // these two are switched on apple for some reason, hopefully this fixes the issue
+    generalkeys[0].id = "IntlBackslash";
+    generalkeys[37].id = "Backquote";
 }
 // this useragentdata is only built-in in some browsers, (firefox does not have it, and also safari so now it does not have the apple detection feature i wanted to use it for but whatever)
 // and also secure context (https) is required
@@ -269,3 +302,6 @@ if (isMobile) {
     });
 }
 // now the only people left out should be the ones with a touchscreen and a mouse, idk if i want to support them or not
+
+// start the site
+setupKeys();
