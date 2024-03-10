@@ -147,10 +147,9 @@ function handleText(event, mode) {
     output.innerHTML = text;
 }
 
-let isCaps = false;
-let isAltGr = false;
-let isShift = false;
-let isShiftRight = false;
+let isCaps = false, isAltGr = false, isShift = false, isShiftRight = false;
+// the only apple one
+let isOption = false;
 // switching between shifted, capslocked, ol altgred states & keys
 function switchKeys(code) {
     
@@ -171,6 +170,7 @@ function switchKeys(code) {
                 break;
         }
     } else {
+        //! apple mode
         switch (code) {
             case "CapsLock":
                 isCaps = !isCaps;
@@ -180,6 +180,13 @@ function switchKeys(code) {
                 break;
             case "ShiftRight":
                 isShiftRight = !isShiftRight;
+                break;
+            // case OH
+            case "AltLeft":
+                isOption = !isOption;
+                break;
+            case "AltRight":
+                isAltGr = !isAltGr;
                 break;
         }
     }
@@ -192,7 +199,7 @@ function switchKeys(code) {
             e.innerHTML = `<p>${capskeys[generalkeys.indexOf(e)]}</p>`;
         });
     }
-    if (isAltGr) {
+    if (isAltGr || isOption) {
         generalkeys.forEach(e => {
             e.innerHTML = `<p>${altkeys[generalkeys.indexOf(e)]}</p>`;
         });
@@ -207,7 +214,12 @@ function switchKeys(code) {
             e.innerHTML = `<p>${capsshiftkeys[generalkeys.indexOf(e)]}</p>`;
         });
     }
-    if ((!isShift && !isAltGr && !isCaps && !isShiftRight) || code == "") {
+    if (isApple && (isOption || isAltGr) && (isShift || isShiftRight)) {
+        generalkeys.forEach(e => {
+            e.innerHTML = `<p>${altshiftkeys[generalkeys.indexOf(e)]}</p>`;
+        });
+    }
+    if ((!isShift && !isAltGr && !isCaps && !isShiftRight && !isOption) || code == "") {
         generalkeys.forEach(e => {
             e.innerHTML = `<p>${keys[generalkeys.indexOf(e)]}</p>`;
         });
@@ -215,12 +227,13 @@ function switchKeys(code) {
 
     // this is cool af
     // let object = {
-    //     isAltGr, isShift, isCaps, isShiftRight
+    //     isAltGr, isShift, isCaps, isShiftRight, isOption
     // }
     // console.table(object);
 }
 
 let isApple = true;
+const altshiftkeys = "kurvaanyádat!ļŁš®śŹ†ťĮłÝýĄżŽžŪÕÔ&ŮōˇĢŔ<>©‚’Ųų*÷—";
 // needed for the apple special key layout
 // https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
 if (navigator.userAgent.includes("Iphone") || navigator.userAgent.includes("Mac OS")) {
@@ -235,13 +248,14 @@ if (navigator.userAgent.includes("Iphone") || navigator.userAgent.includes("Mac 
     list[7].innerHTML = ""; list[7].classList.add("sys"); list[7].id = "undefined";
     // special key layouts are different
     shiftkeys = '§' + shiftkeys.substring(1);
-    altkeys = "@ę€¶†ź¨^ŅĻ¨~`"
+    altkeys = "kurvaanyádat!@ę€¶†ź¨^ŅĻ¨~`ąß∂ń©ķ∆Ż•…^|«»ć„”~Ķ–;–";
     
     setupKeys();
     // these two are switched on apple for some reason, hopefully this fixes the issue
     generalkeys[0].id = "IntlBackslash";
     generalkeys[37].id = "Backquote";
 }
+
 // this useragentdata is only built-in in some browsers, (firefox does not have it, and also safari so now it does not have the apple detection feature i wanted to use it for but whatever)
 // and also secure context (https) is required
 // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgentData
