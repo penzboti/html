@@ -100,7 +100,7 @@ function toggleKey(e, down) {
             }
             else {
                 document.getElementById(e.code).classList.remove("pushed");
-                if (["ShiftLeft", "ShiftRight", "AltRight"].includes(e.code)) switchKeys(e.code);
+                if (["ShiftLeft", "ShiftRight", "AltRight", "AltLeft"].includes(e.code)) switchKeys(e.code);
                 // capslock is toggled in the firmware, we don't need to handle it differently
                 if (isApple && e.code == "CapsLock") switchKeys(e.code);
             }
@@ -127,7 +127,6 @@ function handleText(event, mode) {
         else if (event.code == "Backspace") {
             text = text.slice(0, -1);
         }
-        else if (event.code == "Backquote") handleText("0", "key");
         else if (event.code == "Enter" || event.code == "Tab") {
             // checkCode(text); // secret codes will be checked later here
             text = "";
@@ -233,7 +232,7 @@ function switchKeys(code) {
 }
 
 let isApple = true;
-const altshiftkeys = "kurvaanyádat!ļŁš®śŹ†ťĮłÝýĄżŽžŪÕÔ&ŮōˇĢŔ<>©‚’Ųų*÷—";
+const altshiftkeys = "•ŕŘ#$řŖŗ™}°īĪļŁš®śŹ†ťĮłÝýĄżŽžŪÕÔ&ŮōˇĢŔ<>©‚’Ųų*÷—";
 // needed for the apple special key layout
 // https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
 if (navigator.userAgent.includes("Iphone") || navigator.userAgent.includes("Mac OS")) {
@@ -248,7 +247,7 @@ if (navigator.userAgent.includes("Iphone") || navigator.userAgent.includes("Mac 
     list[7].innerHTML = ""; list[7].classList.add("sys"); list[7].id = "undefined";
     // special key layouts are different
     shiftkeys = '§' + shiftkeys.substring(1);
-    altkeys = "kurvaanyádat!@ę€¶†ź¨^ŅĻ¨~`ąß∂ń©ķ∆Ż•…^|«»ć„”~Ķ–;–";
+    altkeys = "¬&™£$‹›{[]}\\≠@ę€¶†ź¨^ŅĻ¨~`ąß∂ń©ķ∆Ż•…^|«»ć„”~Ķ–;–";
     
     setupKeys();
     // these two are switched on apple for some reason, hopefully this fixes the issue
