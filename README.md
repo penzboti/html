@@ -14,4 +14,6 @@ website: https://penzboti.github.io/html/
  - [x] the ability to touch buttons so i can show it off on mobile aswell
 ```fucking apple: ```
  - [x] some apple macbook bug, probably NOT with keycode ```seems fixed```
- - [ ] apple special keys support
+ - [x] apple special keys support
+## clock
+ - [ ] hungarian version, toggleable
