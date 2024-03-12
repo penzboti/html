@@ -18,6 +18,7 @@ const EnClockface = [
     "tenseoclock"
 ];
 
+// populating the cells and starting the timer work after loading the page
 function loadPage() {
     // clearing the content
     content.innerHTML = "";
@@ -34,14 +35,11 @@ function loadPage() {
         for(j = 0; j < e.length; j++){
             const c = e[j];
             const node = document.createElement("p");
-            node.innerText = c;
-            node.id = `${i}-${j}`
+            node.innerText = c.toUpperCase();
+            node.id = `${i}-${j}`;
             document.getElementById(e).appendChild(node);
         }
     }
-
-    // starting the site
-    handleTimeCall();
 }
 
 // this map makes it readable in code when we reference these things
@@ -58,7 +56,7 @@ const EnMap = {
     "09h": ["4-7", "4-8", "4-9", "4-10"],
     "10h": ["9-0", "9-1", "9-2"],
     "11h": ["7-5", "7-6", "7-7", "7-8", "7-9", "7-10"],
-    "12h": ["8-5", "8-6", "8-7", "8-8", "8-9", "8-10"],
+    "00h": ["8-5", "8-6", "8-7", "8-8", "8-9", "8-10"],
     "00m": ["9-5", "9-6", "9-7", "9-8", "9-9", "9-10"], // o'clock
     "05m": ["2-6", "2-7", "2-8", "2-9"], // these numbers will be both 'from' & 'to'
     "10m": ["3-5", "3-6", "3-7"],
@@ -89,8 +87,8 @@ function loadTime(hour, minute) {
     // halftime is a special case
     if (relativeMin != 30) relativeMin = relativeMin%30;
     // after half time we invert the relative minutes ("past" -> "to")
-    if (minute > 30) relativeMin = 30 - relativeMin;
-    if (minute > 30 && relativeMin == 30) relativeMin = 0;
+    if (minute > 31) relativeMin = 30 - relativeMin;
+    if (minute > 31 && relativeMin == 30) relativeMin = 0;
     // we get a string from it to get the correct one from the map
     let minuteString = parseInt(relativeMin) + "m";
     if (relativeMin < 10) minuteString = `0${minuteString}`;
@@ -98,13 +96,13 @@ function loadTime(hour, minute) {
     // console.log(minute, relativeMin, minuteString);
 
     // "past" or "to"
-    if (minute < 30) toggleList.push(...map["past"]);
-    else if (minute > 30 && relativeMin != 0) toggleList.push(...map["to"]);
+    if (minute <= 31 && relativeMin != 0) toggleList.push(...map["past"]);
+    else if (minute > 31 && relativeMin != 0) toggleList.push(...map["to"]);
 
     //* hour
     let relativeHour = hour;
     // we need to add one when it switches from "past" to "to"
-    if (minute > 30) relativeHour++;
+    if (minute > 31) relativeHour++;
     // we only go up to 12, but basically we use american time. 0 = 12.
     relativeHour = relativeHour%12;
     // we get a string from it ...
@@ -128,6 +126,7 @@ function clearActiveCells() {
     })
 }
 
+let timeout;
 function handleTimeCall() {
     // this calls the loadTime
     const date = new Date();
@@ -139,10 +138,42 @@ function handleTimeCall() {
     // but on pageload you might not be on a perfect minute switch
     // so we also calculate the difference if there is one
     let second = date.getSeconds();
-    let relativeCallTime = (60-second+1)*1000;
-    // if (relativeCallTime != 60000) console.log(relativeCallTime);
-    window.setTimeout(() => {handleTimeCall()}, relativeCallTime);
+    let relativeCallTime = (60-second)*1000;
+    // stop infinite loops from happening
+    // (altough it is prob an edge case if the millisecond is 000)
+    if (relativeCallTime == 0) relativeCallTime = 60000;
+    // console.log(second, relativeCallTime);
+    timeout = window.setTimeout(() => {handleTimeCall()}, relativeCallTime);
 }
 
-// populating the cells and starting the site after loading the page
+// if javascript ever stops working in the background, it might not update.
+// so we update when the window state changes to focused
+// the page initially triggers focues event! so now this
+//* starts the site
+window.addEventListener("focus", e => {
+    // to not run timeout multiple times
+    clearTimeout(timeout);
+    handleTimeCall();
+})
+
+// starting the page
 loadPage();
+
+//* you are able to test it :) if you uncomment this
+// let h = 0; let m = 0;
+// function test() {
+//     loadTime(h, m);
+//     m++;
+//     if (m == 60) {
+//         h++;
+//         m = 0;
+//     }
+//     if (h == 24) {
+//         h = 0;
+//     }
+// }
+// document.addEventListener("keypress", (e) => {
+//     if (e.key == " ") {
+//         test();
+//     }
+// })

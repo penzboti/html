@@ -1,5 +1,5 @@
 * {
-    font-family: "JetBrainsMono Nerd Font Mono", consolas, courier, system-ui;
+    font-family: consolas, courier, system-ui;
 }
 
 body {
@@ -17,7 +17,7 @@ body {
     border: 1px solid white;
     color: rgb(90, 90, 90);
     padding: 15px;
-    box-shadow: 6px 6px 4px whitesmoke;
+    box-shadow: 6px 6px 10px whitesmoke;
 }
 
 .row {
