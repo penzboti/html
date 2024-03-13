@@ -40,6 +40,8 @@ function loadPage() {
             document.getElementById(e).appendChild(node);
         }
     }
+
+    handleTimeCall();
 }
 
 // this map makes it readable in code when we reference these things
@@ -148,8 +150,7 @@ function handleTimeCall() {
 
 // if javascript ever stops working in the background, it might not update.
 // so we update when the window state changes to focused
-// the page initially triggers focues event! so now this
-//* starts the site
+// initially it might not trigger.
 window.addEventListener("focus", e => {
     // to not run timeout multiple times
     clearTimeout(timeout);
