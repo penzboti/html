@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quhoo Wordle Solver</title>
+    <title>Wordle Solver</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -13,6 +13,10 @@
         <input type="text" id="guess" class="input" placeholder="szövegdoboz">
         <input type="button" value="Keresés indítása" onclick="guessWord()" class="button">
         <input type="button" value="Újrakezdés" onclick="start()" class="button">
+        <select id="lang" name="lang">
+            <option value="eng">eng</option>
+            <option value="hu">hu</option>
+        </select>
     </div>
 
     <div id="feedback" class="big"></div>
@@ -29,6 +33,8 @@
     </div>
     <div>A forráskód megtalálható <a href="https://github.com/penzboti/Quhoo-wordle-solver">GitHubon!</a></div>
 
+    <script src="words/eng-words.js"></script>
+    <script src="words/hu-words.js"></script>
     <script src="solver.js"></script>
 </body>
 </html>

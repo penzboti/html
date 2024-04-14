@@ -1,8 +1,15 @@
 // assigning basic variables
-var words_split0 = "ablak, agyag, agyar, ajánl, akció, aktív, alany, album, amőba, angol, anyag, anyós, apród, apály, arany, arasz, aroma, arzén, arány, aréna, audio, álarc, állat, árkád, ártér, árvíz, árbóc, bacon, balta, balti, banda, banán, barna, barát, beteg, beton, bodza, bogyó, bogár, bohóc, bolha, bomba, bronz, bálna, búvár, cetli, chili, chips, cukor, cékla, doboz, dzsem, dátum, dízel, dobat, ecset, email, ember, emelő, emlék, emlős, extra, ezüst, fahéj, fazék, fenyő, fertő, festő, firka, fogas, folyó, fonal, fotel, fáraó, férfi, fórum, főnix, fülke, fürdő, füzet, gatya, gazda, golyó, gomba, grill, gödör, gyors, gyufa, gyula, gyári, gyárt, gyász, gyáva, halál, hamis, hinta, hintó, homok, homár, hétfő, hévíz, hónap, index, indok, iroda, isler, jacht, joker, juhar, járda, jármű, kabin, kabát, kacsa, kajak, kakas, kakaó, kalap, kalóz, kanna, kanál, kanóc, kapor, keksz, kerék, kifli, kosár, kukac, kulcs, kupon, kutya, kvarc, kígyó, kórus, körte, körző, körít, kötél, labda, lábos, labor, lakat, lakás, lapát, lecke, lepke, leves, liget, lámpa, magma, magnó, majom, malac, malom, mangó, maszk, medve, medál, meggy, metró, mikró, mobil, málna, műsor, napló, nyelv, oltár, oltás, opera, orvos, oázis, óceán, ördög, ötlet, pacal, padló, pajta, pajzs, pamut, peron, plüss, pokol, polip, ponty, puska, pálca, párna, póker, radar, rádió, radír, repce, robot, sapka, sarló, sarok, seprű, sereg, sisak, sport, spóra, sugár, sáska, sátor, szaft, szoba, széna, szóda, szőlő, szörp, tabló, tajga, tamás, tanya, tanár, tarja, tarka, taréj, tasak, tehén, teknő, tepsi, toboz, tojás, torma, tálca, tárca, tócsa, tölgy, töltő, tömeg, tömlő, törpe, törzs, túzok, udvar, unoka, úszás, vacok, vagon, vasút, veréb, videó, vidra, vihar, villa, világ, viola, virág, vitéz, vodka, volán, vádli, vírus, vödör, völgy, vörös, zabla, zokni, zuzmó, zálog, zacsi, zsalu, zsaru, zselé, zsepi, zsűri"
 var possible = [];
 var possible_split = [];
+let lang = "eng";
+document.getElementById("lang").value = lang;
 
+document.addEventListener("click", e => {
+    if (e.target.tagName == "OPTION") {
+        lang = e.target.value;
+        start();
+    }
+});
 
 function start() {
     // this runs at the start, and at every restart
@@ -13,6 +20,16 @@ function start() {
     document.getElementById("feedback").innerHTML = "";
     feedback = ["w", "w", "w", "w", "w"]
     won = false;
+
+    let words_split0 = "";
+    switch (lang) {
+        case "hu":
+            words_split0 = huwords;
+            break;
+        case "eng":
+            words_split0 = engwords;
+            break;
+    }
 
     // resets possible words too
     possible = [];
@@ -30,7 +47,7 @@ function guessWord() {
 
     if (document.getElementById("guess").value.length == 5) {
     
-    console.log(possible, 1);
+    // console.log(possible, 1);
     wordEliminator();
     // this is an async function because these need to be run after wordEliminator();
     // ? why does this work when the function isnt async?
@@ -44,14 +61,14 @@ function guessWord() {
         // if no words, tells no words
         addPossibleWord("Nincs több helyes szó!", false)
     }
-    console.log(possible, 2);
+    // console.log(possible, 2);
     
     }
 }
 
 var guess;
 var guess_split;
-var feedback;
+let feedback = [];
 function wordEliminator() {
     // eliminates words by the wordle rules
 
@@ -204,6 +221,3 @@ function feedbackToggler(id) {
 
 // starts the entire thing
 start();
-
-// ! styling --> 2.0
-// ! languages --> 3.0
