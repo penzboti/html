@@ -3,27 +3,32 @@
 // helped me write the activating cells code
 // https://web.archive.org/web/20230323083431/https://qlocktwo.com/us/timecheck?___from_store=de&color=Metamorphite&controls=false&language=EN&size=600
 
-// this is the english version.
-// next step is a hungarian one.
-const EnClockface = [
-    "itlisasampm",
-    "acquarterdc",
-    "twentyfivex",
-    "halfstenfto",
-    "pasterunine",
-    "onesixthree",
-    "fourfivetwo",
-    "eighteleven",
-    "seventwelve",
-    "tenseoclock"
-];
+// language and language switching
+let lang = "";
+
+document.addEventListener("click", e => {
+    if (e.target.tagName == "SELECT" || e.target.tagName == "OPTION") {
+        const prevlang = lang;
+        lang = document.getElementById("lang").value;
+        if (prevlang != lang) {
+            loadPage();
+        }
+    }
+});
 
 // populating the cells and starting the timer work after loading the page
 function loadPage() {
     // clearing the content
     content.innerHTML = "";
-    let face = EnClockface;
-    // this is where we will check for the hungarian one (later)
+    let face = [];
+    switch (lang) {
+        case "de":
+            face = DeClockface;
+            break;
+        case "eng":
+            face = EnClockface;
+            break;
+    }
 
     // basic createlement & appendchild & id work
     for(i = 0; i < face.length; i++){
@@ -44,35 +49,16 @@ function loadPage() {
     handleTimeCall();
 }
 
-// this map makes it readable in code when we reference these things
-const EnMap = {
-    "it is": ["0-0", "0-1", "0-3", "0-4"],
-    "01h": ["5-0", "5-1", "5-2"],
-    "02h": ["6-8", "6-9", "6-10"],
-    "03h": ["5-6", "5-7", "5-8", "5-9", "5-10"],
-    "04h": ["6-0", "6-1", "6-2", "6-3"],
-    "05h": ["6-4", "6-5", "6-6", "6-7"],
-    "06h": ["5-3", "5-4", "5-5"],
-    "07h": ["8-0", "8-1", "8-2", "8-3", "8-4"],
-    "08h": ["7-0", "7-1", "7-2", "7-3", "7-4"],
-    "09h": ["4-7", "4-8", "4-9", "4-10"],
-    "10h": ["9-0", "9-1", "9-2"],
-    "11h": ["7-5", "7-6", "7-7", "7-8", "7-9", "7-10"],
-    "00h": ["8-5", "8-6", "8-7", "8-8", "8-9", "8-10"],
-    "00m": ["9-5", "9-6", "9-7", "9-8", "9-9", "9-10"], // o'clock
-    "05m": ["2-6", "2-7", "2-8", "2-9"], // these numbers will be both 'from' & 'to'
-    "10m": ["3-5", "3-6", "3-7"],
-    "15m": ["1-0", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "1-8"],
-    "20m": ["2-0", "2-1", "2-2", "2-3", "2-4", "2-5"],
-    "25m": ["2-0", "2-1", "2-2", "2-3", "2-4", "2-5", "2-6", "2-7", "2-8", "2-9"],
-    "30m": ["3-0", "3-1", "3-2", "3-3"], // half
-    "past": ["4-0", "4-1", "4-2", "4-3"],
-    "to": ["3-9", "3-10"],
-}
-
 function loadTime(hour, minute) {
-    const map = EnMap;
-    // future language check
+    let map = {};
+    switch (lang) {
+        case "de":
+            map = DeMap;
+            break;
+        case "eng":
+            map = EnMap;
+            break;
+    }
 
     // clear previous
     clearActiveCells();
@@ -98,13 +84,27 @@ function loadTime(hour, minute) {
     // console.log(minute, relativeMin, minuteString);
 
     // "past" or "to"
-    if (minute <= 31 && relativeMin != 0) toggleList.push(...map["past"]);
-    else if (minute > 31 && relativeMin != 0) toggleList.push(...map["to"]);
+    switch (lang) {
+        case "de":
+            if (relativeMin > 21 && relativeMin < 27 && minute < 27) toggleList.push(...map["to"]); 
+            else if ((minute <= 26 && relativeMin != 0) || (relativeMin > 21 && relativeMin < 27)) toggleList.push(...map["past"]);
+            else if (minute > 31 && relativeMin != 0) toggleList.push(...map["to"]);
+            break;
+        case "eng":
+            if (minute <= 31 && relativeMin != 0) toggleList.push(...map["past"]);
+            else if (minute > 31 && relativeMin != 0) toggleList.push(...map["to"]);
+            break;
+    }
 
     //* hour
     let relativeHour = hour;
     // we need to add one when it switches from "past" to "to"
-    if (minute > 31) relativeHour++;
+    if (minute > 26) relativeHour++;
+    if (lang == "de" && relativeMin > 21 && relativeMin < 27) {
+        if (minute < 32) relativeHour++;
+        toggleList.push(...map["30m"]);
+    }
+
     // we only go up to 12, but basically we use american time. 0 = 12.
     relativeHour = relativeHour%12;
     // we get a string from it ...
@@ -112,6 +112,8 @@ function loadTime(hour, minute) {
     if (relativeHour < 10) hourString = `0${hourString}`;
     toggleList.push(...map[hourString]);
     // console.log(hour, relativeHour, hourString);
+
+    if (lang == "de" && relativeMin != 0 && relativeHour == 1) toggleList.push(...map["01h**m"]);
 
     // we activate the cells in the list
     toggleList.forEach(id => {
@@ -158,13 +160,15 @@ window.addEventListener("focus", e => {
 })
 
 // starting the page
+document.getElementById("lang").value = "eng";
+lang = "eng";
 loadPage();
 
 //* you are able to test it :) if you uncomment this
 // let h = 0; let m = 0;
 // function test() {
 //     loadTime(h, m);
-//     m++;
+//     m+=5;
 //     if (m == 60) {
 //         h++;
 //         m = 0;

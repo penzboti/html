@@ -35,3 +35,10 @@ p {
     color: white;
     text-shadow: 1px whitesmoke;
 }
+
+select {
+    position: absolute;
+    top: 100vh;
+    left: 100vw;
+    transform: translate(-200%, -200%);
+}
