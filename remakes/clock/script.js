@@ -6,13 +6,11 @@
 // language and language switching
 let lang = "";
 
-document.addEventListener("click", e => {
-    if (e.target.tagName == "SELECT" || e.target.tagName == "OPTION") {
-        const prevlang = lang;
-        lang = document.getElementById("lang").value;
-        if (prevlang != lang) {
-            loadPage();
-        }
+document.getElementById("lang").addEventListener("change", e => {
+    const prevlang = lang;
+    lang = document.getElementById("lang").value;
+    if (prevlang != lang) {
+        loadPage();
     }
 });
 

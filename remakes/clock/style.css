@@ -38,7 +38,7 @@ p {
 
 select {
     position: absolute;
-    top: 100vh;
-    left: 100vw;
+    top: 100svh;
+    left: 100svw;
     transform: translate(-200%, -200%);
 }
