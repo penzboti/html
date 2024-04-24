@@ -85,28 +85,144 @@ function wordEliminator() {
     });
 
     // eliminates the words.
-    for(w=possible.length-1; 0<=w; w--) {
-        for(i=0; i<5; i++) {
-            // explaining everything here is hard, so ill just skip it
-            if(feedback[i] == "w" && possible[w].includes(guess_split[i])) {
-                possible.splice(possible.indexOf(possible[w]), 1);
-                break;
-            }
-            else if(feedback[i] == "g" && guess_split[i] !== possible_split[w][i]) {
-                possible.splice(possible.indexOf(possible[w]), 1);
-                break;
-            }
-            else if(feedback[i] == "y" && !possible[w].includes(guess_split[i])) {
-                possible.splice(possible.indexOf(possible[w]), 1);
-                break;
-            }
+    if (new Set(guess_split).size == 5) {
+        for(w=possible.length-1; 0<=w; w--) {
+            let done = false;
+            for(i=0; i<5; i++) {
+                if (done) break;
+                switch (feedback[i]) {
+                    case "w":
+                        if (feedback.filter(x => x == feedback[w]).length == 1) {
+                            console.log(possible[w], guess_split[i], 'c')
+                            possible.splice(possible.indexOf(possible[w]), 1);
+                            done = true;
+                        }
+                    break;
+                    case "g":
+                        if(guess_split[i] !== possible_split[w][i]) {
+                            console.log(possible[w], guess_split[i], 'd')
+                            possible.splice(possible.indexOf(possible[w]), 1);
+                            done = true;
+                        }
+                    break;
+                    case "y":
+                        if(!possible[w].includes(guess_split[i])) {
+                            console.log(possible[w], guess_split[i], 'a')
+                            possible.splice(possible.indexOf(possible[w]), 1);
+                            done = true;
+                        }
 
-            else if(feedback[i] == "y" && guess_split[i] == possible_split[w][i]) {
-                possible.splice(possible.indexOf(possible[w]), 1);
-                break;
+                        else if(guess_split[i] == possible_split[w][i]) {
+                            console.log(possible[w], guess_split[i], 'b')
+                            possible.splice(possible.indexOf(possible[w]), 1);
+                            done = true;
+                        }
+                    break;
+                }
             }
         }
-    } 
+    } else {
+        new Set(guess_split).forEach( e=> {
+            // some variable setup beforehand
+            let indexListFunc = () => {
+                let list = [];
+                guess_split.forEach((element, index) => {
+                    if (element == e) {
+                        list.push(index);
+                    }
+                });
+                return list;
+            }
+            let feedbackListFunc = () => {
+                let list = [];
+                indexListFunc().forEach(element => {
+                    list.push(feedback[element]);
+                });
+                return list;
+            }
+            let indexList = indexListFunc();
+            let feedbackList = feedbackListFunc();
+            console.log(possible.includes("equip"));
+            console.log(e, indexList, feedbackList);
+            
+            // if all of them are the same, it is basically what we had before
+            if (feedbackList.every((val, i, arr) => val === "w")) {
+                for(w=possible.length-1; 0<=w; w--) {
+                    if (possible[w].includes(e)) {
+                        possible.splice(possible.indexOf(possible[w]), 1);
+                    }
+                }
+                return;
+            }
+            if (feedbackList.every((val, i, arr) => val === "g")) {
+                console.log("so this is true");
+                for(w=possible.length-1; 0<=w; w--) {
+                    // console.log(possible[w].split("") == possible_split[w], possible[w], possible_split[w]);
+                    if (indexList.every((val, i, arr) => possible[w].split("")[val] == e) == false ){
+                        // console.log(possible[w], e, possible_split[w], possible_split[w][4], "nope");
+                        possible.splice(possible.indexOf(possible[w]), 1);
+                    }
+                }
+                return;
+            }
+            if (feedbackList.every((val, i, arr) => val === "y")) {
+                console.log("huh")
+                for(w=possible.length-1; 0<=w; w--) {
+                    let done = false;
+                    // if in the yellows place there is a green, it eliminates the word
+                    indexList.forEach((val, i, arr) => {
+                        if (possible[w].split("")[val] != e) return;
+                        possible.splice(possible.indexOf(possible[w]), 1);
+                        done = true;
+                    });
+                    if (done) continue;
+                    // if the character appears less times in the word than the indexList, it eliminates the word
+                    if (possible[w].split("").filter(x => x == e).length < indexList.length) {
+                        possible.splice(possible.indexOf(possible[w]), 1);
+                    }
+                }
+                return;
+            }
+            if (feedbackList.includes("g")) {
+                feedbackList.forEach((val, i) => {
+                    if (val != "g") return;
+                    let index = indexList[i];
+
+                    for(w=possible.length-1; 0<=w; w--) {
+                        if (possible[w].split("")[index] != e) {
+                            // console.log(possible[w], "noway");
+                            possible.splice(possible.indexOf(possible[w]), 1);
+                        }
+                    }
+                });
+            }
+            if (feedbackList.includes("y")) {
+                feedbackList.forEach((val, i) => {
+                    if (val != "y") return;
+                    let index = indexList[i];
+                    for(w=possible.length-1; 0<=w; w--) {
+                        if (possible[w].split("")[index] == e) {
+                            // console.log(possible[w], "a");
+                            possible.splice(possible.indexOf(possible[w]), 1);
+                        }
+                    }
+                });
+            }
+            if (feedbackList.includes("w")) {
+                feedbackList.forEach((val, i) => {
+                    if (val != "w") return;
+                    let index = indexList[i];
+                    for(w=possible.length-1; 0<=w; w--) {
+                        if (possible[w].split("")[index] == e) {
+                            // console.log(possible[w], "b");
+                            possible.splice(possible.indexOf(possible[w]), 1);
+                        }
+                    }
+                });
+            }
+        });
+    }
+    console.log(possible.includes("equip"));
 
     // if feedback is all green, it tells you, you won
     if (feedback.every((val, i, arr) => val === "g")) {
