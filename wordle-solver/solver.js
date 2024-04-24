@@ -1,14 +1,12 @@
 // assigning basic variables
 var possible = [];
-var possible_split = [];
+// var possible_split = [];
 let lang = "eng";
 document.getElementById("lang").value = lang;
 
-document.addEventListener("click", e => {
-    if (e.target.tagName == "OPTION") {
-        lang = e.target.value;
-        start();
-    }
+document.getElementById("lang").addEventListener("change", e => {
+    lang = e.target.value;
+    start();
 });
 
 function start() {
@@ -21,36 +19,37 @@ function start() {
     feedback = ["w", "w", "w", "w", "w"]
     won = false;
 
-    let words_split0 = "";
+    let rawwords = "";
     switch (lang) {
         case "hu":
-            words_split0 = huwords;
+            rawwords = huwords;
             break;
         case "eng":
-            words_split0 = engwords;
+            rawwords = engwords;
             break;
     }
 
     // resets possible words too
     possible = [];
-    var words_split1;
-    words_split1 = words_split0.split(", ");
-    words_split1.forEach(element => {
+    rawwords.split(", ").forEach(element => {
         possible.push(element);
     });
 }
 
 
-var won;
+let won = false;
 function guessWord() {
     // only runs if the lettercount is 5
+    //? is this a failsafe?
+    if (document.getElementById("guess").value.length != 5) { alert("NEIN!"); return; }
 
-    if (document.getElementById("guess").value.length == 5) {
+    // resets the input and possible words and feedback displayed for next guess
+    document.getElementById("guess").value = "";
+    document.getElementById("words").innerHTML = "";
+    document.getElementById("feedback").innerHTML = "";
     
-    // console.log(possible, 1);
     wordEliminator();
-    // this is an async function because these need to be run after wordEliminator();
-    // ? why does this work when the function isnt async?
+
     if (!possible.length == 0) {
         if (!won){
             possible.forEach(element => {
@@ -61,168 +60,135 @@ function guessWord() {
         // if no words, tells no words
         addPossibleWord("Nincs több helyes szó!", false)
     }
-    // console.log(possible, 2);
     
-    }
 }
 
 var guess;
-var guess_split;
+let guess_split;
 let feedback = [];
 function wordEliminator() {
     // eliminates words by the wordle rules
-
-    // resets the input for next guess
-    document.getElementById("guess").value = "";
-    // also resets possible words
-    document.getElementById("words").innerHTML = "";
+    // this func became a mess because if you input a word with multiple same letters, the simple ruleset breaks.
+    // for example: "sleep"
+    // if one of the e-s is yellow, then the word has to include that letter, but not on the same index
+    // but if also one of the e-s is grey, then the word must not include that letter, which in this case is not true.
+    // wordle also count how many same letters have been inputted, and only gives yellow or green for the number of this letter in the word we're searching for.
+    // if this was any helpful for you, you're welcome.
 
     // splits every word in the possible array to charachters
-    possible_split = [];
-    possible.forEach(element => {
-        words_split2 = element.split("");
-        possible_split.push(words_split2);
-    });
+    // possible_split = [];
+    // possible.forEach(element => {
+    //     words_split2 = element.split("");
+    //     possible_split.push(words_split2);
+    // });
+    let hashset = new Set(guess_split);
 
     // eliminates the words.
-    if (new Set(guess_split).size == 5) {
-        for(w=possible.length-1; 0<=w; w--) {
-            let done = false;
-            for(i=0; i<5; i++) {
-                if (done) break;
-                switch (feedback[i]) {
-                    case "w":
-                        if (feedback.filter(x => x == feedback[w]).length == 1) {
-                            console.log(possible[w], guess_split[i], 'c')
-                            possible.splice(possible.indexOf(possible[w]), 1);
-                            done = true;
-                        }
-                    break;
-                    case "g":
-                        if(guess_split[i] !== possible_split[w][i]) {
-                            console.log(possible[w], guess_split[i], 'd')
-                            possible.splice(possible.indexOf(possible[w]), 1);
-                            done = true;
-                        }
-                    break;
-                    case "y":
-                        if(!possible[w].includes(guess_split[i])) {
-                            console.log(possible[w], guess_split[i], 'a')
-                            possible.splice(possible.indexOf(possible[w]), 1);
-                            done = true;
-                        }
-
-                        else if(guess_split[i] == possible_split[w][i]) {
-                            console.log(possible[w], guess_split[i], 'b')
-                            possible.splice(possible.indexOf(possible[w]), 1);
-                            done = true;
-                        }
-                    break;
+    //* if this breaks, the older version is found in the git history.
+    // we go trough the set, and getting the indexes and feedbacks of the letters
+    hashset.forEach( e=> {
+        // some variable setup beforehand
+        let indexListFunc = () => {
+            let list = [];
+            guess_split.forEach((element, index) => {
+                if (element == e) {
+                    list.push(index);
                 }
-            }
+            });
+            return list;
         }
-    } else {
-        new Set(guess_split).forEach( e=> {
-            // some variable setup beforehand
-            let indexListFunc = () => {
-                let list = [];
-                guess_split.forEach((element, index) => {
-                    if (element == e) {
-                        list.push(index);
-                    }
+        let feedbackListFunc = () => {
+            let list = [];
+            indexListFunc().forEach(element => {
+                list.push(feedback[element]);
+            });
+            return list;
+        }
+        let indexList = indexListFunc();
+        let feedbackList = feedbackListFunc();
+        
+        // if all of the feedback on the same letters are the same, we use these simple rules
+        // if no multiple same letters, we go by the simple rules
+        // green -> the letter is in the correct place in the word
+        // yellow -> the letter is included in the letter, but not at that place
+        // grey -> it has to not include the letter
+        // we break out of the loop if one of these is true
+        if (feedbackList.every((val, i, arr) => val === "w")) {
+            for(w=possible.length-1; 0<=w; w--) {
+                if (possible[w].includes(e)) {
+                    possible.splice(possible.indexOf(possible[w]), 1);
+                }
+            }
+            return;
+        }
+        if (feedbackList.every((val, i, arr) => val === "g")) {
+            for(w=possible.length-1; 0<=w; w--) {
+                if (!indexList.every((val, i, arr) => possible[w].split("")[val] == e)) {
+                    possible.splice(possible.indexOf(possible[w]), 1);
+                }
+            }
+            return;
+        }
+        if (feedbackList.every((val, i, arr) => val === "y")) {
+            for(w=possible.length-1; 0<=w; w--) {
+                let done = false;
+                // if in the yellows place there is a green, it eliminates the word
+                indexList.forEach((val, i, arr) => {
+                    if (possible[w].split("")[val] != e) return;
+                    possible.splice(possible.indexOf(possible[w]), 1);
+                    done = true;
                 });
-                return list;
-            }
-            let feedbackListFunc = () => {
-                let list = [];
-                indexListFunc().forEach(element => {
-                    list.push(feedback[element]);
-                });
-                return list;
-            }
-            let indexList = indexListFunc();
-            let feedbackList = feedbackListFunc();
-            console.log(possible.includes("equip"));
-            console.log(e, indexList, feedbackList);
-            
-            // if all of them are the same, it is basically what we had before
-            if (feedbackList.every((val, i, arr) => val === "w")) {
-                for(w=possible.length-1; 0<=w; w--) {
-                    if (possible[w].includes(e)) {
-                        possible.splice(possible.indexOf(possible[w]), 1);
-                    }
+                if (done) continue;
+                // if the character appears less times in the word than the indexList, it eliminates the word
+                if (possible[w].split("").filter(x => x == e).length < indexList.length) {
+                    possible.splice(possible.indexOf(possible[w]), 1);
                 }
-                return;
             }
-            if (feedbackList.every((val, i, arr) => val === "g")) {
-                console.log("so this is true");
-                for(w=possible.length-1; 0<=w; w--) {
-                    // console.log(possible[w].split("") == possible_split[w], possible[w], possible_split[w]);
-                    if (indexList.every((val, i, arr) => possible[w].split("")[val] == e) == false ){
-                        // console.log(possible[w], e, possible_split[w], possible_split[w][4], "nope");
-                        possible.splice(possible.indexOf(possible[w]), 1);
-                    }
-                }
-                return;
-            }
-            if (feedbackList.every((val, i, arr) => val === "y")) {
-                console.log("huh")
-                for(w=possible.length-1; 0<=w; w--) {
-                    let done = false;
-                    // if in the yellows place there is a green, it eliminates the word
-                    indexList.forEach((val, i, arr) => {
-                        if (possible[w].split("")[val] != e) return;
-                        possible.splice(possible.indexOf(possible[w]), 1);
-                        done = true;
-                    });
-                    if (done) continue;
-                    // if the character appears less times in the word than the indexList, it eliminates the word
-                    if (possible[w].split("").filter(x => x == e).length < indexList.length) {
-                        possible.splice(possible.indexOf(possible[w]), 1);
-                    }
-                }
-                return;
-            }
-            if (feedbackList.includes("g")) {
-                feedbackList.forEach((val, i) => {
-                    if (val != "g") return;
-                    let index = indexList[i];
+            return;
+        }
 
-                    for(w=possible.length-1; 0<=w; w--) {
-                        if (possible[w].split("")[index] != e) {
-                            // console.log(possible[w], "noway");
-                            possible.splice(possible.indexOf(possible[w]), 1);
-                        }
+        // now we go trough feedback individually.
+        // we cannot go trough the entire word, because there might be multiple same letters
+        // so the rules change:
+        // green -> the letter is in the correct place in the word
+        // yellow -> the letter is included in the letter, but not at that place
+        // grey -> it has to not include the letter AT THAT PLACE
+        // this rewrite might have been overkill just for this rule change
+        if (feedbackList.includes("g")) {
+            feedbackList.forEach((val, i) => {
+                if (val != "g") return;
+                let index = indexList[i];
+
+                for(w=possible.length-1; 0<=w; w--) {
+                    if (possible[w].split("")[index] != e) {
+                        possible.splice(possible.indexOf(possible[w]), 1);
                     }
-                });
-            }
-            if (feedbackList.includes("y")) {
-                feedbackList.forEach((val, i) => {
-                    if (val != "y") return;
-                    let index = indexList[i];
-                    for(w=possible.length-1; 0<=w; w--) {
-                        if (possible[w].split("")[index] == e) {
-                            // console.log(possible[w], "a");
-                            possible.splice(possible.indexOf(possible[w]), 1);
-                        }
+                }
+            });
+        }
+        if (feedbackList.includes("y")) {
+            feedbackList.forEach((val, i) => {
+                if (val != "y") return;
+                let index = indexList[i];
+                for(w=possible.length-1; 0<=w; w--) {
+                    if (possible[w].split("")[index] == e) {
+                        possible.splice(possible.indexOf(possible[w]), 1);
                     }
-                });
-            }
-            if (feedbackList.includes("w")) {
-                feedbackList.forEach((val, i) => {
-                    if (val != "w") return;
-                    let index = indexList[i];
-                    for(w=possible.length-1; 0<=w; w--) {
-                        if (possible[w].split("")[index] == e) {
-                            // console.log(possible[w], "b");
-                            possible.splice(possible.indexOf(possible[w]), 1);
-                        }
+                }
+            });
+        }
+        if (feedbackList.includes("w")) {
+            feedbackList.forEach((val, i) => {
+                if (val != "w") return;
+                let index = indexList[i];
+                for(w=possible.length-1; 0<=w; w--) {
+                    if (possible[w].split("")[index] == e) {
+                        possible.splice(possible.indexOf(possible[w]), 1);
                     }
-                });
-            }
-        });
-    }
-    console.log(possible.includes("equip"));
+                }
+            });
+        }
+    });
 
     // if feedback is all green, it tells you, you won
     if (feedback.every((val, i, arr) => val === "g")) {
@@ -232,7 +198,6 @@ function wordEliminator() {
 
     // also resets feedback
     feedback = ["w", "w", "w", "w", "w"]
-    document.getElementById("feedback").innerHTML = "";
 }
 
 function addPossibleWord(word, clickable) {
@@ -249,6 +214,7 @@ function addPossibleWord(word, clickable) {
     document.getElementById("words").appendChild(node);
 }
 
+//? can it be done with "this"?
 function easyChoose(word) {
     // lets you click on a word, and select it easily
     
@@ -257,26 +223,13 @@ function easyChoose(word) {
 }
 
 
-document.addEventListener("keyup", (event) => {
-    // run at every key stopped being held
-
-    var length = document.getElementById("guess").value.length;
-    if (length != 0) {
-        // this tells you if you have more or less letters than you should do
-        document.getElementById("words").innerHTML = "";
-        if (length < 5){
-            addPossibleWord("Túl kevés betű!", false);
-        } else if (length > 5) {
-            addPossibleWord("Túl sok betű!", false);
-        }
-    }
-
+document.addEventListener("keyup", event => {
     // if you press enter, the guessing will start
     if (event.key == "Enter"){
         guessWord();
     }
 
-    // and updates feedback
+    // and updates feedback on every keypress
     updateFeedback();
 });
 
