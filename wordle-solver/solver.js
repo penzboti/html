@@ -1,6 +1,5 @@
 // assigning basic variables
 var possible = [];
-// var possible_split = [];
 let lang = "eng";
 document.getElementById("lang").value = lang;
 
@@ -11,14 +10,15 @@ document.getElementById("lang").addEventListener("change", e => {
 
 function start() {
     // this runs at the start, and at every restart
-    // resets inputs, divs, and "won"
 
+    // resets inputs, displays, and if you've won or not
     document.getElementById("words").innerHTML = "";
     document.getElementById("guess").value = "";
     document.getElementById("feedback").innerHTML = "";
     feedback = ["w", "w", "w", "w", "w"]
     won = false;
 
+    // we get the words depending on the language
     let rawwords = "";
     switch (lang) {
         case "hu":
@@ -29,7 +29,7 @@ function start() {
             break;
     }
 
-    // resets possible words too
+    // resets, then populates possible words
     possible = [];
     rawwords.split(", ").forEach(element => {
         possible.push(element);
@@ -40,7 +40,6 @@ function start() {
 let won = false;
 function guessWord() {
     // only runs if the lettercount is 5
-    //? is this a failsafe?
     if (document.getElementById("guess").value.length != 5) { alert("NEIN!"); return; }
 
     // resets the input and possible words and feedback displayed for next guess
@@ -50,6 +49,7 @@ function guessWord() {
     
     wordEliminator();
 
+    // displays the possible words
     if (!possible.length == 0) {
         if (!won){
             possible.forEach(element => {
@@ -57,7 +57,7 @@ function guessWord() {
             });
         }
     } else {
-        // if no words, tells no words
+        // if no words are left, it displays this message
         addPossibleWord("Nincs több helyes szó!", false)
     }
     
@@ -75,12 +75,7 @@ function wordEliminator() {
     // wordle also count how many same letters have been inputted, and only gives yellow or green for the number of this letter in the word we're searching for.
     // if this was any helpful for you, you're welcome.
 
-    // splits every word in the possible array to charachters
-    // possible_split = [];
-    // possible.forEach(element => {
-    //     words_split2 = element.split("");
-    //     possible_split.push(words_split2);
-    // });
+    // https://stackoverflow.com/a/28965567/12706133
     let hashset = new Set(guess_split);
 
     // eliminates the words.
@@ -113,12 +108,14 @@ function wordEliminator() {
         // yellow -> the letter is included in the letter, but not at that place
         // grey -> it has to not include the letter
         // we break out of the loop if one of these is true
+        // this .every was copilots idea
         if (feedbackList.every((val, i, arr) => val === "w")) {
             for(w=possible.length-1; 0<=w; w--) {
                 if (possible[w].includes(e)) {
                     possible.splice(possible.indexOf(possible[w]), 1);
                 }
             }
+            // https://masteringjs.io/tutorials/fundamentals/foreach-continue
             return;
         }
         if (feedbackList.every((val, i, arr) => val === "g")) {
@@ -140,6 +137,7 @@ function wordEliminator() {
                 });
                 if (done) continue;
                 // if the character appears less times in the word than the indexList, it eliminates the word
+                // filter found at https://stackoverflow.com/a/6121234/12706133
                 if (possible[w].split("").filter(x => x == e).length < indexList.length) {
                     possible.splice(possible.indexOf(possible[w]), 1);
                 }
@@ -286,7 +284,6 @@ function feedbackToggler(id) {
         feedback[id] = "w";
     }
 }
-
 
 // starts the entire thing
 start();
