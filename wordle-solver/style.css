@@ -1,8 +1,78 @@
-body {
-    width: 95vw;
+* {
+    --menu-height: 50px;
 }
-div {
-    margin: 10px;
+
+body {
+    margin: 0px;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100svw;
+    height: 100svh;
+    align-content: flex-start;
+}
+.container {
+    box-sizing: border-box;
+    background-color: black;
+    min-height: 33.3vh;
+    height: fit-content;
+    width: 100svw;
+    text-align: center;
+    /* for testing purposes: https://cloudinary.com/guides/front-end-development/creative-uses-for-css-inner-border-and-3-ways-to-set-a-border */
+    border: 3px orange solid;
+
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+#left {
+    /* width: 100%;
+    height: 100%; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+#right {
+    /* width: 100%; */
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+#menu {
+    width: 100svw;
+    height: var(--menu-height);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#menu > * {
+    height: calc(var(--menu-height) - 20px);
+}
+
+#input {
+    display: flex;
+    flex-wrap: wrap;
+}
+#input > div {
+    width: 100%;
+}
+
+.row {
+    min-height: 50px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 100%;
 }
 .letter {
     font-size: 40px;
@@ -24,15 +94,32 @@ div {
     margin: 10px;
 }
 
-.big {
-    background-color: black;
-    min-height: 100px;
-    text-align: center;
+/* for pc */
+/* using scrollable divs here, if it overflows off the site */
+@media (min-width: 1000px) {
+    body {
+        overflow: hidden;
+    }
+    .column {
+        width: auto;
+        /* min-height: calc(100svh - var(--menu-height)); */
+        height: calc(100% - var(--menu-height));
+        /* height: auto; */
+    }
+    #left {
+        flex: 2;
+    }
+    #right {
+        flex: 1;
+    }
+    .container {
+        height: 100%;
+        width: 100%;
+        /* hopefully it works: https://stackoverflow.com/questions/9707397/making-a-div-vertically-scrollable-using-css */
+    }
 
-    display: flex;
-    flex-direction: row; 
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
+    #words {
+        height: calc(100svh - var(--menu-height));
+        overflow-y: auto;
+    }
 }

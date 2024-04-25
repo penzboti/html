@@ -13,8 +13,9 @@ function start() {
 
     // resets inputs, displays, and if you've won or not
     document.getElementById("words").innerHTML = "";
-    document.getElementById("guess").value = "";
-    document.getElementById("feedback").innerHTML = "";
+    document.getElementById("guessinput").value = "";
+    document.getElementById("inputrow").innerHTML = "";
+    document.getElementById("rows").innerHTML = "";
     feedback = ["w", "w", "w", "w", "w"]
     won = false;
 
@@ -40,12 +41,15 @@ function start() {
 let won = false;
 function guessWord() {
     // only runs if the lettercount is 5
-    if (document.getElementById("guess").value.length != 5) { alert("NEIN!"); return; }
+    if (document.getElementById("guessinput").value.length != 5) { alert("NEIN!"); return; }
+
+    // displays the feedback of the guessed word, just for the user to see
+    saveFeedback();
 
     // resets the input and possible words and feedback displayed for next guess
-    document.getElementById("guess").value = "";
+    document.getElementById("guessinput").value = "";
     document.getElementById("words").innerHTML = "";
-    document.getElementById("feedback").innerHTML = "";
+    document.getElementById("inputrow").innerHTML = "";
     
     wordEliminator();
 
@@ -198,6 +202,23 @@ function wordEliminator() {
     feedback = ["w", "w", "w", "w", "w"]
 }
 
+// it is purely cosmetic btw
+function saveFeedback() {
+    let node = document.createElement("div");
+    node.classList.add("row");
+    let children = document.getElementById("inputrow").children;
+    // node.children = children;
+    for(i=0; i<=4; i++) {
+        let letter = document.createElement("p");
+        letter.innerText = children[i].innerText;
+        letter.classList.add(children[i].classList[1]);
+        letter.classList.add("letter");
+        node.appendChild(letter);
+    }
+    // node.appendChild(children);
+    document.getElementById("rows").appendChild(node);
+}
+
 function addPossibleWord(word, clickable) {
     // adds possible words to the div
 
@@ -216,7 +237,7 @@ function addPossibleWord(word, clickable) {
 function easyChoose(word) {
     // lets you click on a word, and select it easily
     
-    document.getElementById("guess").value = word;
+    document.getElementById("guessinput").value = word;
     updateFeedback();
 }
 
@@ -234,8 +255,8 @@ document.addEventListener("keyup", event => {
 function updateFeedback() {
     // resets, then updates the feedback
 
-    document.getElementById("feedback").innerHTML = "";
-    guess = document.getElementById("guess").value.toLowerCase();
+    document.getElementById("inputrow").innerHTML = "";
+    guess = document.getElementById("guessinput").value.toLowerCase();
     guess_split = guess.split("");
 
     // adds every letter to feedback div. Never adds more then 5
@@ -256,7 +277,7 @@ function addFeedbackLetter(letter, position) {
     node.setAttribute("onclick",'feedbackToggler('+position+')');
     node.id = position;
 
-    document.getElementById("feedback").appendChild(node);
+    document.getElementById("inputrow").appendChild(node);
 }
 
 var classWh;
