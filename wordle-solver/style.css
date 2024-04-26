@@ -1,5 +1,7 @@
 * {
     --menu-height: 50px;
+    --bg-color: orange;
+    transition: .1s;
 }
 
 body {
@@ -9,16 +11,20 @@ body {
     width: 100svw;
     height: 100svh;
     align-content: flex-start;
+    background-color: var(--bg-color);
 }
+
 .container {
+    /* border gets calculated in the width & height */
+    /* https://cloudinary.com/guides/front-end-development/creative-uses-for-css-inner-border-and-3-ways-to-set-a-border */
     box-sizing: border-box;
     background-color: black;
     min-height: 33.3vh;
     height: fit-content;
     width: 100svw;
     text-align: center;
-    /* for testing purposes: https://cloudinary.com/guides/front-end-development/creative-uses-for-css-inner-border-and-3-ways-to-set-a-border */
-    border: 3px orange solid;
+    border: 3px var(--bg-color) solid;
+    border-radius: 10px;
 
     display: flex;
     flex-direction: row; 
@@ -26,10 +32,9 @@ body {
     justify-content: center;
     align-items: center;
     align-content: center;
+    border-top: 0px;
 }
 #left {
-    /* width: 100%;
-    height: 100%; */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -37,7 +42,6 @@ body {
     align-content: center;
 }
 #right {
-    /* width: 100%; */
     height: max-content;
     display: flex;
     flex-direction: column;
@@ -47,14 +51,64 @@ body {
 }
 
 #menu {
-    width: 100svw;
+    width: 100svw !important;
     height: var(--menu-height);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-direction: row !important;
+    min-height: var(--menu-height) !important;
+    column-gap: 10px;
+    /* https://stackoverflow.com/questions/20626685/how-do-i-set-distance-between-flexbox-items */
+    border-top: 3px var(--bg-color) solid;
 }
 #menu > * {
     height: calc(var(--menu-height) - 20px);
+}
+
+input {
+    min-height: 30px;
+}
+input[type="button"] {
+    border: 3px solid var(--bg-color);
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+}
+input[type="button"]:hover {
+    background-color: var(--bg-color);
+    color: black;
+}
+input[type="button"]:active {
+    border: 3px solid black;
+    background-color: black;
+    color: white;
+}
+input[type="text"] {
+    /* https://codepen.io/fpecher/pen/QWLMWwo */
+    box-shadow: 0 0 30px rgb(255,255,255);
+    background-color: black;
+    /* border: 3px solid var(--bg-color); */
+    border: 3px solid black;
+    color: white;
+    border-radius: 5px;
+    font-size: 20px;
+}
+/* the outline is ugly: https://stackoverflow.com/questions/1457849/how-to-remove-the-border-highlight-on-an-input-text-element */
+input[type="text"]:focus {
+    /* border: 3px solid white; */
+    outline: none;
+}
+select {
+    border: 3px solid var(--bg-color);
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+    user-select: none;
+}
+select:focus {
+    /* border: 3px solid white; */
+    outline: none;
 }
 
 #input {
@@ -63,6 +117,10 @@ body {
 }
 #input > div {
     width: 100%;
+}
+#inputrow {
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .row {
@@ -79,47 +137,81 @@ body {
     width: 40px;
     text-align: center;
     margin: 5px;
+    padding: 5px;
+    border-radius: 3px;
+    user-select: none;
+    height: 46.4px;
+    box-shadow: 5px 5px 5px rgba(255,255,255, .5);
 
     cursor: grab;
 }
-.letter-white {background-color: gray;}
-.letter-yellow {background-color: yellow;}
-.letter-green {background-color: green;}
+.letter-white {background-color: rgb(236, 236, 236);}
+.letter-yellow {background-color: orange;}
+.letter-green {background-color: rgb(0, 171, 0);}
+.deactivated-letter {cursor: auto;}
+.pending-letter {
+    box-sizing: border-box;
+    background-color: black;
+    border: 3px solid grey;
+    width: 50px;
+    height: 56.4px;
+}
 
+#words {
+    display:block;
+}
 .word {
-    background-color: white;
-    font-size: 30px;
-    padding: 5px;
-    border-radius: 5px;
-    margin: 10px;
+    width: calc(100% - 20px);
+    box-shadow: 5px 5px 15px rgba(255,255,255, .5), -5px -5px 15px rgba(255,255,255, .5);
+    background-color: black;
+    border-radius: 3px;
+    font-size: 25px;
+    margin: 5px 10px 5px 10px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: .05s;
+}
+.word:hover {
+    padding: 5px 0 5px 0;
+    background-color: var(--bg-color);
 }
 
 /* for pc */
 /* using scrollable divs here, if it overflows off the site */
-@media (min-width: 1000px) {
+@media (min-width: 800px) {
     body {
         overflow: hidden;
     }
     .column {
         width: auto;
-        /* min-height: calc(100svh - var(--menu-height)); */
         height: calc(100% - var(--menu-height));
-        /* height: auto; */
     }
     #left {
-        flex: 2;
+        flex: 5;
     }
     #right {
-        flex: 1;
+        flex: 2;
     }
     .container {
         height: 100%;
         width: 100%;
-        /* hopefully it works: https://stackoverflow.com/questions/9707397/making-a-div-vertically-scrollable-using-css */
+        border-right: 0px;
     }
 
     #words {
         height: calc(100svh - var(--menu-height));
+        /* https://stackoverflow.com/questions/9707397/making-a-div-vertically-scrollable-using-css */
         overflow-y: auto;
+        /* padding-top: 15px; */
+        border-right: 3px var(--bg-color) solid;
+    }
+    #guessinput {
+        width: 20%;
+    }
+
+    #menu {
+        border-right: 3px var(--bg-color) solid;
     }
 }

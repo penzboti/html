@@ -35,13 +35,14 @@ function start() {
     rawwords.split(", ").forEach(element => {
         possible.push(element);
     });
+    updateFeedback();
 }
 
 
 let won = false;
 function guessWord() {
     // only runs if the lettercount is 5
-    if (document.getElementById("guessinput").value.length != 5) { alert("NEIN!"); return; }
+    if (document.getElementById("guessinput").value.length != 5) { alert("You put in the wrong amount of characters."); return; }
 
     // displays the feedback of the guessed word, just for the user to see
     saveFeedback();
@@ -62,8 +63,10 @@ function guessWord() {
         }
     } else {
         // if no words are left, it displays this message
-        addPossibleWord("Nincs több helyes szó!", false)
+        addPossibleWord("No more valid words", false)
     }
+
+    updateFeedback();
     
 }
 
@@ -202,20 +205,17 @@ function wordEliminator() {
     feedback = ["w", "w", "w", "w", "w"]
 }
 
-// it is purely cosmetic btw
+// displays the feedback of the guessed word, just for the user to see
 function saveFeedback() {
     let node = document.createElement("div");
     node.classList.add("row");
     let children = document.getElementById("inputrow").children;
-    // node.children = children;
     for(i=0; i<=4; i++) {
         let letter = document.createElement("p");
         letter.innerText = children[i].innerText;
-        letter.classList.add(children[i].classList[1]);
-        letter.classList.add("letter");
+        letter.classList.add(children[i].classList[1], "letter", "deactivated-letter");
         node.appendChild(letter);
     }
-    // node.appendChild(children);
     document.getElementById("rows").appendChild(node);
 }
 
@@ -247,10 +247,9 @@ document.addEventListener("keyup", event => {
     if (event.key == "Enter"){
         guessWord();
     }
-
-    // and updates feedback on every keypress
-    updateFeedback();
 });
+// updates feedback on input change
+document.getElementById("guessinput").addEventListener("input", updateFeedback);
 
 function updateFeedback() {
     // resets, then updates the feedback
@@ -260,9 +259,7 @@ function updateFeedback() {
     guess_split = guess.split("");
 
     // adds every letter to feedback div. Never adds more then 5
-    // ? this isnt really nescecary because it doesnt allow you to send it unless its five letters, but ok
-    length = guess.length-1; if (length > 4) { length = 4; };
-    for(i=0; i<=length; i++) {
+    for(i=0; i<=4; i++) {
         addFeedbackLetter(guess_split[i], i);
     }
 }
@@ -272,10 +269,16 @@ function addFeedbackLetter(letter, position) {
     // also adds the text, class, and onclick func
 
     const node = document.createElement("p");
-    node.innerText = letter;
-    node.classList.add("letter", "letter-white")
-    node.setAttribute("onclick",'feedbackToggler('+position+')');
-    node.id = position;
+    node.classList.add("letter");
+    if (typeof letter !== "undefined") {
+        node.innerText = letter;
+        node.classList.add("letter-white");
+        node.setAttribute("onclick",'feedbackToggler('+position+')');
+        node.id = position;
+    } else {
+        node.innerText = "";
+        node.classList.add("pending-letter", "deactivated-letter");
+    }
 
     document.getElementById("inputrow").appendChild(node);
 }

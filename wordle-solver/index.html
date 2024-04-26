@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="menu">
-        <input type="button" value="Újrakezdés" onclick="start()">
+    <div id="menu" class="container">
+        <input type="button" value="Restart" onclick="start()">
         <select id="lang" name="lang">
             <option value="eng">eng</option>
             <option value="hu">hu</option>
@@ -24,7 +24,7 @@
         <!--? should i move input first, for site readability purposes? -->
         <div id="input" class="container">
             <div>
-                <input type="text" id="guessinput" class="input" placeholder="szövegdoboz">
+                <input type="text" id="guessinput" class="input" placeholder="input your word here">
             </div>
             <div>
                 <!-- letters go here, and you change the feedback on them -->
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div>
-                <input type="button" value="Keresés indítása" onclick="guessWord()">
+                <input type="button" value="Search" onclick="guessWord()">
             </div>
         </div>
     </div>
@@ -41,17 +41,6 @@
         <div id="words" class="container"></div>
     </div>
     
-    <!-- <div>
-        Írd be ugyan azt a szót a szövegdobozba, amivel a wordle-nél kezdtél. <br>
-        Ha beírtad a szót a szövegdobozba, rá tudsz kattintani lejjebb a betűkre, hogy beállítsd mit kaptál vissza. <br>
-        Enter lenyomásával, vagy a 'keresés indítása' gomb megnyomásával elindíthatod a szókeresést. <br>
-        Utána még eggyel lejjebb, kiválaszthatod melyik szóval folytatod. Azok a szakak mind lehetnek. <br>
-        Ha kiválasztottál egyet és beírtad a wordle-be, rákattintással egyszerűen behozhatod itt is. <br>
-        Ezt ismételd meg addig, míg kitaláltad a szót. <br>
-        Ha újra szeretnéd kezdeni, kattints az 'újrakezdés' gombra.
-    </div>
-    <div>A forráskód megtalálható <a href="https://github.com/penzboti/Quhoo-wordle-solver">GitHubon!</a></div> -->
-
     <script src="words/eng-words.js"></script>
     <script src="words/hu-words.js"></script>
     <script src="solver.js"></script>
