@@ -200,6 +200,9 @@ select:focus {
         border-right: 0px;
     }
 
+    #rows {
+        overflow-y: auto;
+    }
     #words {
         height: calc(100svh - var(--menu-height));
         /* https://stackoverflow.com/questions/9707397/making-a-div-vertically-scrollable-using-css */
