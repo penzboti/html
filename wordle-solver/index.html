@@ -10,11 +10,19 @@
 </head>
 <body>
     <div id="menu" class="container">
-        <input type="button" value="Restart" onclick="start()">
-        <select id="lang" name="lang">
-            <option value="eng">eng</option>
-            <option value="hu">hu</option>
-        </select>
+        <div style="flex: 1;">
+            <select id="lang" name="lang">
+                <option value="eng">eng</option>
+                <option value="hu">hu</option>
+            </select>
+        </div>
+        <div style="flex: 1">
+            <input type="button" value="Restart" onclick="start()">
+        </div>
+        <div style="flex: 1;">
+            <input type="checkbox" id="assistedToggle">
+            <p>Assisted mode</p>
+        </div>
     </div>
 
     <div id="left" class="column">

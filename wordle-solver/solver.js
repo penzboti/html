@@ -7,7 +7,13 @@ document.getElementById("lang").addEventListener("change", e => {
     lang = e.target.value;
     start();
 });
+document.getElementById("assistedToggle").addEventListener("change", e => {
+    assistedMode = !assistedMode;
+    displayWords();
+});
 
+
+let rawwords = "";
 function start() {
     // this runs at the start, and at every restart
 
@@ -20,7 +26,6 @@ function start() {
     won = false;
 
     // we get the words depending on the language
-    let rawwords = "";
     switch (lang) {
         case "hu":
             rawwords = huwords;
@@ -36,6 +41,7 @@ function start() {
         possible.push(element);
     });
     updateFeedback();
+    displayWords();
 }
 
 
@@ -55,16 +61,7 @@ function guessWord() {
     wordEliminator();
 
     // displays the possible words
-    if (!possible.length == 0) {
-        if (!won){
-            possible.forEach(element => {
-                addPossibleWord(element);
-            });
-        }
-    } else {
-        // if no words are left, it displays this message
-        addPossibleWord("No more valid words", false)
-    }
+    displayWords();
 
     updateFeedback();
     
@@ -138,6 +135,7 @@ function wordEliminator() {
                 let done = false;
                 // if in the yellows place there is a green, it eliminates the word
                 indexList.forEach((val, i, arr) => {
+                    if (done) return;
                     if (possible[w].split("")[val] != e) return;
                     possible.splice(possible.indexOf(possible[w]), 1);
                     done = true;
@@ -197,12 +195,71 @@ function wordEliminator() {
 
     // if feedback is all green, it tells you, you won
     if (feedback.every((val, i, arr) => val === "g")) {
-        addPossibleWord("Eltaláltad!", false);
         won = true;
+        displayWords();
     }
 
     // also resets feedback
     feedback = ["w", "w", "w", "w", "w"]
+}
+
+let assistedMode = false;
+// displays the valid words
+function displayWords() {
+    document.getElementById("words").innerHTML = "";
+    if (!won) {
+    switch (assistedMode) {
+    case true:
+        let scoreList = scoreWords();
+        addPossibleWord("The best word currently is", false)
+        addPossibleWord(scoreList[0])
+        addPossibleWord("Other words you might want to choose", false)
+        for(i=1; i<=4; i++) {
+            addPossibleWord(scoreList[i])
+        }
+        break;
+    case false:
+        if (possible.length == rawwords.split(", ").length) {
+            // to not display all of the words at first, we simply send this message
+            addPossibleWord("Input any 5 letter word.", false)
+        } else if (!possible.length == 0) {
+            possible.forEach(element => {
+                addPossibleWord(element);
+            });
+        } else {
+            // if no words are left, it displays this message
+            addPossibleWord("No more valid words", false)
+        }
+        break;
+    }
+    } else {
+        addPossibleWord("You won!", false);
+    }
+}
+
+function scoreWords() {
+    // assistedMode = true;
+    let list = [...possible];
+    let letterMap = {};
+    let scoreMap = {};
+    list.forEach( e => {
+        e.split("").forEach( f => {
+            if (f in letterMap) {
+                letterMap[f]++;
+            } else {
+                letterMap[f] = 1;
+            }
+        });
+    });
+    list.forEach( e => {
+        let score = 0;
+        new Set(e.split("")).forEach( f => {
+            score += letterMap[f];
+        });
+        scoreMap[e] = score;
+    });
+    list.sort((a, b) => scoreMap[a] - scoreMap[b]).reverse();
+    return list;
 }
 
 // displays the feedback of the guessed word, just for the user to see
