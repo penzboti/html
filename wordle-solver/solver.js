@@ -213,8 +213,11 @@ function displayWords() {
         let scoreList = scoreWords();
         addPossibleWord("The best word currently is", false)
         addPossibleWord(scoreList[0])
-        addPossibleWord("Other words you might want to choose", false)
+        if (typeof scoreList[1] !== undefined) {
+            addPossibleWord("Other words you might want to choose", false)
+        }
         for(i=1; i<=4; i++) {
+            if (scoreList[i] == undefined) break;
             addPossibleWord(scoreList[i])
         }
         break;
@@ -286,6 +289,8 @@ function addPossibleWord(word, clickable) {
     // some messages dont need to be easily chosen, only runs if undefined
     if (typeof(clickable) == "undefined") {
         node.setAttribute("onclick",'easyChoose("'+word+'")');
+    } else {
+        node.classList.add("infoword");
     }
     document.getElementById("words").appendChild(node);
 }
@@ -330,7 +335,9 @@ function addFeedbackLetter(letter, position) {
     if (typeof letter !== "undefined") {
         node.innerText = letter;
         node.classList.add("letter-white");
-        node.setAttribute("onclick",'feedbackToggler('+position+')');
+        node.setAttribute("onclick", `feedbackToggler(${position}, 1)`);
+        // https://stackoverflow.com/questions/4235426/how-can-i-capture-the-right-click-event-in-javascript
+        node.setAttribute("oncontextmenu", `feedbackToggler(${position}, 2);return false;`);
         node.id = position;
     } else {
         node.innerText = "";
@@ -340,29 +347,33 @@ function addFeedbackLetter(letter, position) {
     document.getElementById("inputrow").appendChild(node);
 }
 
-var classWh;
-var classYl;
-var classGr;
-function feedbackToggler(id) {
+function feedbackToggler(id, button) {
     // Toggles letter colors
     // also changes the colors in the feedback array
 
     e = document.getElementById(id).classList;
-    classWh = e.contains("letter-white");
-    classYl = e.contains("letter-yellow");
-    classGr = e.contains("letter-green");
-
-    if (classWh == true) {
-        e.replace("letter-white", "letter-yellow");
-        feedback[id] = "y";
-    }
-    else if (classYl == true) {
-        e.replace("letter-yellow", "letter-green");
-        feedback[id] = "g";
-    }
-    else if (classGr == true) {
-        e.replace("letter-green", "letter-white");
+    let index = e.contains("letter-white") ? 0 : e.contains("letter-yellow") ? 1 : 2;
+    console.log(index,id, button)
+    index = button == 1 ? index + 1 : index - 1;
+    if (index == 3) index = 0; 
+    if (index == -1) index = 2;
+    console.log(index)
+    switch (index) {
+    case 0:
+        e.remove("letter-yellow", "letter-green");
+        e.add("letter-white");
         feedback[id] = "w";
+        break;
+    case 1: 
+        e.remove("letter-white", "letter-green");
+        e.add("letter-yellow");
+        feedback[id] = "y";
+        break;
+    case 2:
+        e.remove("letter-yellow", "letter-white");
+        e.add("letter-green");
+        feedback[id] = "g";
+        break;
     }
 }
 

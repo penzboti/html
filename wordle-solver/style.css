@@ -194,6 +194,17 @@ select:focus {
     padding: 5px 0 5px 0;
     background-color: var(--bg-color);
 }
+.infoword {
+    box-shadow: none;
+    border: none;
+    font-size: 20px;
+    padding: 10px 0px 10px 0px;
+}
+.infoword.word:hover {
+    padding: 0px;
+    background-color: black;
+    cursor: default;
+}
 
 /* for pc */
 /* using scrollable divs here, if it overflows off the site */

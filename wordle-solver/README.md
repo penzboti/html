@@ -14,10 +14,10 @@ suggests you the words with the most score
 do this on every move
 
 # todo
- - [ ] right click to instantly green a letter
- - [ ] fix undefined in assisted mode
- - [ ] change style of unselectable items in *words*
- - [ ] some code explaining
+ - [x] right click to instantly green a letter
+ - [x] fix undefined in assisted mode
+ - [x] change style of unselectable items in *words*
+ - [ ] some js code explaining
 
 # wild idea
 do the percentage calculation but divide the letters into columns
