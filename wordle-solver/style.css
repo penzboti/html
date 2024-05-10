@@ -201,7 +201,7 @@ select:focus {
     padding: 10px 0px 10px 0px;
 }
 .infoword.word:hover {
-    padding: 0px;
+    padding: 10px 0px 10px 0px;
     background-color: black;
     cursor: default;
 }

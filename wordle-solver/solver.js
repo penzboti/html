@@ -207,13 +207,13 @@ let assistedMode = false;
 // displays the valid words
 function displayWords() {
     document.getElementById("words").innerHTML = "";
-    if (!won) {
+    if (!won && possible.length != 0) {
     switch (assistedMode) {
     case true:
         let scoreList = scoreWords();
         addPossibleWord("The best word currently is", false)
         addPossibleWord(scoreList[0])
-        if (typeof scoreList[1] !== undefined) {
+        if (typeof scoreList[1] !== "undefined") {
             addPossibleWord("Other words you might want to choose", false)
         }
         for(i=1; i<=4; i++) {
@@ -225,18 +225,16 @@ function displayWords() {
         if (possible.length == rawwords.split(", ").length) {
             // to not display all of the words at first, we simply send this message
             addPossibleWord("Input any 5 letter word.", false)
-        } else if (!possible.length == 0) {
+        } else {
             possible.forEach(element => {
                 addPossibleWord(element);
             });
-        } else {
-            // if no words are left, it displays this message
-            addPossibleWord("No more valid words", false)
         }
         break;
     }
     } else {
-        addPossibleWord("You won!", false);
+        if (possible.length == 0) addPossibleWord("No more valid words", false);
+        if (won) addPossibleWord("You won!", false);
     }
 }
 

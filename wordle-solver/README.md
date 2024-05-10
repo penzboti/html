@@ -17,6 +17,8 @@ do this on every move
  - [x] right click to instantly green a letter
  - [x] fix undefined in assisted mode
  - [x] change style of unselectable items in *words*
+ - [x] fix undefined in assisted mode if no words remain
+ - [x] fix hover on non usable text in words list
  - [ ] some js code explaining
 
 # wild idea
