@@ -362,11 +362,9 @@ function feedbackToggler(id, button) {
 
     e = document.getElementById(id).classList;
     let index = e.contains("letter-white") ? 0 : e.contains("letter-yellow") ? 1 : 2;
-    console.log(index,id, button)
     index = button == 1 ? index + 1 : index - 1;
     if (index == 3) index = 0; 
     if (index == -1) index = 2;
-    console.log(index)
     switch (index) {
     case 0:
         e.remove("letter-yellow", "letter-green");
