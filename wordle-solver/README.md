@@ -19,7 +19,7 @@ do this on every move
  - [x] change style of unselectable items in *words*
  - [x] fix undefined in assisted mode if no words remain
  - [x] fix hover on non usable text in words list
- - [ ] some js code explaining
+ - [x] some js code explaining
 
 # wild idea
 do the percentage calculation but divide the letters into columns

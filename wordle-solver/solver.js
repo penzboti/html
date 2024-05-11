@@ -7,8 +7,15 @@ document.getElementById("lang").addEventListener("change", e => {
     lang = e.target.value;
     start();
 });
+
+// assisted mode initial load (persist through reloads) and toggle functionality
+let assistedMode = false;
+if (typeof window.localStorage.getItem("assistedMode") === "undefined") window.localStorage.setItem("assistedMode", "false")
+else assistedMode = window.localStorage.getItem("assistedMode") == "true" ? true : false;
+document.getElementById("assistedToggle").checked = assistedMode;
 document.getElementById("assistedToggle").addEventListener("change", e => {
     assistedMode = !assistedMode;
+    window.localStorage.setItem("assistedMode", assistedMode ? "true" : "false");
     displayWords();
 });
 
@@ -203,8 +210,8 @@ function wordEliminator() {
     feedback = ["w", "w", "w", "w", "w"]
 }
 
-let assistedMode = false;
 // displays the valid words
+// this depends on the assisted mode
 function displayWords() {
     document.getElementById("words").innerHTML = "";
     if (!won && possible.length != 0) {
@@ -238,6 +245,9 @@ function displayWords() {
     }
 }
 
+// in the assisted mode, it gives you top words that you should pick.
+// this is calculated by calculating each letter in all of the remaining words
+// then giving a score to each word, and sorting them by that score
 function scoreWords() {
     // assistedMode = true;
     let list = [...possible];
@@ -348,6 +358,7 @@ function addFeedbackLetter(letter, position) {
 function feedbackToggler(id, button) {
     // Toggles letter colors
     // also changes the colors in the feedback array
+    // right click to go back, left click to go forward
 
     e = document.getElementById(id).classList;
     let index = e.contains("letter-white") ? 0 : e.contains("letter-yellow") ? 1 : 2;
