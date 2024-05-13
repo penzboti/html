@@ -55,7 +55,7 @@ function start() {
 let won = false;
 function guessWord() {
     // only runs if the lettercount is 5
-    if (document.getElementById("guessinput").value.length != 5) { alert("You put in the wrong amount of characters."); return; }
+    if (document.getElementById("guessinput").value.trim().length != 5) { alert("You put in the wrong amount of characters."); return; }
 
     // displays the feedback of the guessed word, just for the user to see
     saveFeedback();
@@ -325,7 +325,7 @@ function updateFeedback() {
     // resets, then updates the feedback
 
     document.getElementById("inputrow").innerHTML = "";
-    guess = document.getElementById("guessinput").value.toLowerCase();
+    guess = document.getElementById("guessinput").value.trim().toLowerCase();
     guess_split = guess.split("");
 
     // adds every letter to feedback div. Never adds more then 5
