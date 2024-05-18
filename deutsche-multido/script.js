@@ -210,3 +210,46 @@ function hideScore() {
         e.innerText = e.normalValue;
     });
 }
+
+dictionaryCont.style.visibility = "hidden";
+function toggleDictionary() {
+    dictionaryCont.style.visibility = dictionaryCont.style.visibility == "hidden" ? "visible" : "hidden";
+    if (dictionaryCont.style.visibility == "visible") {
+        // https://stackoverflow.com/questions/2490825/how-to-trigger-event-in-javascript
+        let event = document.createEvent("HTMLEvents");
+        event.initEvent("input", true, true);
+        event.eventName = "input";
+        searchbar.dispatchEvent(event);
+    }
+}
+searchbar.addEventListener("input", () => {
+    let search = searchbar.value.toLowerCase().trim();
+    let results = [];
+    Object.keys(words).forEach( e => {
+        if (e.includes(search)) {results.push(e); return;}
+        let done = false;
+        words[e].forEach( f => {
+            if (done) return;
+            if (f.includes(search)) {results.push(e); done = true;}
+        });
+    });
+    dictionary.innerHTML = "";
+    results.forEach( e => {
+        let entry = document.createElement("div");
+        let content = [e, ...words[e]];
+        content.forEach( (f, i) => {
+            // https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
+            [...f.matchAll(new RegExp(search, 'gi'))].map(a => a.index).forEach( g => {
+                // https://stackoverflow.com/questions/20817618/is-there-a-splice-method-for-strings
+                let s = f.split("");
+                s.splice(g, search.length, `<b>${search}</b>`);
+                content[i] = s.join("");
+            });
+        });
+        content.forEach( f => {
+            entry.innerHTML += `<div><p>${f}</p></div>`
+        });
+        // entry.classList.add("dictionaryEntry");
+        dictionary.appendChild(entry);
+    });
+});

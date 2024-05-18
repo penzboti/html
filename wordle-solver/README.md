@@ -9,3 +9,4 @@ an assisted mode is in the works
 # wild idea
 do the percentage calculation but divide the letters into columns
 dont know how one would do it yet
+- maybe later

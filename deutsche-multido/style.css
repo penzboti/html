@@ -22,7 +22,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow-x: hidden;
+    flex-wrap: wrap;
+    /* height: 100%; */
 }
+/* html, body {
+    overflow: auto;
+} */
 
 .green {
     color: green;
@@ -43,6 +49,11 @@ input[type="button"]:focus, input[type="button"]:hover {
 #information > p {
     color: grey;
     text-align: center;
+}
+/* https://stackoverflow.com/questions/68463567/scroll-in-the-body-and-the-space-after-the-block */
+/* the link helped me diagnose the issue */
+#infoPerfekt {
+    margin-bottom: 0px !important;
 }
 
 #submitInfo {
@@ -73,12 +84,105 @@ input[type="number"] {
     width: 50px;
     height: 25px;
 }
-#touchEnter {
+#menuCont {
+    top: calc(100vh - var(--big-comp-height));
+    width: 100%;
+    height: var(--big-comp-height);
+    border-top: 2px solid orange;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px 10px 0px 0px;
+}
+#menuCont > div {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+#menuCont > div > * {
+    margin: 0px 20px 0px 20px;
+}
+
+/* dictionary */
+#dictionaryCont {
+    background-color: black;
+    border: 2px white solid;
+    box-shadow: 10px 10px 10px white;
     position: fixed;
-    /* -webkit-backface-visibility: hidden; */
-    top: calc(100vh - env(safe-area-inset-bottom));
-    left: calc(100vw);
-    transform: translate(-200%, -200%);
+    display: flex;
+    height: fit-content;
+    justify-content: center;
+    align-items: center;
+    max-height: 80vh;
+    border-radius: 5px;
+    flex-direction: column;
+}
+#searchbarCont {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#searchbarCont > input {
+    min-width: 75%;
+    margin: 10px 10px 10px 10px;
+}
+.close {
+    margin-right: 10px !important;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.close > p {
+    cursor: pointer;
+    margin: 5px;
+}
+.dictionary {
+    width: 97vw;
+
+    display: flex;
+    flex-direction: row;
+}
+#dictionaryInfo {
+    width: 100%;
+
+    padding-right: 20px;
+    width: fit-content;
+}
+#dictionary {
+    width: 100%;
+    height: 50vh;
+    
+    overflow-x: scroll;
+    display: flex;
+    overflow-y: hidden;
+    flex-direction: row;
+}
+#dictionary > div , #dictionaryInfo > div{
+    width: 100%;
+    display: flex;
+    margin: 10px 0px 10px 0px;
+
+    flex-direction: column;
+    height: 100%;
+}
+#dictionary > div > div, #dictionaryInfo > div > div {
+    flex: 1;
+    text-align: center;
+    margin: 0px 5px 0px 5px;
+    height: auto;
+    text-wrap: nowrap;
+    width: auto;
+}
+#dictionary > div > div > p, #dictionaryInfo > div > div > p {
+    margin: 0px;
+    text-align: center;
+    height: min-content;
+    color: rgb(225, 225, 225);
+}
+p > b {
+    color: white;
+    text-decoration: underline;
 }
 
 /** mobile layout, or to browsers with no @media query */
@@ -185,5 +289,24 @@ input {
         width: var(--big-comp-width);
         margin: 1vh calc(var(--big-comp-width) / 4) 1vh calc(var(--big-comp-width) / 4);
         transform: translate(0px, 0px);
+    }
+    /* original dictionary */
+    #menuCont {
+        position: absolute;
+    }
+    .dictionary {
+        display: block;
+    }
+    #dictionary {
+        flex-wrap: nowrap;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        flex-direction: column;
+    }
+    #dictionary > div, #dictionaryInfo > div {
+        flex-direction: row;
+    }
+    #dictionaryInfo {
+        width: 100% !important;
     }
 }

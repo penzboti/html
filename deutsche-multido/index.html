@@ -39,8 +39,31 @@
         Press the <b>space</b> key to <b>start</b> the quiz,<br>
         Or use this <button onclick="hidePopup()">button</button>.
     </div>
-    <button id="touchEnter" onclick="handleStep()">Enter</button>
-    <!-- next thing is the dictionary search, i promise -->
+    <div id="menuCont">
+        <div style="justify-content: flex-start;"><button onclick="toggleDictionary()">Dictionary</button></div>
+        <div style="justify-content: flex-end;"><button onclick="handleStep()">Enter</button></div>
+    </div>
+    <div id="dictionaryCont">
+        <div id="searchbarCont">
+            <div style="flex: 7.5"></div>
+            <input type="text" id="searchbar" placeholder="Search">
+            <div class="close" style="flex: 7.5">
+                <!-- https://en.wikipedia.org/wiki/X_mark -> unicode versions -->
+                <p onclick="toggleDictionary()">✖</p>
+            </div>
+        </div>
+        <div class="dictionary">
+            <div id="dictionaryInfo"><div>
+                <div><p>Hungarian</p></div>
+                <div><p>Infinitiv</p></div>
+                <div><p>Präsens</p></div>
+                <div><p>Präteritum</p></div>
+                <div><p>Auxiliary verb</p></div>
+                <div><p>Perfekt</p></div>
+            </div></div>
+            <div id="dictionary"></div>
+        </div>
+    </div>
     
     <!-- loading words -->
     <script src="words.js"></script>
