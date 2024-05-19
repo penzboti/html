@@ -29,19 +29,19 @@
             <p id="infoPerfekt">perfekt</p>
         </div>
     </div>
+    <div id="menuCont">
+        <div style="justify-content: flex-start;"><button onclick="toggleDictionary()">Dictionary</button><button onclick="toggleHelpPopup()">Help</button></div>
+        <div style="justify-content: flex-end;"><button onclick="handleStep()">Enter</button></div>
+    </div>
+    
     <div id="submitInfo">
         You can navigate with <b>tab</b>s<br>Press <b>enter</b> to submit.<br>
         You may toggle the button with <b>enter</b>.<br>
         After submission,<br>
         correct values are displayed <b>under</b> the inputs,<br>
         but only where <b>necessary</b>.<br>
-        Adjust range: from <input type="number" id="startIndexInput" min="0"> to <input type="number" id="endIndexInput">.<br>
         Press the <b>space</b> key to <b>start</b> the quiz,<br>
-        Or use this <button onclick="hidePopup()">button</button>.
-    </div>
-    <div id="menuCont">
-        <div style="justify-content: flex-start;"><button onclick="toggleDictionary()">Dictionary</button></div>
-        <div style="justify-content: flex-end;"><button onclick="handleStep()">Enter</button></div>
+        Or use this <button onclick="toggleHelpPopup()">button</button>.
     </div>
     <div id="dictionaryCont">
         <div id="searchbarCont">

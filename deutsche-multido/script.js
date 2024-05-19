@@ -1,17 +1,21 @@
-content.style.visibility = "hidden";
-// hiding initial popup
-function hidePopup() {
-    submitInfo.style.visibility = "hidden";
-    content.style.visibility = "visible";
-    let startval = startIndexInput.value, endval = endIndexInput.value;
-    // checking if the min and max values have changed and if so, restarting the quiz
-    if (startval != startIndex || endval != endIndex) {
-        startIndex = startval, endIndex = endval;
+let helpPopup = true;
+function toggleHelpPopup() {
+    switch(helpPopup) {
+    case true:
+        submitInfo.style.visibility = "hidden";
+        content.style.visibility = "visible";
+        menuCont.style.visibility = "visible";
+        infoElements.forEach( e => {
+            e.normalValue = e.innerText;
+        })
+        break;
+    case false:
+        content.style.visibility = "hidden";
+        menuCont.style.visibility = "hidden";
+        submitInfo.style.visibility = "visible";
+        break;
     }
-    infoElements.forEach( e => {
-        e.normalValue = e.innerText;
-    })
-    startQuiz();
+    helpPopup = !helpPopup;
 }
 
 let auxiliary = "ist";
@@ -33,29 +37,10 @@ auxiliaryButton.addEventListener("click", () => {
     changeAuxiliary();
 });
 
-// https://stackoverflow.com/questions/62348768/how-to-check-the-state-of-input-event
-startIndexInput.addEventListener("change", () => { updateMinMax(); })
-endIndexInput.addEventListener("change", () => { updateMinMax(); })
-// min and max value functionality
-function updateMinMax() {
-    // https://stackoverflow.com/a/31058978/12706133
-    // checking for edge cases
-    if (parseInt(startIndexInput.value, 10) > parseInt(startIndexInput.max, 10)) startIndexInput.value = parseInt(startIndexInput.max, 10);
-    if (parseInt(startIndexInput.value, 10) < parseInt(startIndexInput.min, 10)) startIndexInput.value = parseInt(startIndexInput.min, 10);
-    if (parseInt(endIndexInput.value, 10) > parseInt(endIndexInput.max, 10)) endIndexInput.value = parseInt(endIndexInput.max, 10);
-    if (parseInt(endIndexInput.value, 10) < parseInt(endIndexInput.min, 10)) endIndexInput.value = parseInt(endIndexInput.min, 10);
-    // changing the min and max values
-    startIndexInput.max = parseInt(endIndexInput.value, 10) -1;
-    endIndexInput.min = parseInt(startIndexInput.value, 10) +1;
-    // checking if input was empty, and if so, setting it to the min/max value
-    if (startIndexInput.max == "NaN") { startIndexInput.max = endIndexInput.max; endIndexInput.value = endIndexInput.max; updateMinMax(); }
-    if (endIndexInput.min == "NaN") { endIndexInput.min = startIndexInput.min; startIndexInput.value = startIndexInput.min; updateMinMax(); }
-}
-
 // key pressing detection
 document.addEventListener("keydown", (e) => {
-    if (submitInfo.style.visibility!="hidden" && e.key == " ") hidePopup();
-    if (e.key == "Enter" && lastTarget != auxiliaryButton) handleStep();
+    if (submitInfo.style.visibility!="hidden" && e.key == " ") toggleHelpPopup();
+    if (e.key == "Enter" && lastTarget != auxiliaryButton && !helpPopup) handleStep();
     // this might trap the focus, but it might not
     // https://hidde.blog/using-javascript-to-trap-focus-in-an-element/
     if (e.key == "Tab") {
@@ -74,7 +59,7 @@ document.addEventListener("keydown", (e) => {
 
     // you can also toggle the button with arrow keys
     if ((e.key == "ArrowUp" || e.key == "ArrowDown") && lastTarget == auxiliaryButton) changeAuxiliary();
-    // and also navigate
+    // and also navigate, but only from the button lol
     if (e.key == "ArrowLeft" && lastTarget == auxiliaryButton) {
         let i = allInputs.indexOf(lastTarget);
         if (i == 0) {
@@ -107,7 +92,7 @@ document.addEventListener("keyup", (e) => {
 let quiz = [];
 let currentStep;
 let canStep = false;
-let startIndex = startIndexInput.value = 0, endIndex = endIndexInput.value = 130; endIndexInput.max = Object.keys(words).length; updateMinMax();
+let startIndex = 0, endIndex = Object.keys(words).length;
 // starting the quiz
 function startQuiz() {
     quiz = Object.keys(words).slice(startIndex, endIndex);
@@ -214,6 +199,7 @@ function hideScore() {
 dictionaryCont.style.visibility = "hidden";
 function toggleDictionary() {
     dictionaryCont.style.visibility = dictionaryCont.style.visibility == "hidden" ? "visible" : "hidden";
+    menuCont.style.visibility = menuCont.style.visibility == "visible" ? "hidden" : "visible";
     if (dictionaryCont.style.visibility == "visible") {
         // https://stackoverflow.com/questions/2490825/how-to-trigger-event-in-javascript
         let event = document.createEvent("HTMLEvents");
@@ -253,3 +239,7 @@ searchbar.addEventListener("input", () => {
         dictionary.appendChild(entry);
     });
 });
+
+// start the quiz
+toggleHelpPopup();
+startQuiz();
