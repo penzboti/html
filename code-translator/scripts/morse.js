@@ -40,7 +40,7 @@ getWords().then(words => {
 function getWords() {
     return new Promise((resolve, reject) => {
         // this wordlist is from https://www.ef.com/wwen/english-resources/english-vocabulary/top-3000-words/
-        fetch('words.txt')
+        fetch('../words.txt')
             .then(response => response.text())
             .then(data => {
                 resolve(data);
