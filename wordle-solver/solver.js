@@ -249,8 +249,9 @@ function displayWords() {
 // this is calculated by calculating each letter in all of the remaining words
 // then giving a score to each word, and sorting them by that score
 function scoreWords() {
-    // assistedMode = true;
     let list = [...possible];
+
+    // score letters in words
     let letterMap = {};
     let scoreMap = {};
     list.forEach( e => {
@@ -262,6 +263,7 @@ function scoreWords() {
             }
         });
     });
+
     list.forEach( e => {
         let score = 0;
         new Set(e.split("")).forEach( f => {
@@ -270,7 +272,39 @@ function scoreWords() {
         scoreMap[e] = score;
     });
     list.sort((a, b) => scoreMap[a] - scoreMap[b]).reverse();
-    return list;
+
+    // score letters in position in words
+    let positionalLetterMap = [{}, {}, {}, {}, {}];
+    list.forEach( e => {
+        for (i=0; i<=4; i++) {
+            let f = e.split("")[i];
+            if (f in positionalLetterMap[i]) {
+                positionalLetterMap[i][f]++;
+            } else {
+                positionalLetterMap[i][f] = 1;
+            }
+        }
+    });
+
+    list.forEach( e => {
+        let score = 0;
+        for (i=0; i<=4; i++) {
+            let f = e.split("")[i];
+            score += positionalLetterMap[i][f];
+        }
+        scoreMap[e] = score;
+    });
+    let positionalList = [...possible];
+    positionalList.sort((a, b) => scoreMap[a] - scoreMap[b]).reverse();
+
+    // console.log(`The best word "${list[0]}" is placed positionally ${positionalList.indexOf(list[0]) + 1}`);
+    // console.log(`The best positional word "${positionalList[0]}" is placed in the list ${list.indexOf(positionalList[0]) + 1}`);
+
+    // console.log(list, positionalList);
+    
+    // it seems better at the moment.
+    return positionalList;
+    // return list;
 }
 
 // displays the feedback of the guessed word, just for the user to see
