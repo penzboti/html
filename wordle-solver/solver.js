@@ -19,8 +19,21 @@ document.getElementById("assistedToggle").addEventListener("change", e => {
     displayWords();
 });
 
+// answers mode, code just like assisted mode
+// only uses possible answers
+let answersMode = false;
+if (typeof window.localStorage.getItem("answersMode") === "undefined") window.localStorage.setItem("answersMode", "false")
+else answersMode = window.localStorage.getItem("answersMode") == "true" ? true : false;
+document.getElementById("answersToggle").checked = answersMode;
+document.getElementById("answersToggle").addEventListener("change", e => {
+    answersMode = !answersMode;
+    window.localStorage.setItem("answersMode", answersMode ? "true" : "false");
+    start();
+});
+
 
 let rawwords = "";
+let rawanswers = "";
 function start() {
     // this runs at the start, and at every restart
 
@@ -32,27 +45,40 @@ function start() {
     feedback = ["w", "w", "w", "w", "w"]
     won = false;
 
+    previous_guess = "";
+    previous_feedback = [];
+
     // we get the words depending on the language
     switch (lang) {
         case "hu":
             rawwords = huwords;
+            rawanswers = huwords;
             break;
         case "eng":
             rawwords = engwords;
+            rawanswers = enganswers;
             break;
     }
 
     // resets, then populates possible words
     possible = [];
-    rawwords.split(", ").forEach(element => {
-        possible.push(element);
-    });
+    if (answersMode) {
+        rawanswers.split(", ").forEach(element => {
+            possible.push(element);
+        });
+    } else {
+        rawwords.split(", ").forEach(element => {
+            possible.push(element);
+        });
+    }
     updateFeedback();
     displayWords();
 }
 
 
 let won = false;
+let previous_guess = "";
+let previous_feedback = [];
 function guessWord() {
     // only runs if the lettercount is 5
     if (document.getElementById("guessinput").value.trim().length != 5) { alert("You put in the wrong amount of characters."); return; }
@@ -207,6 +233,8 @@ function wordEliminator() {
     }
 
     // also resets feedback
+    previous_guess = guess;
+    previous_feedback = [...feedback];
     feedback = ["w", "w", "w", "w", "w"]
 }
 
@@ -214,97 +242,177 @@ function wordEliminator() {
 // this depends on the assisted mode
 function displayWords() {
     document.getElementById("words").innerHTML = "";
-    if (!won && possible.length != 0) {
+    
+    if (!won && possible.length == 0) {
+        if (possible.length == 0) addPossibleWord("No more valid words", false);
+        if (won) addPossibleWord("You won!", false);
+    } else { 
+
     switch (assistedMode) {
     case true:
-        let scoreList = scoreWords();
-        addPossibleWord("The best word currently is", false)
-        addPossibleWord(scoreList[0])
-        if (typeof scoreList[1] !== "undefined") {
-            addPossibleWord("Other words you might want to choose", false)
-        }
-        for(i=1; i<=4; i++) {
+
+        let letterMaps = mapLetters();
+        let scoreList = scoreWords(letterMaps);
+
+        addPossibleWord("Here are the best words to choose from", false);
+        for(i=0; i<5; i++) {
             if (scoreList[i] == undefined) break;
             addPossibleWord(scoreList[i])
         }
-        break;
+
+        addPossibleWord(`Overall there are ${possible.length} word(s) left`, false);
+        if (previous_feedback.filter(e => e == "g").length > 3) {
+            let letterEliminatorWords = letterEliminatorWordMaker(letterMaps);
+            addPossibleWord("You may choose these words to eliminate more letters", false);
+            for(i = 0; i < 3; i++){
+                if (letterEliminatorWords[i] == undefined) break;
+                addPossibleWord(letterEliminatorWords[i]);
+            }
+        }
+        
+    break;
     case false:
-        if (possible.length == rawwords.split(", ").length) {
+
+        if (guess == "") {
             // to not display all of the words at first, we simply send this message
+            // to not lag the device or have an infinite scroller
             addPossibleWord("Input any 5 letter word.", false)
+            addPossibleWord("If you can't think of any, here is a random one:", false)
+            addPossibleWord(possible[Math.floor(Math.random() * possible.length)]);
+            
         } else {
+            addPossibleWord(`Here are the ${possible.length} possible words`, false);
             possible.forEach(element => {
                 addPossibleWord(element);
             });
         }
-        break;
-    }
-    } else {
-        if (possible.length == 0) addPossibleWord("No more valid words", false);
-        if (won) addPossibleWord("You won!", false);
-    }
+    break;
+    } }
 }
 
-// in the assisted mode, it gives you top words that you should pick.
-// this is calculated by calculating each letter in all of the remaining words
-// then giving a score to each word, and sorting them by that score
-function scoreWords() {
-    let list = [...possible];
 
-    // score letters in words
+// in the assisted mode, it gives you top words that you should pick.
+// this is calculated by calculating the frequency of letters in the remaining words
+// then giving a score to each word
+// the positional one just gives a score to each word based on the frequency of the letter in that position
+function mapLetters() {
+    let list = [...possible];
     let letterMap = {};
-    let scoreMap = {};
-    list.forEach( e => {
-        e.split("").forEach( f => {
-            if (f in letterMap) {
-                letterMap[f]++;
+    list.forEach( word => {
+        word.split("").forEach( letter => {
+            if (letter in letterMap) {
+                letterMap[letter]++;
             } else {
-                letterMap[f] = 1;
+                letterMap[letter] = 1;
             }
         });
     });
 
-    list.forEach( e => {
-        let score = 0;
-        new Set(e.split("")).forEach( f => {
-            score += letterMap[f];
-        });
-        scoreMap[e] = score;
+    let positionalLetterMap = [{}, {}, {}, {}, {}];
+    list.forEach( word => {
+        for (i=0; i<=4; i++) {
+            let letter = word.split("")[i];
+            if (letter in positionalLetterMap[i]) {
+                positionalLetterMap[i][letter]++;
+            } else {
+                positionalLetterMap[i][letter] = 1;
+            }
+        }
     });
+
+    return {overall: letterMap, positional: positionalLetterMap}
+}
+
+// sorting words by the score calculated in mapLetters
+function scoreWords(letterMaps) {
+    // this version uses the overall letter map, which is slightly worse than the positional one
+    // it scores the words based on letter frequency. if a letter is more frequent in the remaining words, the word gets a higher score
+    // list.forEach( word => {
+    //     let score = 0;
+    //     new Set(word.split("")).forEach( letter => {
+    //         score += letterMap[letter];
+    //     });
+    //     scoreMap[word] = score;
+    // });
+    // list.sort((a, b) => scoreMap[a] - scoreMap[b]).reverse();
+
+    // this version splits the words into 5 different letter position groups, and scores them individually
+    // and then based on what letter is where in the word, it scores them
+    let letterMap = letterMaps.positional;
+    let list = [...possible];
+    let scoreMap = {};
+
+    list.forEach( word => {
+        let score = 0;
+        let letters = {};
+
+        for (i=0; i<=4; i++) {
+            let letter = word.split("")[i];
+            let scoreBuffer = letterMap[i][letter];
+
+            // also making sure that the same letter is not counted twice
+            if (letter in letters) {
+                if (letters[letter] < scoreBuffer) {
+                    score -= letters[letter];
+                } else {
+                    scoreBuffer = 0;
+                }
+            }
+
+            score += scoreBuffer;
+            letters[letter] = scoreBuffer > letters[letter] ? scoreBuffer : letters[letter];
+        }
+
+        scoreMap[word] = score;
+    });
+
     list.sort((a, b) => scoreMap[a] - scoreMap[b]).reverse();
 
-    // score letters in position in words
-    let positionalLetterMap = [{}, {}, {}, {}, {}];
-    list.forEach( e => {
-        for (i=0; i<=4; i++) {
-            let f = e.split("")[i];
-            if (f in positionalLetterMap[i]) {
-                positionalLetterMap[i][f]++;
-            } else {
-                positionalLetterMap[i][f] = 1;
-            }
-        }
-    });
+    return list;
+}
 
-    list.forEach( e => {
+function letterEliminatorWordMaker(letterMaps) {
+    // this feature solves one issue, written in this article
+    // https://www.dailymail.co.uk/femail/article-10568771/Furious-Wordle-players-arms-word-options-letter.html
+    // when you guess 4 letters, but the last one can be multiple letters
+    // so this function returns some words that can eliminate some of these letters
+    // so you dont have to guess one at a time and maybe run out of guesses
+    let allwords = !answersMode ? rawwords.split(", ") : rawanswers.split(", ");
+    let letterEliminatorScoreMap = {};
+
+    allwords.forEach( word => {
         let score = 0;
+        let letters = {};
+        
         for (i=0; i<=4; i++) {
-            let f = e.split("")[i];
-            score += positionalLetterMap[i][f];
+            let letter = word.split("")[i];
+            let scoreBuffer = letterMaps.overall[letter];
+            let positionalScoreBuffer = letterMaps.positional[i][letter];
+
+            if (isNaN(scoreBuffer)) scoreBuffer = 0;
+            if (isNaN(positionalScoreBuffer)) positionalScoreBuffer = 0;
+
+            // also making sure that the same letter is not counted twice
+            if (letter in letters) {
+                if (letters[letter] < scoreBuffer) score -= letters[letter];
+                else scoreBuffer = 0;
+                positionalScoreBuffer = 0;
+            }
+            // and also, since we want the most unknown information, then its the best to leave out the letters that are already guessed
+            if (previous_guess.includes(letter)) {scoreBuffer = 0; positionalScoreBuffer = 0};
+
+            score += scoreBuffer + positionalScoreBuffer;
+            letters[letter] = scoreBuffer > letters[letter] ? scoreBuffer : letters[letter];
         }
-        scoreMap[e] = score;
+        letterEliminatorScoreMap[word] = score;
     });
-    let positionalList = [...possible];
-    positionalList.sort((a, b) => scoreMap[a] - scoreMap[b]).reverse();
 
-    // console.log(`The best word "${list[0]}" is placed positionally ${positionalList.indexOf(list[0]) + 1}`);
-    // console.log(`The best positional word "${positionalList[0]}" is placed in the list ${list.indexOf(positionalList[0]) + 1}`);
+    let filteredWords = allwords.filter(e => letterEliminatorScoreMap[e] != 0);
+    let scores = filteredWords.map(e => letterEliminatorScoreMap[e]);
 
-    // console.log(list, positionalList);
-    
-    // it seems better at the moment.
-    return positionalList;
-    // return list;
+    // max is not array.max, but Math.max https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max
+    // only returning the best words by score
+    return filteredWords.filter(e => letterEliminatorScoreMap[e] == Math.max(...scores));
 }
 
 // displays the feedback of the guessed word, just for the user to see
