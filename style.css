@@ -29,3 +29,15 @@ p {
 p:hover {
     color: #007BFF;
 }
+
+#end {
+    /* hopefully we dont overflow main */
+    position:fixed;
+    top: 100svh;
+    transform: translateY(-100%);
+    
+}
+
+#end > p:hover {
+    color: black;
+}
