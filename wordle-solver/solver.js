@@ -9,25 +9,25 @@ document.getElementById("lang").addEventListener("change", e => {
 });
 
 // assisted mode initial load (persist through reloads) and toggle functionality
-let assistedMode = false;
-if (typeof window.localStorage.getItem("assistedMode") === "undefined") window.localStorage.setItem("assistedMode", "false")
-else assistedMode = window.localStorage.getItem("assistedMode") == "true" ? true : false;
+let assistedMode = true;
+if (window.localStorage.getItem("assistedMode") === null) window.localStorage.setItem("assistedMode", assistedMode)
+else assistedMode = window.localStorage.getItem("assistedMode") == "true";
 document.getElementById("assistedToggle").checked = assistedMode;
 document.getElementById("assistedToggle").addEventListener("change", e => {
     assistedMode = !assistedMode;
-    window.localStorage.setItem("assistedMode", assistedMode ? "true" : "false");
+    window.localStorage.setItem("assistedMode", assistedMode);
     displayWords();
 });
 
 // answers mode, code just like assisted mode
 // only uses possible answers
 let answersMode = false;
-if (typeof window.localStorage.getItem("answersMode") === "undefined") window.localStorage.setItem("answersMode", "false")
-else answersMode = window.localStorage.getItem("answersMode") == "true" ? true : false;
+if (window.localStorage.getItem("answersMode") === null) window.localStorage.setItem("answersMode", answersMode)
+else answersMode = window.localStorage.getItem("answersMode") == "true";
 document.getElementById("answersToggle").checked = answersMode;
 document.getElementById("answersToggle").addEventListener("change", e => {
     answersMode = !answersMode;
-    window.localStorage.setItem("answersMode", answersMode ? "true" : "false");
+    window.localStorage.setItem("answersMode", answersMode);
     start();
 });
 
