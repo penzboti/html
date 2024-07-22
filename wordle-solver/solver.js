@@ -10,6 +10,7 @@ document.getElementById("lang").addEventListener("change", e => {
 
 // assisted mode initial load (persist through reloads) and toggle functionality
 let assistedMode = true;
+// guess its null instead of undefined then https://developer.mozilla.org/en-US/docs/Web/API/Storage/getItem
 if (window.localStorage.getItem("assistedMode") === null) window.localStorage.setItem("assistedMode", assistedMode)
 else assistedMode = window.localStorage.getItem("assistedMode") == "true";
 document.getElementById("assistedToggle").checked = assistedMode;
