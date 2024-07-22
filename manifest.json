@@ -4,8 +4,8 @@
     "background_color": "#000000",
     "description": "Multiple small html projects, made by penzboti",
 
-    "start_url": "../index.html",
-    "display": "fullscreen",
+    "start_url": ".",
+    "display": "minimal-ui",
     "icons": [
         {
             "src": "icons/512.png",
