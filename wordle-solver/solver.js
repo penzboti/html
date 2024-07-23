@@ -246,7 +246,7 @@ function displayWords() {
     
     if (possible.length == 0) addPossibleWord("No more valid words", false);
     else if (won) addPossibleWord("You won!", false);
-    } else { 
+    else { 
 
     switch (assistedMode) {
     case true:
