@@ -244,9 +244,8 @@ function wordEliminator() {
 function displayWords() {
     document.getElementById("words").innerHTML = "";
     
-    if (!won && possible.length == 0) {
-        if (possible.length == 0) addPossibleWord("No more valid words", false);
-        if (won) addPossibleWord("You won!", false);
+    if (possible.length == 0) addPossibleWord("No more valid words", false);
+    else if (won) addPossibleWord("You won!", false);
     } else { 
 
     switch (assistedMode) {
