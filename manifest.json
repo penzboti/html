@@ -1,7 +1,7 @@
 {
     "name": "penzboti/html",
     "short_name": "html",
-    "background_color": "#000000",
+    "background_color": "#ffffff",
     "description": "Multiple small html projects, made by penzboti",
 
     "start_url": ".",
