@@ -1,3 +1,6 @@
+// TODO: its weird you have to confirm a word
+// esp because you can still type while its going on
+// maybe change the button icons so you can see it better
 const code = {
     "a": ".-",
     "b": "-...",
@@ -61,7 +64,7 @@ function getWord() {
 
 // keybord input
 document.addEventListener("keydown", e => {
-    switch(e.key) {
+    switch (e.key) {
         case " ":
             confirmChar();
             break;
@@ -80,7 +83,7 @@ document.addEventListener("keydown", e => {
 // adding morse code . or -
 let characters = "";
 function addChar(char) {
-    if (currword.length <= userword.length) {return;}
+    if (currword.length <= userword.length) { return; }
     if (characters.length != 5) characters = `${characters}${char}`;
 
     displayMorse();
@@ -96,7 +99,7 @@ function delChar() {
 // sending morse code feedback
 function displayMorse() {
     for (let i = 0; i < 5; i++) {
-        codeSequence.children[i].innerText = typeof(characters[i]) != "undefined" ? characters[i] : "_";
+        codeSequence.children[i].innerText = typeof (characters[i]) != "undefined" ? characters[i] : "_";
         if (characters[i] == ".") codeSequence.children[i].innerText = "·";
     }
 }
@@ -142,6 +145,6 @@ function displayWord() {
     baseSequence.appendChild(node);
 
     let node2 = document.createElement("span");
-    node2.innerText = currword.slice(userword.length+1);
+    node2.innerText = currword.slice(userword.length + 1);
     baseSequence.appendChild(node2);
 }
