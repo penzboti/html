@@ -1,36 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>HTML redirect site</title>
-    <link rel="icon" href="icons/512.png" type="image/x-icon">
+    <link rel="icon" href="icons/512.png" type="image/x-icon" />
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="manifest.json" />
+  </head>
+  <body>
+    <a id="topright">dark</a>
     <div id="main">
-        <p>learning sites</p>
-        <a href="code-translator/">code translation learner</a>
-        <a href="deutsche-multido/">deutsche-multido</a>
-        <br>
-        <p>cool sites</p>
-        <a href="wordle-solver/">wordle-solver</a>
-        <br>
-        <p>experiments</p>
-        <a href="diamond-shape/">diamond-shape</a>
-        <a href="experiments/flick.html">flick</a>
-        <a href="experiments/move.html">move</a>
-        <a href="experiments/colours.html">colours</a>
-        <br>
-        <p>remakes</p>
-        <a href="remakes/keyboard/">keyboard</a>
-        <a href="remakes/clock/">clock</a>
+      <p>learning sites</p>
+      <a href="code-translator/">code translation learner</a>
+      <a href="deutsche-multido/">deutsche-multido</a>
+      <br />
+      <p>cool sites</p>
+      <a href="wordle-solver/">wordle-solver</a>
+      <br />
+      <p>experiments</p>
+      <a href="diamond-shape/">diamond-shape</a>
+      <a href="experiments/flick.html">flick</a>
+      <a href="experiments/move.html">move</a>
+      <a href="experiments/colours.html">colours</a>
+      <br />
+      <p>remakes</p>
+      <a href="remakes/keyboard/">keyboard</a>
+      <a href="remakes/clock/">clock</a>
     </div>
     <div id="end">
-        <p>source code on <a href="https://github.com/penzboti/html">github</a></p>
+      <p>
+        source code on <a href="https://github.com/penzboti/html">github</a>
+      </p>
     </div>
-</body>
+    <script>
+<!-- TODO: separate darkmode js file -->
+<!-- Q: localstorage prev state? -->
+        if (
+            window.matchMedia &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+            document.getElementsByTagName("body")[0].style["color-scheme"] = "dark";
+            topright.innerText = "ligth";
+        }
+        topright.addEventListener("click", e => {
+            let cur = document.getElementsByTagName("body")[0].style["color-scheme"];
+            let target = cur !== "dark" ? "dark" : "light";
+            document.getElementsByTagName("body")[0].style["color-scheme"] = target;
+            e.target.innerText = cur;
+        });
+    </script>
+  </body>
 </html>

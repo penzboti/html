@@ -5,9 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>colours</title>
+<style>
+        #text {
+            font-size: 90px;
+        }
+@media screen and (min-width: 1000px) {
+    #text {
+        font-size: 250px;
+    }
+}
+</style>
 </head>
 <body style="font-family: 'Courier New', monospace;">
-    <div id="text" style="position: absolute; left: 50vw; top: 50vh; transform: translateX(-50%) translateY(-50%); user-select: none; font-size: 250px;"></div>
+    <div id="text" style="position: absolute; left: 50vw; top: 50vh; transform: translateX(-50%) translateY(-50%); user-select: none;"></div>
     <script>
         const text = document.getElementById("text");
         const maxNum = 16777215;
@@ -22,9 +32,9 @@
             setBG();
         });
         setBG();
-    window.addEventListener("load", () => {
-            alert("just click!");
-        });
+    <!-- window.addEventListener("load", () => { -->
+    <!--         alert("just click!"); -->
+    <!--     }); -->
     </script>
 </body>
 </html>
