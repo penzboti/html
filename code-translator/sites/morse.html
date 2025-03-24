@@ -1,51 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Morse Code translator site</title>
 
-    <link rel="stylesheet" href="../style.css">
-    <!--TODO: words can overflow out the side on mobile for example -->
+    <link rel="stylesheet" href="../style.css" />
     <style>
-        #dictionary-cont {
-            position: fixed;
-            display: flex;
-        }
+      #dictionary-cont {
+        position: fixed;
+        display: flex;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="content">
-        <div id="baseSequence"></div>
-        <div id="codeSequence">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+      <div id="baseSequence"></div>
+      <div id="codeSequence">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div id="input">
+        <div class="separated-buttons">
+          <button type="button" id="dot" onclick="addChar('.')">·</button>
+          <button type="button" id="dash" onclick="addChar('-')">—</button>
+          <button type="button" id="back" onclick="delChar()">←</button>
         </div>
-        <div id="input">
-            <div class="separated-buttons">
-                <button type="button" id="dot" onclick="addChar('.')">·</button>
-                <button type="button" id="dash" onclick="addChar('-')">—</button>
-                <button type="button" id="back" onclick="delChar()">←</button>
-            </div>
-            <div class="separated-buttons">
-                <button type="button" id="enter" onclick="confirmChar()">✓</button>
-            </div>
+        <div class="separated-buttons">
+          <button type="button" id="enter" onclick="confirmChar()">✓</button>
         </div>
-        <p>
-            You can use a keyboard aswell<br>
-            ← is backspace<br>
-            ✓ is space, to confirm a character.<br>
-            At the end of a word use the confirm button again
-        </p>
+      </div>
+      <p>
+        You can use a keyboard aswell<br />
+        ← is backspace<br />
+        ✓ is space, to confirm a character.<br />
+        At the end of a word use the confirm button again
+      </p>
     </div>
-    <div id="dictionary-cont">
-    </div>
+    <div id="dictionary-cont"></div>
 
     <script src="../scripts/morse.js"></script>
 
-    <script src="../../../source.js"></script>
-</body>
+    <!-- <script src="../../../source.js"></script> -->
+  </body>
 </html>
+
