@@ -209,17 +209,30 @@ function hideScore() {
 
 dictionaryCont.style.visibility = "hidden";
 function toggleDictionary() {
-  dictionaryCont.style.visibility =
-    dictionaryCont.style.visibility == "hidden" ? "visible" : "hidden";
-  menuCont.style.visibility =
-    menuCont.style.visibility == "visible" ? "hidden" : "visible";
-  if (dictionaryCont.style.visibility == "visible") {
-    // https://stackoverflow.com/questions/2490825/how-to-trigger-event-in-javascript
-    let event = document.createEvent("HTMLEvents");
-    event.initEvent("input", true, true);
-    event.eventName = "input";
-    searchbar.dispatchEvent(event);
+  if (document.body.clientWidth >= 1000) {
+    word.classList.toggle("kukucs");
   }
+
+  if (menuCont.style.visibility === "hidden") {
+    dictionaryCont.style.visibility = "hidden";
+    menuCont.style.visibility = "visible";
+    document.querySelector("html").style.overflowY = "";
+    content.style.visibility = "visible";
+    return;
+  }
+
+  document.documentElement.scrollTop = document.body.scrollTop = 0;
+  dictionaryCont.style.visibility = "visible";
+  menuCont.style.visibility = "hidden";
+  document.querySelector("html").style.overflowY = "hidden";
+  content.style.visibility = "hidden";
+  word.style.visibility = "visible";
+
+  // https://stackoverflow.com/questions/2490825/how-to-trigger-event-in-javascript
+  let event = document.createEvent("HTMLEvents");
+  event.initEvent("input", true, true);
+  event.eventName = "input";
+  searchbar.dispatchEvent(event);
 }
 searchbar.addEventListener("input", () => {
   let search = searchbar.value.toLowerCase().trim();
@@ -265,4 +278,3 @@ searchbar.addEventListener("input", () => {
 // start the quiz
 toggleHelpPopup();
 startQuiz();
-

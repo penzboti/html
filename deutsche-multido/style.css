@@ -129,7 +129,7 @@ input[type="number"] {
   /* top: 0px; */
 
   border-radius: 10px;
-  border: 5px solid white;
+  border: 3px solid white;
   /* https://cssgenerator.org/box-shadow-css-generator.html */
   box-shadow: 7px 7px 26px -4px rgba(0, 0, 0, 1);
   -webkit-box-shadow: 3px 3px 26px -4px rgba(255, 255, 255, 1);
@@ -213,6 +213,10 @@ p > b {
 .tableRow {
   background-color: #151515;
 }
+.kukucs {
+  position: fixed !important;
+  top: var(--big-comp-height) !important;
+}
 
 /* NOTE: mobile layout, or to browsers with no @media query */
 
@@ -220,10 +224,11 @@ p > b {
   text-align: center;
   width: var(--sml-comp-width);
   height: var(--sml-comp-height);
-  font-size: calc(var(--sml-comp-height) * 0.75);
+  font-size: calc(var(--sml-comp-height) * 0.5);
   font-weight: bold;
   margin: calc(var(--sml-comp-height) / 4) 0px calc(var(--sml-comp-height) / 4)
     0px;
+  text-wrap: nowrap;
 }
 
 input {
@@ -351,4 +356,3 @@ input {
     width: 100% !important;
   }
 }
-
