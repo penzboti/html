@@ -35,12 +35,12 @@ a:hover {
   padding: 10px 20px;
   margin: 10px;
 }
-#topright {
-    position: fixed;
-    top:0px;
-    left: 100vw;
-    transform: translateX(calc(-100% - 20px));
-    margin: 10px;
+#dark {
+  position: fixed;
+  top: 0px;
+  left: 100vw;
+  transform: translateX(calc(-100% - 20px));
+  margin: 10px;
 }
 
 p {
@@ -62,4 +62,3 @@ p:hover {
 #end > p:hover {
   color: black;
 }
-
