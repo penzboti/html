@@ -65,6 +65,10 @@ function getWord() {
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
     case " ":
+      e.preventDefault();
+      confirmChar();
+      break;
+    case "Enter":
       confirmChar();
       break;
     case ".":
@@ -159,4 +163,28 @@ function displayWord() {
   size = currword.length / 5;
   if (currword.length < 5) size = 0;
   baseSequence.style.fontSize = `${5 - size}em`;
+}
+
+function populateDictionary() {
+  dictionary.innerHTML = "";
+  Object.keys(code).forEach((e, i) => {
+    const node = document.createElement("div");
+    node.classList.add("dictionaryEntry");
+    let letters = code[e].replaceAll("-","_");
+    node.innerHTML = `<p>${e}</p><p>${letters}</p>`;
+    if (i % 2 === 1) {
+      node.classList.add("entryHL");
+    }
+    dictionary.appendChild(node);
+  });
+}
+
+populateDictionary();
+dictionaryCont.style.visibility = "hidden";
+function toggleDictionary() {
+  let cur = dictionaryCont.style.visibility;
+  let target = cur === "visible" ? "hidden" : "visible";
+  dictionaryCont.style.visibility = target;
+  if (target === "visible") {
+  }
 }

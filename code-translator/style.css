@@ -99,3 +99,52 @@ button {
   aspect-ratio: 1/1;
 }
 
+.popupBox {
+  position: fixed;
+  padding: 10px;
+  background-color: black;
+  border: 3px solid white;
+  height: 80vh;
+  border-radius: 10px;
+}
+#dictionary {
+  overflow-y: scroll;
+  height: 100%;
+}
+.dictionaryEntry {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  background-color: black;
+}
+.dictionaryEntry > p {
+  margin: 1.5vh 5vw;
+  font-size: 2vw;
+  letter-spacing: 1rem;
+  font-weight: bold;
+}
+.entryHL {
+  background-color: #202020 !important;
+}
+
+#menu {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 5vh;
+  background-color: black;
+  border-bottom: 2px solid orange;
+  display: flex;
+}
+
+input {
+  background-color: black;
+  color: white;
+}
+
+@media screen and (min-width: 600px) {
+  #menu {
+    height: 3vh;
+  }
+}

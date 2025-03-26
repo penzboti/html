@@ -6,12 +6,6 @@
     <title>Morse Code translator site</title>
 
     <link rel="stylesheet" href="../style.css" />
-    <style>
-      #dictionary-cont {
-        position: fixed;
-        display: flex;
-      }
-    </style>
   </head>
   <body>
     <div id="content">
@@ -40,11 +34,15 @@
         At the end of a word use the confirm button again
       </p>
     </div>
-    <div id="dictionary-cont"></div>
+    <div id="dictionaryCont" class="popupBox">
+      <div id="dictionary"></div>
+    </div>
+    <div id="menu">
+      <input type="button" onclick="toggleDictionary()" value="dictionary" />
+    </div>
 
     <script src="../scripts/morse.js"></script>
 
     <!-- <script src="../../../source.js"></script> -->
   </body>
 </html>
-

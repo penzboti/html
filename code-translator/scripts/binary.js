@@ -38,6 +38,7 @@ let answerPhase = false;
 // confirms the number and displays answer to the user
 function confirmNum() {
   if (!answerPhase) {
+    input.children[0].style.visibility = "hidden";
     characters = characters.padEnd(8, "0");
     let n = parseInt(characters, 2);
     if (n == currN) {
@@ -59,6 +60,7 @@ function confirmNum() {
     }
   } else {
     baseSequence.classList.remove("green");
+    input.children[0].style.visibility = "visible";
     newCode();
   }
   answerPhase = !answerPhase;
@@ -87,4 +89,3 @@ function displayBinary() {
 
 // start the site
 newCode();
-
