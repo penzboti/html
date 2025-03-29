@@ -161,12 +161,24 @@ input {
   border: 1px solid grey;
   text-align: center;
   border-radius: 5px;
+  min-height: 50%;
+}
+
+#closeBtn {
+  position: relative;
+  color: red;
+  transform: translate(62vw, -80vh);
+  border: 1px solid red;
+  font-size: 4vh;
+  width: fit-content;
+  min-height: fit-content;
+}
+#closeBtn:hover {
+  background-color: pink;
+  color: black;
 }
 
 @media screen and (min-width: 600px) {
-  /* #menu { */
-  /*   height: 3vh; */
-  /* } */
   .dictionaryEntry > p {
     font-size: 2vw;
     letter-spacing: 1rem;
@@ -174,5 +186,8 @@ input {
 
   .dictionaryEntry {
     width: 30vw;
+  }
+  #closeBtn {
+    transform: translate(calc(32vw), -80vh);
   }
 }

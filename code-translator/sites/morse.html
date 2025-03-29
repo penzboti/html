@@ -19,12 +19,12 @@
       </div>
       <div id="input">
         <div class="separated-buttons">
-          <button type="button" id="dot" onclick="addChar('.')">·</button>
-          <button type="button" id="dash" onclick="addChar('-')">—</button>
-          <button type="button" id="back" onclick="delChar()">←</button>
+          <button type="button" id="dot">·</button>
+          <button type="button" id="dash">—</button>
+          <button type="button" id="back">←</button>
         </div>
         <div class="separated-buttons">
-          <button type="button" id="enter" onclick="confirmChar()">✓</button>
+          <button type="button" id="enter">✓</button>
         </div>
       </div>
       <p>
@@ -36,6 +36,12 @@
     </div>
     <div id="dictionaryCont" class="popupBox">
       <div id="dictionary"></div>
+      <input
+        type="button"
+        id="closeBtn"
+        onclick="toggleDictionary()"
+        value="X"
+      />
     </div>
     <div id="menu">
       <input type="button" onclick="toggleDictionary()" value="dictionary" />

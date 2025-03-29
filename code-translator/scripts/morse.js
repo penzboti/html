@@ -89,6 +89,60 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+// (not only mobile) back button to close dictionary;
+// this is kind of annoying, might remove it;
+// bc i cant stop the popup from appearing
+window.onbeforeunload = (e) => {
+  if (dictionaryCont.style.visibility === "visible") {
+    e.preventDefault();
+    toggleDictionary();
+    return (e.returnValue = "aaa"); // what is this idk
+  }
+};
+
+document.getElementsByTagName("body")[0].addEventListener("click", (e) => {
+  if (
+    !dictionaryCont.contains(e.target) &&
+    dictionaryCont.style.visibility === "visible" &&
+    e.target.tagName !== "INPUT"
+  ) {
+    toggleDictionary();
+  }
+});
+
+let touchEvent = false;
+document.querySelectorAll("button").forEach((e) => {
+  let fn = (f) => {
+    switch (f.id) {
+      case "back":
+        delChar();
+        break;
+      case "dot":
+        addChar(".");
+        break;
+      case "dash":
+        addChar("-");
+        break;
+      case "enter":
+        confirmChar();
+        break;
+    }
+  };
+
+  // order of events: https://web.dev/articles/mobile-touchandmouse
+  e.addEventListener("touchstart", (f) => {
+    touchEvent = true;
+    fn(f.target);
+  });
+  e.addEventListener("mousedown", (f) => {
+    if (touchEvent) {
+      touchEvent = false;
+      return;
+    }
+    fn(f.target);
+  });
+});
+
 // adding morse code . or -
 let characters = "";
 function addChar(char) {
