@@ -58,7 +58,3 @@ p:hover {
   top: 100svh;
   transform: translateY(-100%);
 }
-
-#end > p:hover {
-  color: black;
-}
