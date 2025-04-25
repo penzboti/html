@@ -1,61 +1,105 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>move amogus</title>
+    <link rel="icon" href="/icons/512.png" type="image/x-icon" />
 
     <style>
-        body {
-            margin: 0;
-            background-color: black;
-            color: white;
-            font-size: 70px;
-            pointer-events: none;
-            overflow: hidden;
-        }
+      body {
+        margin: 0;
+        background-color: black;
+        color: white;
+        font-size: 70px;
+        pointer-events: none;
+        overflow: hidden;
+      }
 
-        ::selection {
-            color: none;
-            background: none;
-        }
+      ::selection {
+        color: none;
+        background: none;
+      }
     </style>
-</head>
-<body>
-    <div id="main" style="position: absolute; left: 0px; top: 0px;">ඞ</div>
-    <div id="overflow" style="position: absolute; left: 50vw; top: 50vh;"></div>
+  </head>
+  <body>
+    <div id="main" style="position: absolute; left: 0px; top: 0px">ඞ</div>
+    <div id="overflow" style="position: absolute; left: 50vw; top: 50vh"></div>
 
     <script>
-        mouseDown = false;
-        posx = 0;
-        posy = 0;
+      let mouseDown = false;
+      let touchDown = false;
+      let posx = 0;
+      let posy = 0;
 
-        main = document.getElementById("main")
-        overflow = document.getElementById("overflow");
+      let touchList = [];
+      window.addEventListener("touchstart", (e) => {
+        touchDown = true;
+      });
+      window.addEventListener("touchend", (e) => {
+        touchDown = false;
+      });
+      window.addEventListener("touchmove", (e) => {
+        console.log(e);
+        <!-- if (touchDown) { -->
+        let prevTouchList = touchList;
+        curTouchList = [...e.touches];
+        touchList = curTouchList;
 
-        window.addEventListener("mousemove", (e) => {
-            if (mouseDown) {
-                posx += e.movementX;
-                posy += e.movementY;
-
-                main.style.left = `${posx}px`;
-                main.style.top = `${posy}px`
-                
-                overflowCheck();
-            }
-        });
-        
-        window.addEventListener("mousedown", (e) => { mouseDown = true; });
-        window.addEventListener("mouseup", (e) => { mouseDown = false; });
-        
-        function overflowCheck() {
-            overflow.innerText = "";
-            if (posx < 0) { overflow.innerText = "←"; if (posy < 0) overflow.innerText =  ""; if (posy > window.innerHeight) overflow.innerText = "";};
-            if (posy < 0) overflow.innerText = "↑";
-            if (posx > window.innerWidth) overflow.innerText = "→";
-            if (posy > window.innerHeight) overflow.innerText = "↓"
+        if (touchList.length === 0) {
+          return;
         }
+
+        let previds = prevTouchList.map((f) => f.identifier);
+        let curids = curTouchList.map((f) => f.identifier);
+        let filter = previds.filter((f) => curids.includes(f));
+        let id = filter[0];
+        console.log(filter, previds, curids);
+
+        let prev = prevTouchList.find((f) => f.identifier === id);
+        let cur = curTouchList.find((f) => f.identifier === id);
+        posx += cur.screenX - prev.screenX;
+        posy += cur.screenY - prev.screenY;
+
+        main.style.left = `${posx}px`;
+        main.style.top = `${posy}px`;
+
+        overflowCheck();
+        <!-- } -->
+        <!-- touchList = [...e.touches]; -->
+      });
+
+      window.addEventListener("mousedown", (e) => {
+        mouseDown = true;
+      });
+      window.addEventListener("mouseup", (e) => {
+        mouseDown = false;
+      });
+      window.addEventListener("mousemove", (e) => {
+        if (mouseDown) {
+          posx += e.movementX;
+          posy += e.movementY;
+
+          main.style.left = `${posx}px`;
+          main.style.top = `${posy}px`;
+
+          overflowCheck();
+        }
+      });
+
+      function overflowCheck() {
+        // TODO: diagonal indicators
+        overflow.innerText = "";
+        if (posx < 0) {
+          overflow.innerText = "←";
+          if (posy < 0) overflow.innerText = "";
+          if (posy > window.innerHeight) overflow.innerText = "";
+        }
+        if (posy < 0) overflow.innerText = "↑";
+        if (posx > window.innerWidth) overflow.innerText = "→";
+        if (posy > window.innerHeight) overflow.innerText = "↓";
+      }
     </script>
-</body>
+  </body>
 </html>
