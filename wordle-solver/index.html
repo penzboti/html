@@ -1,60 +1,74 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wordle Solver</title>
 
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="/icons/512.png" type="image/x-icon" />
+  </head>
+  <body>
     <div id="menu" class="container">
       <!--TODO: settings menu -->
-      <!-- possibly not separate reset button? -->
-        <div style="flex: 1;">
-            <select id="lang" name="lang">
-                <option value="eng">eng</option>
-                <option value="hu">hu</option>
-            </select>
-        </div>
-        <div style="flex: 1">
-            <input type="button" value="Restart" onclick="start()">
-        </div>
-        <div style="flex: 1;">
-            <input type="checkbox" id="assistedToggle">
-            <p>Assisted mode</p>
-        </div>
-        <div style="flex: 1;">
-            <input type="checkbox" id="answersToggle">
-            <p>Answers mode</p>
-        </div>
+      <div style="flex: 1">
+        <input
+          type="button"
+          value="Back"
+          onclick="alert('WIP go back in history')"
+        />
+      </div>
+      <div style="flex: 1">
+        <input type="button" value="Restart" onclick="start()" />
+      </div>
+      <div style="flex: 1">
+        <input
+          type="button"
+          value="Settings"
+          onclick="alert('WIP settings dropdown? menu')"
+        />
+        <input type="checkbox" id="assistedToggle" />
+        <p>Assisted mode</p>
+        <input type="checkbox" id="answersToggle" />
+        <p>Answers mode</p>
+        <select id="lang" name="lang">
+          <option value="eng">eng</option>
+          <option value="hu">hu</option>
+        </select>
+      </div>
+      <div style="flex: 1">
+        <input type="button" value="Help" onclick="alert('WIP help guide')" />
+      </div>
     </div>
 
     <div id="left" class="column">
-        <div id="rows" class="container">
-            <!-- rows get injected here -->
+      <div id="rows" class="container">
+        <!-- rows get injected here -->
+      </div>
+      <!--? should i move input first, for site readability purposes? -->
+      <div id="input" class="container">
+        <div>
+          <input
+            type="text"
+            id="guessinput"
+            class="input"
+            placeholder="Input your word here"
+          />
         </div>
-        <!--? should i move input first, for site readability purposes? -->
-        <div id="input" class="container">
-            <div>
-                <input type="text" id="guessinput" class="input" placeholder="Input your word here">
-            </div>
-            <div>
-                <!-- letters go here, and you change the feedback on them -->
-                <div id="inputrow" class="row">
-                </div>
-            </div>
-            <div>
-                <input type="button" value="Search" onclick="guessWord()">
-            </div>
+        <div>
+          <!-- letters go here, and you change the feedback on them -->
+          <div id="inputrow" class="row"></div>
         </div>
+        <div>
+          <input type="button" value="Search" onclick="guessWord()" />
+        </div>
+      </div>
     </div>
 
     <div id="right" class="column">
-        <div id="words" class="container"></div>
+      <div id="words" class="container"></div>
     </div>
-    
 
     <script src="words/eng-words.js"></script>
     <script src="words/possible-eng-words.js"></script>
@@ -64,6 +78,6 @@
 
     <script src="solver.js"></script>
 
-    <script src="../source.js"></script>
-</body>
+    <script src="/scripts/source.js"></script>
+  </body>
 </html>

@@ -1,13 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Keyboard</title>
 
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="/icons/512.png" type="image/x-icon" />
+  </head>
+  <body>
     <!-- ideas from -->
     <!-- https://codepen.io/Mickel07/pen/YdONYK -->
     <!-- https://www.keybr.com/ -->
@@ -15,82 +16,82 @@
     <div id="output-fadeout"></div>
     <div id="output"></div>
     <div id="content">
-        <div class="row num">
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div id="Backspace" class="onehalf"><p>←</p></div>
-        </div>
-        <div class="row">
-            <div id="Tab" class="onehalf"><p>Tab</p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-        </div>
-        <div class="row">
-            <div id="CapsLock" class="two"><p>Caps lock</p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div id="Enter" class="two"><p>Enter</p></div>
-        </div>
-        <div class="row">
-            <div id="ShiftLeft" class="onehalf"><p>Shift</p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div><p></p></div>
-            <div id="ShiftRight" class="twohalf"><p>Shift</p></div>
-        </div>
-        <div class="row sysrow">
-            <div id="ControlLeft"><p>Ctrl</p></div>
-            <div id="FnLeft" class="sys"><p>Fn</p></div>
-            <div id="MetaLeft"><p>Win</p></div>
-            <div id="AltLeft"><p>alt</p></div>
-            <div id="Space"><p>Space</p></div>
-            <div id="AltRight"><p>Alt gr</p></div>
-            <div id="FnRight" class="sys"><p>Fn</p></div>
-            <div id="ControlRight"><p>Ctrl</p></div>
-        </div>
+      <div class="row num">
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div id="Backspace" class="onehalf"><p>←</p></div>
+      </div>
+      <div class="row">
+        <div id="Tab" class="onehalf"><p>Tab</p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+      </div>
+      <div class="row">
+        <div id="CapsLock" class="two"><p>Caps lock</p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div id="Enter" class="two"><p>Enter</p></div>
+      </div>
+      <div class="row">
+        <div id="ShiftLeft" class="onehalf"><p>Shift</p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div><p></p></div>
+        <div id="ShiftRight" class="twohalf"><p>Shift</p></div>
+      </div>
+      <div class="row sysrow">
+        <div id="ControlLeft"><p>Ctrl</p></div>
+        <div id="FnLeft" class="sys"><p>Fn</p></div>
+        <div id="MetaLeft"><p>Win</p></div>
+        <div id="AltLeft"><p>alt</p></div>
+        <div id="Space"><p>Space</p></div>
+        <div id="AltRight"><p>Alt gr</p></div>
+        <div id="FnRight" class="sys"><p>Fn</p></div>
+        <div id="ControlRight"><p>Ctrl</p></div>
+      </div>
     </div>
 
     <script src="script.js"></script>
 
-    <script src="../../source.js"></script>
-</body>
+    <script src="/scripts/source.js"></script>
+  </body>
 </html>

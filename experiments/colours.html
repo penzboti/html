@@ -1,40 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>colours</title>
-<style>
+    <link rel="icon" href="/icons/512.png" type="image/x-icon" />
+    <style>
+      #text {
+        font-size: 90px;
+      }
+      @media screen and (min-width: 1000px) {
         #text {
-            font-size: 90px;
+          font-size: 250px;
         }
-@media screen and (min-width: 1000px) {
-    #text {
-        font-size: 250px;
-    }
-}
-</style>
-</head>
-<body style="font-family: 'Courier New', monospace;">
-    <div id="text" style="position: absolute; left: 50vw; top: 50vh; transform: translateX(-50%) translateY(-50%); user-select: none;"></div>
+      }
+    </style>
+  </head>
+  <body style="font-family: &quot;Courier New&quot;, monospace">
+    <div
+      id="text"
+      style="
+        position: absolute;
+        left: 50vw;
+        top: 50vh;
+        transform: translateX(-50%) translateY(-50%);
+        user-select: none;
+      "
+    ></div>
     <script>
-        const text = document.getElementById("text");
-        const maxNum = 16777215;
-        function setBG() {
-            const num = Math.floor(Math.random()*maxNum)
-            const color = `#${num.toString(16)}`;
-            document.body.style.backgroundColor = color;
-            text.style.color = `#${(maxNum - num).toString(16)}`;
-            text.innerText = color;
-        }
-        window.addEventListener("click", (e) => {
-            setBG();
-        });
+      const text = document.getElementById("text");
+      const maxNum = 16777215;
+      function setBG() {
+        const num = Math.floor(Math.random() * maxNum);
+        const color = `#${num.toString(16)}`;
+        document.body.style.backgroundColor = color;
+        text.style.color = `#${(maxNum - num).toString(16)}`;
+        text.innerText = color;
+      }
+      window.addEventListener("click", (e) => {
         setBG();
-    <!-- window.addEventListener("load", () => { -->
-    <!--         alert("just click!"); -->
-    <!--     }); -->
+      });
+      setBG();
+      <!-- window.addEventListener("load", () => { -->
+      <!--         alert("just click!"); -->
+      <!--     }); -->
     </script>
-</body>
+  </body>
 </html>
