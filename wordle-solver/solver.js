@@ -254,6 +254,12 @@ function displayWords() {
         let letterMaps = mapLetters();
         let scoreList = scoreWords(letterMaps);
 
+        if (possible.length === 1) {
+            addPossibleWord("There is only one word left", false);
+            addPossibleWord(scoreList[0]);
+            return;
+        }
+
         addPossibleWord("Here are the best words to choose from", false);
         for(i=0; i<5; i++) {
             if (scoreList[i] == undefined) break;
