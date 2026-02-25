@@ -1,0 +1,11 @@
+#navbar {
+  position:absolute;
+  top:0px;
+  left:0px;
+}
+
+.main-top {
+    position:absolute;
+  top: 30px; /* navbar height */
+  left:0px;
+}

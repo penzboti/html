@@ -16,7 +16,6 @@ PWA makes the site downloadable. (altough no offline)
 - confetti. https://confettijs.org/ - if you are correct you get confetti.
 - PWA to work offline. [article](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers)
 - big precise clock (down to seconds)
-- customisable keyboard piano
 - flick save score 
 
 # prob next project

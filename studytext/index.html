@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Text</title>
+    <link rel="stylesheet" href="../style.css">
+  </head>
+  <body>
+    <div id="inputfields">
+      <input type="file" id="fileinput">
+      <textarea id="textinput"></textarea>
+      <br>
+      <button id="startbtn" onclick="start()">Start</button>
+      <p>preview:</p>
+    </div>
+
+    <div id="navbar">
+      <button id="backbtn" onclick="end()">back</button>
+    </div>
+    <div id="main">
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.1/dist/markdown-it.min.js"></script>
+    <script type="module">
+      const md = markdownit()
+      function render(text) {
+        const result = md.render(text)
+        main.innerHTML = result;
+      }
+      globalThis["render"] = render;
+    </script>
+    <script src="scripts.js"></script>
+  </body>
+</html>
