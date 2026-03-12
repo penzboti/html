@@ -1,6 +1,5 @@
 // #### config
 const replaceText = "[replace this]" // note that '<' and '>' produce different html
-// i should probably find a better one
 const replaceAmount = 10;
 
 // #### globals
@@ -8,6 +7,7 @@ navbar.style.visibility = "hidden";
 
 let globaltxt = "";
 let globallist = [];
+let globaltype;
 
 // #### functions
 function start() {
@@ -16,10 +16,55 @@ function start() {
     return;
   }
   hide()
-  let {text,list} = selectWords(globaltxt,replaceAmount)
-  globallist=list;
-  render(text);
-  replaceReplacements(list);
+  globaltype = type.value;
+
+  if (globaltype == "normal") {
+    let {text,list} = selectWords(globaltxt,replaceAmount)
+    globallist=list;
+    render(text);
+    replaceReplacements(list);
+  }
+  else if (globaltype == "bold") {
+    render(globaltxt);
+    let strongs = main?.getElementsByTagName("strong"); 
+    let all_list = [];
+    for (let i = 0; i < strongs.length; i++) {
+      let e = strongs[i];
+      e.id = i;
+      all_list.push({id: i, word: e.innerText})
+    }
+    let list = randomRemove(all_list)
+    for (let item of list) {
+      let e = document.getElementById(item.id);
+      let node = document.createElement("input");
+      node.id = item.id;
+      node.value = item.word;
+      e.replaceWith(node)
+    }
+  } else if (globaltype == "dates") {
+    let {text,list} = selectDates(globaltxt)
+    globallist=list;
+    render(text);
+    replaceReplacements(list);
+  }
+}
+
+function randomRemove(list) {
+  let i = 0;
+  let next = 0;
+  if (list.length > replaceAmount) list.unshift("")
+  while (list.length > replaceAmount) {
+    if (next === 0) {
+      list.splice(i,1)
+      next = Math.floor(Math.random() * list.length)
+      i--;
+    }
+    if (next < 0) next = 1 // console.log debugging didn't solve this issue. must learn real debugging tools (sad)
+    if (i > list.length) i = 0;
+    i++;
+    next--;
+  }
+  return list
 }
 
 function end() {
@@ -38,6 +83,13 @@ function unhide() {
   navbar.style.visibility = "hidden";
 }
 
+import markdownIt from 'https://cdn.jsdelivr.net/npm/markdown-it@14.1.1/+esm'
+const md = markdownIt() // rendering markdown
+function render(text) {
+  const result = md.render(text)
+  main.innerHTML = result;
+}
+
 // #### handling input
 // file
 fileinput?.addEventListener('change', () => {
@@ -53,11 +105,10 @@ fileinput?.addEventListener('change', () => {
   }
 });
 
-// text (doesnt work yet)
+// text
 textinput?.addEventListener('change', () => {
-  const txt = textinput.value;
-  console.log(txt)
-  render(txt)
+  globaltxt = textinput.value;
+  render(globaltxt)
 })
 
 // #### handling 'quiz'
@@ -67,9 +118,15 @@ function test(c) {
 
 function selectWords(text, amount) {
   let n = 0;
+  let recursion = 0;
   let list = [];
 
   while (n < amount){
+    recursion++;
+    if (recursion > 1000) {
+      alert(`note: we only found ${list.length} words to replace`)
+      break;
+    }
     let pos = Math.floor(Math.random() * text.length);
     let c = text[pos];
     if (!test(c)) continue;
@@ -79,18 +136,18 @@ function selectWords(text, amount) {
       pos--;
       c = text[pos];
     }
-    startpos = pos+1;
+    let startpos = pos+1;
 
     // go to the end of the word
     do {
       pos++;
       c = text[pos];
     } while (test(c));
-    endpos = pos;
+    let endpos = pos;
 
     if (endpos-startpos <= 3) continue;
     let word = text.substring(startpos,endpos)
-    if (list.flat().includes(word)) continue;
+    if (list.some(item => item.word == word)) continue;
 
     list.push({startpos, endpos, word})
     n++;
@@ -117,9 +174,124 @@ function replaceReplacements(list) {
 
     let chars = [...text]
     chars.splice(n, replaceText.length, replacement)
-    bruh = chars.join('')
+    let bruh = chars.join('')
 
     text = bruh;
   })
   main.innerHTML = text; 
+}
+
+// autoload
+window.addEventListener('pageshow', () => {
+setTimeout(() => {
+  if (textinput?.value) {
+    globaltxt = textinput.value;
+    render(globaltxt);
+  }
+  else if (fileinput.files?.[0]) {
+    const file = fileinput.files?.[0];
+    const reader = new FileReader();
+    reader.readAsText(file, 'UTF-8');
+    reader.onload = function({ target }) {
+      const txt = target.result;
+      globaltxt = txt;
+      render(globaltxt);
+    }
+  }
+}, 50) // because why not pageshow doesnt work like that
+});
+
+globalThis["start"] = start
+globalThis["end"] = end
+
+const allowed_words = ["jan","feb","márc","ápr","máj","jún","júl","aug","szept","okt","nov","dev"]
+
+function selectDates() {
+  // let bank = globaltxt.split('\n').map(line => line.split(' ')).flat();
+  let bank = globaltxt.split(' ')
+
+  let list = [];
+  let curr_list = [];
+  for (let i = 0; i < bank.length; i++) {
+    // TODO: make a checkdate function, because we have to split by '-' and also '\n' and '\t'
+    const word = bank[i];
+    let date_potential = false;
+    for (let w of allowed_words) {
+      if (word.includes(w)) {
+        curr_list.push({i,word,type: "month"})
+        date_potential = true
+      }
+    }
+    if (!date_potential && word.split('').every(c => "0123456789.-,:;".includes(c))) {
+      if (word.split('').some(c => "0123456789".includes(c))) {
+        console.log(word)
+        curr_list.push({i,word,type: "number"})
+        date_potential = true
+      }
+    }
+    if (!date_potential && word.includes("-")) {
+      let split = word.split("-");
+      if (split[0].split('').some(c => "0123456789".includes(c))) {
+        curr_list.push({i,word: split[0],type: "number",additions: `-${split[1]}`})
+      }
+    }
+
+    if (!date_potential && curr_list.length !== 0) {
+      if (!curr_list.map(e => e.type).some(t => t === "number")) {
+        curr_list = []
+        continue
+      }
+      if (curr_list.length === 1) {
+        let d = curr_list[0].word
+        console.log(d, d.substring(0,4))
+        if (d.length < 4 || (d.length > 4 && d.substring(0,4).split('').some(c => !"0123456789".includes(c)) && d[4] !== "-" )) {
+          curr_list = []
+          continue
+        }
+      } else {
+        if (!curr_list.map(e => e.type).some(t => t === "month")) {
+          curr_list = []
+          continue
+        }
+      }
+      let date = "";
+      let indexes = [];
+      for (let e of curr_list) {
+        date+=e.word+" ";
+        indexes.push(e.i)
+      }
+      date = date.substring(0,date.length-1)
+      let last = curr_list[curr_list.length-1];
+      let trailing_char = last.word.split('').pop()
+      if ("0123456789.".includes(trailing_char)) trailing_char = null;
+      if (last.additions) trailing_char = last.additions
+      list.push({date,indexes,includes_year: curr_list[0].type === "number",trailing_char})
+      curr_list = []
+    }
+  }
+
+  console.log(list)
+  list = randomRemove(list);
+
+  console.log(list)
+  let removed = 0
+  let list_item = list.pop()
+  if (!list_item) {
+    alert("no date detected")
+    return {text: globaltxt,list:[]}
+  }
+  for (let i = 0; i < bank.length - removed; i++) {
+    if (i == list_item.indexes[0]) {
+      bank.splice(i,1)
+      list_item.indexes.splice(0,1)
+      if (list_item.indexes.length === 0) {
+        bank.splice(i,0,replaceText)
+      }
+      i--
+    }
+  }
+
+  let text = bank.join(" ")
+
+  return {text, list}
 }
