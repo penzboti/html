@@ -33,6 +33,7 @@ function start() {
       e.id = i;
       all_list.push({id: i, word: e.innerText})
     }
+    console.log(all_list)
     let list = randomRemove(all_list)
     for (let item of list) {
       let e = document.getElementById(item.id);
@@ -41,6 +42,7 @@ function start() {
       node.value = item.word;
       e.replaceWith(node)
     }
+    console.log(list)
   } else if (globaltype == "dates") {
     let {text,list} = selectDates(globaltxt)
     globallist=list;
@@ -207,13 +209,31 @@ globalThis["end"] = end
 const allowed_words = ["jan","feb","márc","ápr","máj","jún","júl","aug","szept","okt","nov","dev"]
 
 function selectDates() {
-  // let bank = globaltxt.split('\n').map(line => line.split(' ')).flat();
   let bank = globaltxt.split(' ')
+  bank = bank.map(w => w.split('').filter(c => c !== "\r").join(''));
+  bank = bank.map(word => {
+    let queue = [word]
+    let list = []
+    while (queue.length !== 0) {
+      let w = queue.pop()
+      if (w.includes('\n') && w !== "\n") {
+        let words = w.match(/[^\n]+|\n/g)
+        queue.unshift(...words.reverse())
+        continue;
+      }
+      if (w.includes('\t') && w !== "\t") {
+        let words = w.match(/[^\t]+|\t/g)
+        queue.unshift(...words.reverse())
+        continue;
+      }
+      list.push(w)
+    }
+    return list
+  }).flat();
 
   let list = [];
   let curr_list = [];
   for (let i = 0; i < bank.length; i++) {
-    // TODO: make a checkdate function, because we have to split by '-' and also '\n' and '\t'
     const word = bank[i];
     let date_potential = false;
     for (let w of allowed_words) {
@@ -224,7 +244,6 @@ function selectDates() {
     }
     if (!date_potential && word.split('').every(c => "0123456789.-,:;".includes(c))) {
       if (word.split('').some(c => "0123456789".includes(c))) {
-        console.log(word)
         curr_list.push({i,word,type: "number"})
         date_potential = true
       }
@@ -243,7 +262,6 @@ function selectDates() {
       }
       if (curr_list.length === 1) {
         let d = curr_list[0].word
-        console.log(d, d.substring(0,4))
         if (d.length < 4 || (d.length > 4 && d.substring(0,4).split('').some(c => !"0123456789".includes(c)) && d[4] !== "-" )) {
           curr_list = []
           continue
@@ -256,42 +274,57 @@ function selectDates() {
       }
       let date = "";
       let indexes = [];
+
       for (let e of curr_list) {
         date+=e.word+" ";
         indexes.push(e.i)
       }
       date = date.substring(0,date.length-1)
+
       let last = curr_list[curr_list.length-1];
       let trailing_char = last.word.split('').pop()
       if ("0123456789.".includes(trailing_char)) trailing_char = null;
+      if (trailing_char) date = date.substring(0,date.length-1)
       if (last.additions) trailing_char = last.additions
       list.push({date,indexes,includes_year: curr_list[0].type === "number",trailing_char})
       curr_list = []
     }
   }
 
-  console.log(list)
   list = randomRemove(list);
 
-  console.log(list)
   let removed = 0
-  let list_item = list.pop()
+  let list_i = 0;
+  let list_item = list[list_i]
   if (!list_item) {
     alert("no date detected")
     return {text: globaltxt,list:[]}
   }
-  for (let i = 0; i < bank.length - removed; i++) {
-    if (i == list_item.indexes[0]) {
+  for (let i = 0; i < bank.length; i++) {
+    if (i == list_item.indexes[0] - removed) {
       bank.splice(i,1)
+      removed++;
       list_item.indexes.splice(0,1)
       if (list_item.indexes.length === 0) {
-        bank.splice(i,0,replaceText)
+        removed--;
+        bank.splice(i,0,replaceText + (list_item.trailing_char ? list_item.trailing_char : ""))
+        list_i++;
+        list_item = list[list_i]
+        if (!list_item) break
       }
       i--
     }
   }
 
-  let text = bank.join(" ")
+
+  let text = bank.reduce((str, a)=> {
+    if (a === "\n" || a === "\t") return str+a;
+    let last = str[str.length-1];
+    if (last === "\n" || last === "\t") return str+a;
+    return str+" "+a;
+  });
+
+  list = list.map((e,index) => {return {...e,index,word:e.date};})
 
   return {text, list}
 }
