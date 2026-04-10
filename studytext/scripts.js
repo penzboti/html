@@ -9,6 +9,10 @@ let globaltxt = "";
 let globallist = [];
 let globaltype;
 
+let is_started = false;
+let is_check_mode = false;
+let strict = document.getElementById("strict").checked;
+
 // #### functions
 function start() {
   if (globaltxt === "") {
@@ -17,6 +21,7 @@ function start() {
   }
   hide()
 
+  strict = document.getElementById("strict").checked;
   globaltxt = globaltxt.split('').filter(c => c !== "\r").join("");
   // parse [[links]] and ![[images]]
   globaltxt = globaltxt.split('\n').map(l => {
@@ -107,6 +112,7 @@ function start() {
     render(text);
     replaceReplacements(list);
   }
+  is_started = true;
 }
 
 function randomRemove(list) {
@@ -130,6 +136,7 @@ function randomRemove(list) {
 function end() {
   unhide();
   render(globaltxt);
+  is_started = false;
 }
 
 function hide() {
@@ -234,7 +241,8 @@ function selectWords(text, amount) {
 function replaceReplacements(list) {
   let text = main.innerHTML;
   list.forEach((e,i) => {
-    let replacement = `<input type="text" value="${e.word}" id="${i}">`;
+    let replacement = `<input type="text" value="${e.word}" id="${i}">`
+    + `<button onclick="check(${i})" id="${i}b">pipa here</button>`;
     let n = text.indexOf(replaceText)
 
     let chars = [...text]
@@ -272,8 +280,9 @@ setTimeout(() => {
 
 globalThis["start"] = start
 globalThis["end"] = end
+globalThis["check"] = check
 
-const allowed_words = ["jan","feb","márc","ápr","máj","jún","júl","aug","szept","okt","nov","dev"]
+const allowed_words = ["január","február","március","április","május","június","augusztus","szeptember","október","november","december","jan","feb","márc","ápr","máj","jún","júl","aug","szept","okt","nov","dev"]
 
 function selectDates() {
   let bank = globaltxt.split(' ')
@@ -397,3 +406,73 @@ function selectDates() {
 
   return {text, list}
 }
+
+let cur_id = 0;
+
+addEventListener("focusout", e => {
+  if (!is_started) return;
+  console.log(e)
+  let target = e.target;
+
+  if (e.target.nodeName !== "INPUT") return;
+  if (e.target.value === "") return;
+  cur_id = target.id;
+  if (!globallist[cur_id].checked) {
+    let bool = e.relatedTarget === document.getElementById(`${cur_id}b`);
+    check(cur_id);
+    if (bool) document.getElementById(parseInt(cur_id)+1).focus();
+  }
+})
+
+function check(id) {
+  console.log(globallist)
+  let input = document.getElementById(id);
+  let cur = input.value;
+  let ans = globallist[id].word;
+  if (ans === cur) {
+    input.classList.add("green")
+    globallist[id].correct = true;
+  }
+  else {
+    console.log(strict, document.getElementById("strict").value)
+    if (strict) {
+      input.classList.add("red")
+      globallist[id].correct = false;
+    } else checkMode(id)
+  }
+  document.getElementById(`${id}b`).remove()
+  globallist[id].checked = true;
+}
+
+const popup = document.getElementById("popup");
+popup.style.visibility = "hidden";
+const popupAns = document.getElementById("pop-answer");
+const popupCor = document.getElementById("pop-correct");
+function checkMode(id) {
+  is_check_mode = true;
+  popup.style.visibility = "visible";
+  let input = document.getElementById(id);
+  let cur = input.value;
+  popupAns.innerText = cur;
+  let ans = globallist[id].word;
+  popupCor.innerText = ans;
+}
+
+window.addEventListener("keypress", e => {
+  let id = cur_id
+  let input = document.getElementById(id)
+  if (is_check_mode) {
+    if (e.key === "t") {
+      input.classList.add("green")
+      globallist[id].correct = true;
+      is_check_mode = false;
+      popup.style.visibility = "hidden";
+    }
+    if (e.key === "f") {
+      input.classList.add("red")
+      globallist[id].correct = false;
+      is_check_mode = false;
+      popup.style.visibility = "hidden";
+    }
+  }
+})

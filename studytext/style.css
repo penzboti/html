@@ -1,11 +1,62 @@
+body {
+  overflow-x: hidden;
+}
+
 #navbar {
-  position:absolute;
-  top:0px;
-  left:0px;
+  position: fixed;
+  top: 100vh;
+  left: 0px;
+  width: 100vw;
+  height: 30px;
+  transform: translateY(-100%);
+
+  background-color: pink;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+}
+#navbar button {
+  flex-grow: 1;
+}
+#navbar p:nth-child(2) {
+  flex-grow: 4;
+}
+#navbar p:nth-child(3) {
+  flex-grow: 5;
 }
 
 .main-top {
-    position:absolute;
-  top: 30px; /* navbar height */
-  left:0px;
+  position:absolute;
+  top: 0px;
+  left: 0px;
+  padding-bottom: 30px;
+}
+
+.red {
+  color: red;
+}
+.green {
+  color: yellowgreen;
+}
+
+#popup {
+  position: fixed;
+  width: 50vw;
+  height: 50vh;
+  left: 50vw;
+  top: 50vh;
+  transform: translate(-50%,-50%);
+  background-color: pink;
+  border: 2px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#pop-legend {
+  position: relative;
+  top: 100%;
 }

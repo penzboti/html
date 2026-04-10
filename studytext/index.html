@@ -20,17 +20,30 @@
         <option value="bold+heading">Bold and Headings</option>
         <option value="dates">Dates</option>
       </select>
+      <input type="checkbox" id="strict">strict mode
       <br>
       <button id="startbtn" onclick="start()">Start</button>
       <p>preview:</p>
     </div>
 
-    <div id="navbar">
-      <button id="backbtn" onclick="end()">back</button>
-    </div>
     <div id="main">
     </div>
 
+    <div id="navbar">
+      <button id="backbtn" onclick="end()">back</button>
+      <p id="prev"></p>
+      <p id="keybinds">
+      Tab: next&check
+      Shift-Tab: previous
+      Enter: check
+      </p>
+    </div>
+
+    <div id="popup">
+      <p id="pop-answer"></p>
+      <p id="pop-correct"></p>
+      <p id="pop-legend">T to mark correct, F to mark wrong</p>
+    </div>
 
     <script type="module" src="scripts.js"></script>
   </body>
