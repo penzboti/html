@@ -134,9 +134,11 @@ function randomRemove(list) {
 }
 
 function end() {
+  popup.style.visibility = "hidden";
   unhide();
   render(globaltxt);
   is_started = false;
+  is_end = false;
 }
 
 function hide() {
@@ -441,13 +443,19 @@ function check(id) {
     } else checkMode(id)
   }
   document.getElementById(`${id}b`).remove()
+
   globallist[id].checked = true;
+  if (globallist.every(e => e.checked)) {
+    end_popup();
+  }
 }
 
 const popup = document.getElementById("popup");
 popup.style.visibility = "hidden";
 const popupAns = document.getElementById("pop-answer");
 const popupCor = document.getElementById("pop-correct");
+const popupLegend = document.getElementById("pop-legend");
+const legend_text_check = "[T] mark correct ; [F] mark wrong";
 function checkMode(id) {
   is_check_mode = true;
   popup.style.visibility = "visible";
@@ -456,23 +464,62 @@ function checkMode(id) {
   popupAns.innerText = cur;
   let ans = globallist[id].word;
   popupCor.innerText = ans;
+  popupLegend.innerText = legend_text_check;
+}
+
+const legend_text_end = "[T] new quiz ; [F] stay";
+let is_end = false;
+function end_popup() {
+  is_end = true;
+  popup.style.visibility = "visible";
+  let n = globallist.map(e => e.correct).filter(e => e).length;
+  popupAns.innerText = `${n} jó / ${globallist.length}`
+  popupCor.innerText = "";
+  popupLegend.innerText = legend_text_end;
+}
+
+function add_correct(id) {
+  let anchor = document.getElementById(id);
+  let node = document.createElement("random_element_here");
+  node.innerText = globallist[id].word;
+  node.classList.add("green")
+  anchor.insertAdjacentElement("afterend",node);
 }
 
 window.addEventListener("keypress", e => {
   let id = cur_id
   let input = document.getElementById(id)
   if (is_check_mode) {
-    if (e.key === "t") {
+    e.preventDefault();
+    if (e.key === "t" || e.key === "T") {
       input.classList.add("green")
       globallist[id].correct = true;
       is_check_mode = false;
       popup.style.visibility = "hidden";
     }
-    if (e.key === "f") {
+    if (e.key === "f" || e.key === "F") {
       input.classList.add("red")
       globallist[id].correct = false;
       is_check_mode = false;
       popup.style.visibility = "hidden";
+      add_correct(id);
     }
+  }
+  if (is_end) {
+    console.log(e)
+    if (e.key === "Enter") {
+      end();
+    }
+    if (e.key === "f" || e.key === "F") {
+      popup.style.visibility = "hidden";
+    }
+    if (e.key === "t" || e.key === "T") {
+      end();
+    }
+  }
+  let target = e.target;
+  if (e.target.nodeName !== "INPUT") return;
+  if (e.key === "Enter") {
+    check(target.id);
   }
 })
