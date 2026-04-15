@@ -76,7 +76,7 @@ function start() {
     render(text);
     replaceReplacements(list);
   }
-  else if (globaltype == "bold" || globaltype == "heading" || globaltype == "bold+heading") {
+  if (globaltype == "bold" || globaltype == "heading" || globaltype == "bold+heading") {
     render(globaltxt);
     let strongs = [];
     if (globaltype == "bold" || globaltype == "bold+heading") strongs = [...strongs, ...main?.getElementsByTagName("strong")]; 
@@ -105,14 +105,15 @@ function start() {
       node.value = item.word;
       e.replaceWith(node)
     }
-    console.log(list)
-  } else if (globaltype == "dates") {
+  }
+  if (globaltype == "dates") {
     let {text,list} = selectDates(globaltxt)
     globallist=list;
     render(text);
     replaceReplacements(list);
   }
   is_started = true;
+  if ([...main.children].map(e=>[...e.children]).flat().map(e => e.tagName).includes("A")) start();
 }
 
 function randomRemove(list) {
@@ -243,8 +244,10 @@ function selectWords(text, amount) {
 function replaceReplacements(list) {
   let text = main.innerHTML;
   list.forEach((e,i) => {
-    let replacement = `<input type="text" value="${e.word}" id="${i}">`
-    + `<button onclick="check(${i})" id="${i}b">pipa here</button>`;
+    let txt = "";
+    // txt = e.word;
+    let replacement = `<input type="text" value="${txt}" id="${i}">`
+    // + `<button onclick="check(${i})" id="${i}b">pipa here</button>`;
     let n = text.indexOf(replaceText)
 
     let chars = [...text]
@@ -413,7 +416,6 @@ let cur_id = 0;
 
 addEventListener("focusout", e => {
   if (!is_started) return;
-  console.log(e)
   let target = e.target;
 
   if (e.target.nodeName !== "INPUT") return;
@@ -427,31 +429,36 @@ addEventListener("focusout", e => {
 })
 
 function check(id) {
-  console.log(globallist)
   let input = document.getElementById(id);
   let cur = input.value;
   let ans = globallist[id].word;
   if (ans === cur) {
     input.classList.add("green")
     globallist[id].correct = true;
+    apply_prev(true)
   }
   else {
-    console.log(strict, document.getElementById("strict").value)
-    if (strict) {
+    if (strict || cur === "") {
       input.classList.add("red")
       globallist[id].correct = false;
+      add_correct(id);
+      apply_prev(false)
     } else checkMode(id)
   }
-  document.getElementById(`${id}b`).remove()
+  // document.getElementById(`${id}b`).remove()
+  input.readonly = true;
+  input.readOnly = true;
 
   globallist[id].checked = true;
-  if (globallist.every(e => e.checked)) {
+  input.classList.add("checked")
+  if (!is_check_mode && globallist.every(e => e.checked)) {
     end_popup();
   }
 }
 
 const popup = document.getElementById("popup");
 popup.style.visibility = "hidden";
+const popupTitle = document.getElementById("pop-title");
 const popupAns = document.getElementById("pop-answer");
 const popupCor = document.getElementById("pop-correct");
 const popupLegend = document.getElementById("pop-legend");
@@ -465,6 +472,7 @@ function checkMode(id) {
   let ans = globallist[id].word;
   popupCor.innerText = ans;
   popupLegend.innerText = legend_text_check;
+  popupTitle.innerText = "Check word";
 }
 
 const legend_text_end = "[T] new quiz ; [F] stay";
@@ -474,8 +482,9 @@ function end_popup() {
   popup.style.visibility = "visible";
   let n = globallist.map(e => e.correct).filter(e => e).length;
   popupAns.innerText = `${n} jó / ${globallist.length}`
-  popupCor.innerText = "";
+  popupCor.innerText = `${n/globallist.length * 100}%`;
   popupLegend.innerText = legend_text_end;
+  popupTitle.innerText = "End of quiz";
 }
 
 function add_correct(id) {
@@ -487,6 +496,7 @@ function add_correct(id) {
 }
 
 window.addEventListener("keypress", e => {
+  if (!is_started) return;
   let id = cur_id
   let input = document.getElementById(id)
   if (is_check_mode) {
@@ -496,6 +506,7 @@ window.addEventListener("keypress", e => {
       globallist[id].correct = true;
       is_check_mode = false;
       popup.style.visibility = "hidden";
+      apply_prev(true)
     }
     if (e.key === "f" || e.key === "F") {
       input.classList.add("red")
@@ -503,10 +514,14 @@ window.addEventListener("keypress", e => {
       is_check_mode = false;
       popup.style.visibility = "hidden";
       add_correct(id);
+      apply_prev(false)
     }
+    if (globallist.every(e => e.checked)) {
+      end_popup();
+    }
+    return;
   }
   if (is_end) {
-    console.log(e)
     if (e.key === "Enter") {
       end();
     }
@@ -516,10 +531,29 @@ window.addEventListener("keypress", e => {
     if (e.key === "t" || e.key === "T") {
       end();
     }
+    return;
+  }
+  if (e.key === "Escape") {
+    end()
+    return;
   }
   let target = e.target;
   if (e.target.nodeName !== "INPUT") return;
   if (e.key === "Enter") {
-    check(target.id);
+    cur_id = parseInt(target.id)
+    if (!globallist[cur_id].checked) check(cur_id);
+    if (!e.shiftKey) document.getElementById(cur_id+1).focus();
   }
 })
+
+window.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    end()
+  }
+})
+
+function apply_prev(correct) {
+  // currently shows the input id you checked
+  //? maybe it should show the current input always
+  document.getElementById("prev").innerText = `${correct ? "Correct" : "Incorrect"} : ${cur_id+1}/${globallist.length}`;
+}

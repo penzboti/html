@@ -9,6 +9,8 @@
   </head>
   <body>
     <div id="inputfields">
+      <button id="startbtn" onclick="start()">Start</button>
+      <br>
       <input type="file" id="fileinput">
       <textarea id="textinput"></textarea>
       <br>
@@ -22,7 +24,6 @@
       </select>
       <input type="checkbox" id="strict">strict mode
       <br>
-      <button id="startbtn" onclick="start()">Start</button>
       <p>preview:</p>
     </div>
 
@@ -40,6 +41,7 @@
     </div>
 
     <div id="popup">
+      <p id="pop-title"></p>
       <p id="pop-answer"></p>
       <p id="pop-correct"></p>
       <p id="pop-legend"></p>

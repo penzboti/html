@@ -1,5 +1,6 @@
 body {
   overflow-x: hidden;
+  background-color: white;
 }
 
 #navbar {
@@ -38,7 +39,7 @@ body {
   color: red;
 }
 .green {
-  color: yellowgreen;
+  color: #22b348;
 }
 
 #popup {
@@ -60,4 +61,14 @@ body {
   position: absolute;
   top: 100%;
   transform: translateY(-200%);
+}
+#pop-title {
+  position: absolute;
+  top: 0%;
+  /* transform: translateY(200%); */
+}
+
+.checked {
+  background-color: lightgray;
+  font-weight: bold;
 }

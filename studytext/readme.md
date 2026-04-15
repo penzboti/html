@@ -1,10 +1,8 @@
 # info
-this is all hack and not finished yet
+this is all hacky and not finished yet
 
 # todo
-- write date mode
+- remove url-words (starting with https)
 - organize functions into multiple files (since we have like three modes)
 - rename variables and functions
-- checking
-- scoring
 - better design
