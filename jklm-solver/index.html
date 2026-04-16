@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JKLM</title>
+    <link rel="icon" href="../icons/512.png" type="image/x-icon">
+
+    <style>
+      body {
+        min-height: 90vh;
+      }
+      dialog {
+        position: fixed;
+        top: 50vh;
+        transform: translateY(-50%)
+      }
+    </style>
+  </head>
+  <body>
+    <div id="inputs">
+      <input id="input" placeholder="letter combination">
+      <select id="select">
+        <option value="english">English</option>
+        <option value="german">German</option>
+      </select>
+      <input type="checkbox" id="checkbox"><label for="checkbox">dictionary links</label>
+      <br>
+      <input type="button" id="button" value="Start" onclick="start()">
+    </div>
+
+    <div id="main">
+    </div>
+
+    <dialog id="warning" open>
+      <p>This site loads a lot of words. This might take some time, and cell data (~2MB). Leave this site if this concerns you.</p>
+      <button command="close" commandfor="warning">Close</button>
+    </dialog>
+
+    <script>
+      let words = "";
+      let lang = "";
+      let links = true;
+      async function start() {
+        console.log("started")
+        if (lang !== select.value) {
+          lang = select.value;
+          let url = `${window.location.href}/words/${lang}.txt`;
+          words = await fetch(url).then(data => {return data.text()});
+        }
+        links = checkbox.checked;
+
+        let combination = input.value;
+        if (combination === "") {
+          alert("empty");
+          return;
+        }
+
+        let arr = await words.split("\n").map(word => word.toLowerCase());
+        let good = await arr.filter(word => word.includes(combination))
+        await good.sort((a,b) => a.length > b.length);
+        if (!links) main.innerText = `${good.length} words:\n` + good.join('\n');
+        else {
+          let wordurl = lang === "german" ? "https://www.verbformen.com/?w=" : "https://www.dictionary.com/browse/";
+          good = good.map(word => `<a href="${wordurl}${word}">${word}</a>`)
+          main.innerHTML =`<p>${good.length} words:</p>` + good.join('<br/>')
+        }
+      }
+    </script>
+  </body>
+</html>
