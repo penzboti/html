@@ -25,15 +25,18 @@
         <option value="german">German</option>
       </select>
       <input type="checkbox" id="checkbox"><label for="checkbox">dictionary links</label>
+      <input type="checkbox" id="frequency"><label for="frequency">unfrequent words</label>
       <br>
       <input type="button" id="button" value="Start" onclick="start()">
+      <button command="show-modal" commandfor="warning">About</button>
     </div>
 
     <div id="main">
     </div>
 
-    <dialog id="warning" open>
+    <dialog id="warning">
       <p>This site loads a lot of words. This might take some time, and cell data (~2MB). Leave this site if this concerns you.</p>
+      <p>Links are not that resource-intensive, it works fine on mobile.</p>
       <button command="close" commandfor="warning">Close</button>
     </dialog>
 
@@ -41,16 +44,18 @@
       let words = "";
       let lang = "";
       let links = true;
+      let unfrequent = frequency.checked;
       async function start() {
-        console.log("started")
-        if (lang !== select.value) {
+        if (lang !== select.value || unfrequent !== frequency.value) {
           lang = select.value;
-          let url = `${window.location.href}/words/${lang}.txt`;
+          unfrequent = frequency.checked;
+          frequency_txt = unfrequent ? "" : "-frequent";
+          let url = `${window.location.href}/words/${lang}${frequency_txt}.txt`;
           words = await fetch(url).then(data => {return data.text()});
         }
         links = checkbox.checked;
 
-        let combination = input.value;
+        let combination = input.value.toLowerCase();
         if (combination === "") {
           alert("empty");
           return;
@@ -58,7 +63,7 @@
 
         let arr = await words.split("\n").map(word => word.toLowerCase());
         let good = await arr.filter(word => word.includes(combination))
-        await good.sort((a,b) => a.length > b.length);
+        good.sort((a, b) => a.length - b.length || a.localeCompare(b));
         if (!links) main.innerText = `${good.length} words:\n` + good.join('\n');
         else {
           let wordurl = lang === "german" ? "https://www.verbformen.com/?w=" : "https://www.dictionary.com/browse/";
@@ -66,6 +71,10 @@
           main.innerHTML =`<p>${good.length} words:</p>` + good.join('<br/>')
         }
       }
+
+      document.addEventListener("keypress", e => {
+        if (e.key === "Enter") start()
+      })
     </script>
   </body>
 </html>
