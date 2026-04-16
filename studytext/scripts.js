@@ -65,6 +65,34 @@ function start() {
         l = new_l
       }
     }
+    // [halo](link) links parsing
+    if (l.includes("[") && l.includes("](") && l.includes(")")) {
+      let new_l = "";
+      let inside = false;
+      let link_inside = false;
+      let link_n = 0;
+      for (let i = 0; i < l.length; i++) {
+        let prev = l[i-1];
+        let cur = l[i]
+        new_l += cur
+        if (link_inside) link_n++;
+        if (cur == "[") { inside = true; new_l = new_l.substring(0,new_l.length-1) }
+        if (prev == "]" && cur == "(") { inside = false; link_inside = true; new_l = new_l.substring(0,new_l.length-2) }
+        if (cur == ")") { link_inside = false; new_l = new_l.substring(0,new_l.length-link_n); link_n = 0; }
+      }
+      l = new_l
+    }
+    // parse http(s):// links (aka delete them)
+    if (l.includes("https://") || l.includes("http://") || l.includes("www.")) {
+      let arr = l.split(" ");
+      arr = arr.map(e => {
+        if (e.includes("https://") || e.includes("http://") || e.includes("www.")) {
+          e = "[[link]]"
+        }
+        return e
+      })
+      l = arr.join(" ")
+    }
     return l;
   }).join("\n")
 
@@ -414,8 +442,16 @@ function selectDates() {
 
 let cur_id = 0;
 
+addEventListener("focusin", () => {
+  let id = document.activeElement.id;
+  id = parseInt(id)
+  if (isNaN(id)) return;
+  document.getElementById("current").innerText = `current: ${id+1}`;
+})
+
 addEventListener("focusout", e => {
   if (!is_started) return;
+  if (is_end) return;
   let target = e.target;
 
   if (e.target.nodeName !== "INPUT") return;
@@ -468,23 +504,29 @@ function checkMode(id) {
   popup.style.visibility = "visible";
   let input = document.getElementById(id);
   let cur = input.value;
-  popupAns.innerText = cur;
+  popupAns.innerText = "your answer: " + cur;
   let ans = globallist[id].word;
-  popupCor.innerText = ans;
+  popupCor.innerText = "correct: " + ans;
   popupLegend.innerText = legend_text_check;
   popupTitle.innerText = "Check word";
 }
 
-const legend_text_end = "[T] new quiz ; [F] stay";
+const legend_text_end = "[Escape|Enter|T] new quiz ; [Space|F] stay";
+const keybind_text_end = "[Space] Show stats ; [Escape] exit"
 let is_end = false;
-function end_popup() {
+function end_popup(premature) {
   is_end = true;
   popup.style.visibility = "visible";
   let n = globallist.map(e => e.correct).filter(e => e).length;
+  if (typeof premature !== "undefined") if (premature) globallist = globallist.filter(e => e.checked);
+  let percent = n/globallist.length * 100;
+  if (isNaN(percent)) percent = 0;
   popupAns.innerText = `${n} jó / ${globallist.length}`
-  popupCor.innerText = `${n/globallist.length * 100}%`;
+  popupCor.innerText = `${percent}%`;
   popupLegend.innerText = legend_text_end;
   popupTitle.innerText = "End of quiz";
+  prev.innerText = "End of quiz"
+  keybinds.innerText = "";
 }
 
 function add_correct(id) {
@@ -522,10 +564,14 @@ window.addEventListener("keypress", e => {
     return;
   }
   if (is_end) {
+    if (e.key === " " && popup.style.visibility === "hidden") {
+      end_popup();
+      return;
+    }
     if (e.key === "Enter") {
       end();
     }
-    if (e.key === "f" || e.key === "F") {
+    if (e.key === "f" || e.key === "F" || e.key === " ") {
       popup.style.visibility = "hidden";
     }
     if (e.key === "t" || e.key === "T") {
@@ -533,27 +579,28 @@ window.addEventListener("keypress", e => {
     }
     return;
   }
-  if (e.key === "Escape") {
-    end()
-    return;
-  }
   let target = e.target;
   if (e.target.nodeName !== "INPUT") return;
   if (e.key === "Enter") {
     cur_id = parseInt(target.id)
     if (!globallist[cur_id].checked) check(cur_id);
-    if (!e.shiftKey) document.getElementById(cur_id+1).focus();
+    if (!e.shiftKey && cur_id+1<globallist.length && !globallist[cur_id+1].checked) document.getElementById(cur_id+1).focus();
   }
 })
 
 window.addEventListener("keydown", e => {
   if (e.key === "Escape") {
-    end()
+    if (is_end) {
+      end();
+      return;
+    }
+    end_popup(true)
   }
 })
 
 function apply_prev(correct) {
   // currently shows the input id you checked
   //? maybe it should show the current input always
-  document.getElementById("prev").innerText = `${correct ? "Correct" : "Incorrect"} : ${cur_id+1}/${globallist.length}`;
+  document.getElementById("prev").innerText =
+  `${correct ? "Correct" : "Incorrect"} ; progress:${globallist.map(e => e.checked).filter(e => e).length+1}/${globallist.length}`;
 }
