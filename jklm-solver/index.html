@@ -19,7 +19,8 @@
   </head>
   <body>
     <div id="inputs">
-      <input id="input" placeholder="letter combination">
+      <input id="input" placeholder="combinations">
+      <input id="input2" placeholder="individual letters">
       <select id="select">
         <option value="english">English</option>
         <option value="german">German</option>
@@ -56,19 +57,24 @@
         links = checkbox.checked;
 
         let combination = input.value.toLowerCase();
-        if (combination === "") {
+        let letters = input2.value.toLowerCase();
+        if (combination === "" && letters === "") {
           alert("empty");
           return;
         }
 
         let arr = await words.split("\n").map(word => word.toLowerCase());
-        let good = await arr.filter(word => word.includes(combination))
-        good.sort((a, b) => a.length - b.length || a.localeCompare(b));
-        if (!links) main.innerText = `${good.length} words:\n` + good.join('\n');
+        if (combination !== "") arr = arr.filter(word => word.includes(combination))
+        if (letters !== "") arr = arr.filter(word => {
+          let n = letters.split('').filter(l => word.includes(l)).length
+          return n === letters.length
+        });
+        arr.sort((a, b) => a.length - b.length || a.localeCompare(b));
+        if (!links) main.innerText = `${arr.length} words:\n` + arr.join('\n');
         else {
           let wordurl = lang === "german" ? "https://www.verbformen.com/?w=" : "https://www.dictionary.com/browse/";
-          good = good.map(word => `<a href="${wordurl}${word}">${word}</a>`)
-          main.innerHTML =`<p>${good.length} words:</p>` + good.join('<br/>')
+          arr = arr.map(word => `<a href="${wordurl}${word}" target="_blank">${word}</a>`)
+          main.innerHTML =`<p>${arr.length} words:</p>` + arr.join('<br/>')
         }
       }
 
